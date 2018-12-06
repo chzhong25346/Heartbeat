@@ -32,9 +32,9 @@ def get_statistics(ticker, db_name):
         cols = [ele.text.strip() for ele in cols]
         dic.update(dict([cols]))
     df = pd.DataFrame(dic, index=[0])
-    df = rename(df)
-    list = ['Market Cap (intraday)', 'Enterprise Value', 'Trailing P/E',
-            'Forward P/E', 'PEG Ratio (5 yr expected)', 'Price/Sales (ttm)',
+    # df = rename(df)
+    list = ['Market Cap (intraday) 5', 'Enterprise Value 3', 'Trailing P/E',
+            'Forward P/E 1', 'PEG Ratio (5 yr expected) 1', 'Price/Sales (ttm)',
             'Price/Book (mrq)']
     valuation = pick_stats(df, list, 'Valuation Measures') ###
     list = ['Profit Margin', 'Operating Margin (ttm)']
