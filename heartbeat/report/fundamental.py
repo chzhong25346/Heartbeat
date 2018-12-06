@@ -16,6 +16,7 @@ def fundamental_output(s_dic, ticker):
         get_news(company_name)
     except Exception as e:
         # print(e)
+        print("Failed to search! try again.")
 
 
 def get_statistics(ticker, db_name):
