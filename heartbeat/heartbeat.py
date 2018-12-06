@@ -8,6 +8,7 @@ from .utils.config import Config
 from .report.technical import technical_output
 from .report.fundamental import fundamental_output
 from .db.db import Db
+import sys
 
 cmd_completer = WordCompleter(['exit'])
 
@@ -32,11 +33,13 @@ def main(argv):
     while True:
         try:
             if(mode == None):
-                dic = {1:'Technical Analysis', 2:'Fundamental Analysis'}
+                dic = {1:'Technical Analysis', 2:'Fundamental Analysis', 0:'End Program'}
                 print("Analysis Mode:\n" , '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()))
                 key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode) ))
                 if(key != 0):
                     mode = dic[key]
+                elif(key == 0):
+                    sys.exit()
             if(mode == 'Technical Analysis'):
                 ticker = prompt('Enter ticker: ', bottom_toolbar=bottom_toolbar(mode), completer=cmd_completer)
                 if(ticker == 'exit'):
