@@ -49,8 +49,11 @@ def get_statistics(ticker, db_name):
     balance_sheet = pick_stats(df, list, 'Balance Sheet') ###
     list = ['Operating Cash Flow (ttm)','Levered Free Cash Flow (ttm)']
     cash_flow = pick_stats(df, list, 'Cash Flow Statement') ###
+    list = ['Forward Annual Dividend Yield 4','Trailing Annual Dividend Yield 3',
+            'Payout Ratio 4']
+    dividends = pick_stats(df, list, 'Dividends') ###
     print('\n'+ 35*'-' + '\n' + 'Financial Statistics' + '\n'+ 35*'-' + '\n' )
-    print(valuation, profitability, manag_eff, inc_stat, balance_sheet, cash_flow,  sep='\n')
+    print(valuation, profitability, manag_eff, inc_stat, balance_sheet, cash_flow, dividends,  sep='\n')
 
 
 def get_news(text):
