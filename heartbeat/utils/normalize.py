@@ -70,7 +70,8 @@ def normalize_financials(data, ticker, period):
             df['symbol'] = ticker
             df['period'] = period
             df_L.append(df)
-        except:
+        except Exception as e:
+            print(e)
             pass
     return df_L
 

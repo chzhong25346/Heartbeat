@@ -76,7 +76,8 @@ def get_financials(ticker):
     url = 'https://finance.yahoo.com/quote/'+ticker+'/financials?p='+ticker
     try:
         html = requests.get(url).text
-    except:
+    except Exception as e:
+        print(e)
         time.sleep(30)
         html = requests.get(url).text
     try:
@@ -84,7 +85,8 @@ def get_financials(ticker):
         soup_script = soup.find("script",text=re.compile("root.App.main")).text
         json_script = json.loads(re.search("root.App.main\s+=\s+(\{.*\})",soup_script)[1])
         fin_data = json_script['context']['dispatcher']['stores']['QuoteSummaryStore']
-    except:
+    except Exception as e:
+        print(e)
         pass
         fin_data = None
     return fin_data
