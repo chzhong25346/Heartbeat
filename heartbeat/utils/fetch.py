@@ -4,7 +4,6 @@ import json
 import time
 import os
 import requests
-import re
 from bs4 import BeautifulSoup
 from ..utils.util import normalize_Todash
 from alpha_vantage.timeseries import TimeSeries

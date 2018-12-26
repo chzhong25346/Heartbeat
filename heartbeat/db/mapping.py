@@ -4,7 +4,6 @@ from datetime import datetime
 from ..utils.fetch import fetch_index, get_daily_adjusted
 from ..utils.util import gen_id
 from ..models import Income,BalanceSheet,Cashflow
-import re
 
 
 def map_income(df):
