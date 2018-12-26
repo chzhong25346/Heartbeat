@@ -7,6 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 from ..utils.util import normalize_Todash
 from alpha_vantage.timeseries import TimeSeries
+import re
 
 
 def fetch_index(index_name):
@@ -82,7 +83,8 @@ def get_financials(ticker):
     try:
         soup = BeautifulSoup(html,'html.parser')
         soup_script = soup.find("script",text=re.compile("root.App.main")).text
-        json_script = json.loads(re.search("root.App.main\s+=\s+(\{.*\})",soup_script)[1])
+        if re.search("root.App.main\s+=\s+(\{.*\})",soup_script)[1]:
+            json_script = json.loads(re.search("root.App.main\s+=\s+(\{.*\})",soup_script)[1])
         fin_data = json_script['context']['dispatcher']['stores']['QuoteSummaryStore']
     except Exception as e:
         print(e)
