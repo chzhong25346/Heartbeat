@@ -83,8 +83,9 @@ def get_financials(ticker):
     try:
         soup = BeautifulSoup(html,'html.parser')
         soup_script = soup.find("script",text=re.compile("root.App.main")).text
-        if re.search("root.App.main\s+=\s+(\{.*\})",soup_script)[1]:
-            json_script = json.loads(re.search("root.App.main\s+=\s+(\{.*\})",soup_script)[1])
+        matched = re.search("root.App.main\s+=\s+(\{.*\})",soup_script)
+        if matched:
+            json_script = json.loads(matched.group(1))
         fin_data = json_script['context']['dispatcher']['stores']['QuoteSummaryStore']
     except Exception as e:
         print(e)
