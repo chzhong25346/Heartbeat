@@ -2,7 +2,7 @@ import pandas as pd
 from ..utils.util import groupby_na_to_zero
 from ..utils.locate_db import locate_session
 from ..db.read import read_ticker
-from ..models import Index, Quote, Report
+from ..models import Index, Quote
 from .volume_price import volume_price,today_price,fiftytwo_week
 
 

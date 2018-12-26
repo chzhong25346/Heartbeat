@@ -34,6 +34,8 @@ class Db():
     def create_all(self):
         self.Model.metadata.create_all(self.engine)
 
+    def create_all(self, table):
+        self.Model.metadata.create_all(self.engine, tables=table)
 
     def session(self):
         Session = sessionmaker(bind=self.engine)

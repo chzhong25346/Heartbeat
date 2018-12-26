@@ -1,5 +1,5 @@
 import pandas as pd
-from ..models import Index, Quote, Report
+from ..models import Index, Quote
 
 def locate_session(s_dic, ticker):
     '''

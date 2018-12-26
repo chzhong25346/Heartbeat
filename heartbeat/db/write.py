@@ -12,6 +12,5 @@ def bulk_save(session, model_list):
         session.commit()
         # logger.info('Worte to Db.')
     except Exception as e:
-        logger.error(e)
         session.rollback()
         pass

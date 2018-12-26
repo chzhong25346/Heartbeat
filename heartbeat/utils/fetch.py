@@ -3,11 +3,11 @@ import pandas as pd
 import json
 import time
 import os
+import requests
+import re
+from bs4 import BeautifulSoup
 from ..utils.util import normalize_Todash
-from datetime import datetime as dt
 from alpha_vantage.timeseries import TimeSeries
-import logging
-logger = logging.getLogger('main.fetch')
 
 
 def fetch_index(index_name):
@@ -69,3 +69,22 @@ def get_daily_adjusted(config,ticker,size,today_only,index_name):
             return df
     except Exception as e:
         logger.error(e)
+
+
+
+def get_financials(ticker):
+    url = 'https://finance.yahoo.com/quote/'+ticker+'/financials?p='+ticker
+    try:
+        html = requests.get(url).text
+    except:
+        time.sleep(30)
+        html = requests.get(url).text
+    try:
+        soup = BeautifulSoup(html,'html.parser')
+        soup_script = soup.find("script",text=re.compile("root.App.main")).text
+        json_script = json.loads(re.search("root.App.main\s+=\s+(\{.*\})",soup_script)[1])
+        fin_data = json_script['context']['dispatcher']['stores']['QuoteSummaryStore']
+    except:
+        pass
+        fin_data = None
+    return fin_data
