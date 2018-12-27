@@ -26,7 +26,7 @@ class Quote(db.Model):
 class Income(db.Model):
     __tablename__ = 'income'
     id = db.Column(db.String(40), unique=True, nullable=False, primary_key=True)
-    symbol = db.Column(db.String(6), nullable=False)
+    symbol = db.Column(db.String(10), nullable=False)
     period = db.Column(db.String(9), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     researchDevelopment = db.Column(db.BIGINT, nullable=True)
@@ -56,7 +56,7 @@ class Income(db.Model):
 class BalanceSheet(db.Model):
     __tablename__ = 'balancesheet'
     id = db.Column(db.String(40), unique=True, nullable=False, primary_key=True)
-    symbol = db.Column(db.String(6), nullable=False)
+    symbol = db.Column(db.String(10), nullable=False)
     period = db.Column(db.String(9), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     capitalSurplus = db.Column(db.BIGINT, nullable=True)
@@ -93,7 +93,7 @@ class BalanceSheet(db.Model):
 class Cashflow(db.Model):
     __tablename__ = 'cashflow'
     id = db.Column(db.String(40), unique=True, nullable=False, primary_key=True)
-    symbol = db.Column(db.String(6), nullable=False)
+    symbol = db.Column(db.String(10), nullable=False)
     period = db.Column(db.String(9), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     changeToLiabilities = db.Column(db.BIGINT, nullable=True)
