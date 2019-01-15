@@ -6,7 +6,7 @@ import time
 
 
 def update_financials(s, list):
-    list = ['ACO-X.TO']  ## Testing
+    # list = ['TOU.TO']  ## Testing
 
     for ticker in list:
         print('Processing: %s' % ticker)

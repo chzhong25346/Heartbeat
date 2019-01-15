@@ -9,6 +9,7 @@ from .utils.normalize import generate_tickerL
 from .report.technical import technical_output
 from .report.fundamental import fundamental_output
 from .financials.update import update_financials
+from .screener.screener import screening
 from .db.db import Db
 from .models import Income,BalanceSheet,Cashflow
 import sys
@@ -36,7 +37,7 @@ def main(argv):
     while True:
         try:
             if(mode == None):
-                dic = {1:'Technical Analysis', 2:'Fundamental Analysis', 3:'Update Financials', 0:'End Program'}
+                dic = {1:'Technical Analysis', 2:'Fundamental Analysis', 3:'Update Financials', 4:'Screener', 0:'End Program'}
                 print("Enter Module:\n" , '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()))
                 key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode) ))
                 if(key not in list(dic.keys()) ):
@@ -64,11 +65,15 @@ def main(argv):
                     mode = None
                 elif(index != '' and index != 'exit'):
                     financials(index)
+            if(mode == 'Screener'):
+                screener()
+                cmd = prompt('Command : ', bottom_toolbar=bottom_toolbar(mode), completer=cmd_completer).replace(" ", "")
+                if(cmd == 'exit'):
+                    mode = None
         except KeyboardInterrupt:
             continue
         except EOFError:
             break
-
 
 
 def technical_report(ticker):
@@ -107,4 +112,13 @@ def financials(index):
     db.create_all([BalanceSheet.__table__])
     db.create_all([Cashflow.__table__])
     update_financials(s, tickerL)
+    s.close()
+
+
+def screener():
+    Config.DB_NAME = 'financials'
+    db = Db(Config)
+    s = db.session()
+    screening(s)
+
     s.close()

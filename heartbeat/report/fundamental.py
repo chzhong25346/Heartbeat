@@ -67,3 +67,39 @@ def get_news(text):
     for h in results[0:5]:
         h = tag_re.sub('', str(h))
         print(">>> "+h)
+
+
+def get_ratios(ticker):
+    url = 'https://finance.yahoo.com/quote/{0}/key-statistics?p={0}'.format(ticker)
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    dic = {}
+    rows = soup.findAll('tr')
+    for row in rows:
+        cols = row.find_all('td')
+        cols = [ele.text.strip() for ele in cols]
+        dic.update(dict([cols]))
+    try:
+        pe = float(dic['Trailing P/E'])
+        pb = float(dic['Price/Book (mrq)'])
+    except:
+        pe = float(dic['Forward P/E 1'])
+        pb = float(dic['Price/Book (mrq)'])
+    return pe,pb
+
+
+# def get_roe(ticker):
+#     url = 'https://finance.yahoo.com/quote/{0}/key-statistics?p={0}'.format(ticker)
+#     response = requests.get(url)
+#     soup = BeautifulSoup(response.text, 'html.parser')
+#     dic = {}
+#     rows = soup.findAll('tr')
+#     try:
+#         for row in rows:
+#             cols = row.find_all('td')
+#             cols = [ele.text.strip() for ele in cols]
+#             dic.update(dict([cols]))
+#             roe = float(dic['Return on Equity (ttm)'][:-1])
+#         return roe
+#     except:
+#         return None
