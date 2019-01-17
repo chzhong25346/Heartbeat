@@ -15,9 +15,9 @@ def screening(s):
 
     vigilance_L = vigilance([bs_ann, bs_quart])
     prospects_L = prospects([ic_ann, ic_quart])
-    liqudity_L = liqudity([cf_ann, cf_quart])
+    liquidity_L = liquidity([cf_ann, cf_quart])
 
-    list = vigilance_L + prospects_L + liqudity_L
+    list = vigilance_L + prospects_L + liquidity_L
     picks = [item for item, count in collections.Counter(list).items() if count > 2]
     print(40*'-' + '\n' + 15*' ' +"Screening Picks" + "\n" + 40*'-')
     print(', '.join(picks))
@@ -27,7 +27,7 @@ def screening(s):
 
 
 def vigilance(df_list):
-    # D/E < 0.5(includes companys no debt) and CR >1.5 and Debt change within 10%
+    # D/E < 1(includes companys no debt) and CR >1.5 and Debt change within 10%
     list = []
     for df in df_list:
         df.fillna(0, inplace=True)
@@ -42,7 +42,7 @@ def vigilance(df_list):
             totalDebt = totalDebt.pct_change(periods=1).dropna()
             DE = (longTermDebt+shortLongTermDebt) / totalStockholderEquity
             CR = totalCurrentAssets / totalCurrentLiabilities
-            if( DE < 0.5 and CR > 1.5 and all(totalDebt < 1) and all(totalDebt > -1)):
+            if( DE < 1 and CR > 1.5 and all(totalDebt < 1) and all(totalDebt > -1)):
                 list.append(ticker)
     return [item for item, count in collections.Counter(list).items() if count > 1]
 
@@ -61,7 +61,8 @@ def prospects(df_list):
     return [item for item, count in collections.Counter(list).items() if count > 1]
 
 
-def liqudity(df_list):
+def liquidity(df_list):
+    # Cash from Operating - capitalExpenditures positive
     # Cash from Operating postive and Cash from Investing/Financing negative
     list = []
     for df in df_list:
@@ -70,9 +71,27 @@ def liqudity(df_list):
             operating = df.iloc[df.index == ticker].sort_values(by='date')['totalCashFromOperatingActivities']
             investing = df.iloc[df.index == ticker].sort_values(by='date')['totalCashflowsFromInvestingActivities']
             financing = df.iloc[df.index == ticker].sort_values(by='date')['totalCashFromFinancingActivities']
-            if(all(operating > 0) and all(investing < 0) and all(financing < 0)):
+            capex = abs(df.iloc[df.index == ticker].sort_values(by='date')['capitalExpenditures'])
+            if(all(operating-capex > 0) and all(operating > 0) and all(investing < 0) and all(financing < 0)):
                 list.append(ticker)
     return [item for item, count in collections.Counter(list).items() if count > 1]
+
+
+# def return_on_equity(df_ic,df_bs):
+#     ic_ticker_L = df_ic.index.unique().tolist()
+#     bs_ticker_L = df_bs.index.unique().tolist()
+#     ticker_L = [item for item, count in collections.Counter(ic_ticker_L + bs_ticker_L).items() if count > 1]
+#     df_ic.fillna(0, inplace=True)
+#     df_bs.fillna(0, inplace=True)
+#     list = []
+#     for ticker in ticker_L:
+#         netIncome = df_ic.iloc[df_ic.index == ticker].sort_values(by='date')['netIncome']
+#         totalStockholderEquity = df_bs.iloc[df_bs.index == ticker].sort_values(by='date')['totalStockholderEquity']
+#         roe = netIncome/totalStockholderEquity*100
+#         if(all(roe > 7)):
+#             list.append(ticker)
+#     return list
+
 
 
 def undervalued(tickerL):

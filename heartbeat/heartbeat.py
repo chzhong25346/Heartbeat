@@ -120,5 +120,4 @@ def screener():
     db = Db(Config)
     s = db.session()
     screening(s)
-
     s.close()
