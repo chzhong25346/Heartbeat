@@ -30,8 +30,7 @@ def technical_output(s_dic, ticker):
                 + "\n52-week change: " + ft_delta + "\n" + 35*'-')
         print(df_pv)
     except Exception as e:
-        print(e)
-        print("Failed to search! try again.")
+        print("Unable to search! Try again.")
 
 
 def get_quote(s, ticker):
