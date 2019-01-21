@@ -11,18 +11,25 @@ import re
 def fundamental_output(s_dic, ticker):
     output = ''
     try:
-        s, db_name, ticker, company_name = locate_session(s_dic, ticker)
-        print(40*'-' + '\n' + ticker + ' - ' + company_name + "\n" + 40*'-')
-        get_statistics(ticker,db_name)
-        get_news(company_name)
+        if(locate_session(s_dic, ticker) != None):
+            print('Found in local Database:')
+            s, db_name, ticker, company_name = locate_session(s_dic, ticker)
+            print(40*'-' + '\n' + ticker + ' - ' + company_name + "\n" + 40*'-')
+            get_statistics(ticker,db_name)
+            get_news(company_name)
+        else:
+            print('external')
+            print(40*'-' + '\n' + ticker + ' - ' "\n" + 40*'-')
+            get_statistics(ticker,None)
     except Exception as e:
         # print(e)
-        print("Failed to search! try again.")
+        print("Unable to search! Try again.")
 
 
 def get_statistics(ticker, db_name):
     if(db_name == 'tsxci'):
         ticker = ticker+'.TO'
+    ticker = ticker.upper()
     IVps = intrinsic_value(get_keyStats(ticker))
     url = 'https://finance.yahoo.com/quote/{0}/key-statistics?p={0}'.format(ticker)
     response = requests.get(url)

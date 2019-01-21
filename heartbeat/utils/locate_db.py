@@ -10,3 +10,5 @@ def locate_session(s_dic, ticker):
         df = pd.read_sql(s.query(Index).filter(Index.symbol == ticker).statement, s.bind)
         if not df.empty:
             return s, name, df.symbol[0], df.company[0]
+    if df.empty:
+        return None

@@ -100,7 +100,7 @@ def get_keyStats(ticker):
         ticker = ticker.replace('.TO', '')
         url = 'http://financials.morningstar.com/ajax/keystatsAjax.html?t='+ticker+'&culture=en-CA&region=CAN'
     else:
-        url = 'http://financials.morningstar.com/ajax/keystatsAjax.html?t='+ticker+'&culture=en-US&region=US'
+        url = 'http://financials.morningstar.com/ajax/keystatsAjax.html?t='+ticker+'&culture=en-USa&region=USA'
     lm_json = requests.get(url).json()
     df = pd.read_html(lm_json["ksContent"])[0]
     df = df.rename(columns = {'Unnamed: 0':'date'})
