@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from ..utils.locate_db import locate_session
 from ..utils.normalize import rename,pick_stats
+from ..utils.fetch import get_keyStats
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -22,6 +23,7 @@ def fundamental_output(s_dic, ticker):
 def get_statistics(ticker, db_name):
     if(db_name == 'tsxci'):
         ticker = ticker+'.TO'
+    IVps = intrinsic_value(get_keyStats(ticker))
     url = 'https://finance.yahoo.com/quote/{0}/key-statistics?p={0}'.format(ticker)
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -53,7 +55,8 @@ def get_statistics(ticker, db_name):
     list = ['Forward Annual Dividend Yield 4','Trailing Annual Dividend Yield 3',
             'Payout Ratio 4']
     dividends = pick_stats(df, list, 'Dividends') ###
-    print('\n'+ 35*'-' + '\n' + 'Financial Statistics' + '\n'+ 35*'-' + '\n' )
+    print(35*'-' + '\n' + 'Financial Statistics' + '\n'+ 35*'-' + '\n' )
+    print('Intrinsic Value Per Share: ', IVps)
     print(valuation, profitability, manag_eff, inc_stat, balance_sheet, cash_flow, dividends,  sep='\n')
 
 
@@ -103,3 +106,42 @@ def get_ratios(ticker):
 #         return roe
 #     except:
 #         return None
+
+
+def intrinsic_value(df):
+    # http://news.morningstar.com/classroom2/course.asp?docId=145102&page=1&CN=sample
+    g = 0.03 # Inflation rate 3% as the perpetuity growth rate, which is close to the historical average growth rate of the U.S. economy
+    R = 0.1 # Required Return (Discount Rate)
+    FCF = df['FreeCashFlow'].dropna() # Free cash flow
+    avg_FCF = FCF.mean() # Average Free cash flow
+    nic = df['NetIncome'].dropna()
+    begining = int(round(nic[nic.index.min()])) # begining income
+    ending = int(round(nic[nic.index.max()])) # ending income
+    klength = len(FCF) # number of years in Free Cash Flow
+    avg_growth_rate = (((ending/begining)**(1/klength))-1).real # average income growth rate
+    CFn = {} #  Cash Flow in the Last Individual Year Estimated, in this case Year 10 cash flow
+    temp = None
+    for k in range(1, klength+1):
+        if(k == 1):
+            temp = round(avg_FCF*(1+avg_growth_rate),2)
+            CFn.update({k:temp})
+        else:
+            temp = round(temp*(1+avg_growth_rate),2)
+            CFn.update({k:temp})
+    DFCF = {} # Discounted Free Cash Flow
+    for key, value in CFn.items():
+        DF = round((1+R)**key,2)
+        DFCF.update({key:round(value*DF,0)})
+    sum_DFCF = sum(DFCF.values()) # Discounted Free Cash Flow, Years 1-N
+    N = max(k for k, v in CFn.items()) # Most recent year
+    CFlast = CFn[N]  # FCF in most recent year
+    perV = round((CFlast*(1+g)/(R-g)),2) # Perpetuity Value
+    PVPV = round(perV/(1+R)**N,2) # Present Value of Perpetuity Value (Present Value of Cash Flow in Year N)
+    intrinsic_value = sum_DFCF + PVPV
+    shares = df['Shares'].dropna()
+    sharesLast = shares[shares.index.max()] # latest year the number of shares
+    IVps = round(intrinsic_value/sharesLast,2)
+    if(IVps > 0):
+        return IVps
+    else:
+        return None

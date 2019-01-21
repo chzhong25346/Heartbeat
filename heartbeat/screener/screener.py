@@ -1,7 +1,8 @@
 import collections
 import pandas as pd
 from ..models import Income, BalanceSheet, Cashflow
-from ..report.fundamental import get_ratios
+from ..report.fundamental import get_ratios, intrinsic_value
+from ..utils.fetch import get_keyStats
 
 
 def screening(s):
@@ -20,10 +21,10 @@ def screening(s):
     list = vigilance_L + prospects_L + liquidity_L
     picks = [item for item, count in collections.Counter(list).items() if count > 2]
     print(40*'-' + '\n' + 15*' ' +"Screening Picks" + "\n" + 40*'-')
-    print(', '.join(picks))
+    print(intrinsicValue(picks))
 
-    print(40*'-' + '\n' + 15*' ' + "Undervalued" + "\n" + 40*'-')
-    print(', '.join(undervalued(picks)))
+    print(40*'-' + '\n' + 10*' ' + "Undervalued (PE,PB)" + "\n" + 40*'-')
+    print((', '.join(underValued(picks))))
 
 
 def vigilance(df_list):
@@ -93,8 +94,19 @@ def liquidity(df_list):
 #     return list
 
 
+def intrinsicValue(tickerL):
+    # Calculate IV/ps with filterd list
+    dic = {}
+    for ticker in tickerL:
+        df = get_keyStats(ticker)
+        IVps = intrinsic_value(df)
+        dic.update({ticker:IVps})
+    result = pd.DataFrame.from_dict(dic,orient='index')
+    result.columns = ['IV/s']
+    return result
 
-def undervalued(tickerL):
+
+def underValued(tickerL):
     # PE * PB < 22.5 for now
     list = []
     for ticker in tickerL:

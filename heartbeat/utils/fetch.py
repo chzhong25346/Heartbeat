@@ -1,5 +1,6 @@
 import urllib3,certifi
 import pandas as pd
+import numpy as np
 import json
 import time
 import os
@@ -92,3 +93,26 @@ def get_financials(ticker):
         pass
         fin_data = None
     return fin_data
+
+
+def get_keyStats(ticker):
+    if 'TO' in ticker:
+        ticker = ticker.replace('.TO', '')
+        url = 'http://financials.morningstar.com/ajax/keystatsAjax.html?t='+ticker+'&culture=en-CA&region=CAN'
+    else:
+        url = 'http://financials.morningstar.com/ajax/keystatsAjax.html?t='+ticker+'&culture=en-US&region=US'
+    lm_json = requests.get(url).json()
+    df = pd.read_html(lm_json["ksContent"])[0]
+    df = df.rename(columns = {'Unnamed: 0':'date'})
+    df = df[df.columns.drop(list(df.filter(regex='Unnamed|TTM')))]
+    df = df[df['date'].notnull()]
+    df.reset_index(drop=True, inplace=True)
+    df = df.loc[0:14]
+    df['date'] = df['date'].str.replace(r'[^\w]|CAD|USD|Mil|IDR|CNY', '')
+    df = df.replace('—', np.nan)
+    df.set_index('date', inplace=True)
+    df = df.astype(np.float64)
+    df = df.T
+    df.index = pd.to_datetime(df.index)
+    df.sort_index(inplace=True)
+    return df
