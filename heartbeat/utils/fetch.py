@@ -22,7 +22,7 @@ def fetch_index(index_name):
             data.index.name = 'symbol'
             data = normalize_Todash(data)
             return data
-        elif (index_name == 'tsxci' or index_name == 'sp100'):
+        elif (index_name == 'tsxci' or index_name == 'sp100' or index_name == 'sp500'):
             data = pd.read_csv(filename, na_filter = False)
             data.columns = ['symbol', 'company']
             # data = normalize_Todash(data)

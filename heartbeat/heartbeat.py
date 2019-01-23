@@ -6,6 +6,7 @@ from prompt_toolkit.validation import Validator
 from prompt_toolkit.completion import WordCompleter
 from .utils.config import Config
 from .utils.normalize import generate_tickerL
+from .utils.fetch import fetch_index
 from .report.technical import technical_output
 from .report.fundamental import fundamental_output
 from .financials.update import update_financials
@@ -103,8 +104,11 @@ def fundamental_report(ticker):
 
 
 def financials(index):
-    index_L = ['nasdaq100','tsxci','sp100']
-    tickerL = generate_tickerL(index.lower(), index_L)
+    if (index == 'sp500'):
+        tickerL = fetch_index(index)['symbol'].tolist()
+    else:
+        index_L = ['nasdaq100','tsxci','sp100']
+        tickerL = generate_tickerL(index.lower(), index_L)
     Config.DB_NAME = 'financials'
     db = Db(Config)
     s = db.session()
