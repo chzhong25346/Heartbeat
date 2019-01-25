@@ -3,7 +3,7 @@ import datetime as dt
 from datetime import datetime
 from ..utils.fetch import fetch_index, get_daily_adjusted
 from ..utils.util import gen_id
-from ..models import Income,BalanceSheet,Cashflow
+from ..models import Income,BalanceSheet,Cashflow,Keystats
 
 
 def map_income(df):
@@ -106,5 +106,31 @@ def map_cashflow(df):
 		totalCashflowsFromInvestingActivities = r['totalCashflowsFromInvestingActivities'],
 		changeToInventory = r['changeToInventory'],
 		repurchaseOfStock = r['repurchaseOfStock'],
+    ) for r in df_records]
+    return model_instnaces
+
+
+def map_keystats(df):
+    df_records = df.to_dict('r')
+    model_instnaces = [Keystats(
+        id = gen_id(r['symbol']+str(r['date'])),
+        symbol = r['symbol'],
+        # date = datetime.fromtimestamp(r['date']).strftime("%Y-%m-%d"),
+        date = r['date'],
+		revenue = r['Revenue'],
+        grossMargin = r['GrossMargin'],
+        operatingIncome = r['OperatingIncome'],
+        operatingMargin = r['OperatingMargin'],
+        netIncome = r['NetIncome'],
+        earningsPerShare = r['EarningsPerShare'],
+        dividends = r['Dividends'],
+        payoutRatio = r['PayoutRatio'],
+        shares = r['Shares'],
+        bookValuePerShare = r['BookValuePerShare'],
+        operatingCashFlow = r['OperatingCashFlow'],
+        capSpending = r['CapSpending'],
+        freeCashFlow = r['FreeCashFlow'],
+        freeCashFlowPerShare = r['FreeCashFlowPerShare'],
+        workingCapital = r['WorkingCapital'],
     ) for r in df_records]
     return model_instnaces

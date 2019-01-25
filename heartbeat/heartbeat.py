@@ -12,7 +12,7 @@ from .report.fundamental import fundamental_output
 from .financials.update import update_financials
 from .screener.screener import screening
 from .db.db import Db
-from .models import Income,BalanceSheet,Cashflow
+from .models import Income,BalanceSheet,Cashflow,Keystats
 import sys
 
 cmd_completer = WordCompleter(['exit'])
@@ -85,7 +85,10 @@ def technical_report(ticker):
         db_nasdaq = Db(Config)
         s = db_nasdaq.session()
         s_dic.update({name:s})
-    technical_output(s_dic, ticker)
+    Config.DB_NAME = 'financials'
+    db = Db(Config)
+    s = db.session()
+    technical_output(s_dic, s, ticker)
     for name, s in s_dic.items():
         s.close()
 
@@ -98,7 +101,10 @@ def fundamental_report(ticker):
         db = Db(Config)
         s = db.session()
         s_dic.update({name:s})
-    fundamental_output(s_dic, ticker)
+    Config.DB_NAME = 'financials'
+    db = Db(Config)
+    s = db.session()
+    fundamental_output(s_dic, s, ticker)
     for name, s in s_dic.items():
         s.close()
 
@@ -115,6 +121,7 @@ def financials(index):
     db.create_all([Income.__table__])
     db.create_all([BalanceSheet.__table__])
     db.create_all([Cashflow.__table__])
+    db.create_all([Keystats.__table__])
     update_financials(s, tickerL)
     s.close()
 

@@ -8,8 +8,7 @@ from .volume_price import volume_price,today_price,fiftytwo_week
 from .fundamental import intrinsic_value
 
 
-
-def technical_output(s_dic, ticker):
+def technical_output(s_dic, s_fin, ticker):
     output = ''
     try:
         s, db_name, ticker, company_name = locate_session(s_dic, ticker)
@@ -18,11 +17,10 @@ def technical_output(s_dic, ticker):
         ft_max, ft_min, ft_delta = fiftytwo_week(df)
         df_pv = volume_price(df)
         print(35*'-' + '\n' + ticker + ' - ' + company_name + "\n" + 35*'-')
+        ticker = ticker.upper()
         if(db_name == 'tsxci'):
-            IVps = intrinsic_value(get_keyStats(ticker+'.TO'))
-        else:
-            IVps = intrinsic_value(get_keyStats(ticker))
-
+            ticker = ticker+'.TO'
+        IVps = intrinsic_value(get_keyStats(ticker))
         print('IVps: ' + str(IVps) + '\n' + 'close: ' + str(today.close) + ', open: ' + str(today.open) + '\n'
               + 'high: ' + str(today.high) + ', low: ' + str(today.low) + '\n' + 35*'-')
         print("52-week high: " + ft_max

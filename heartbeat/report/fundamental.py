@@ -3,34 +3,43 @@ import numpy as np
 from ..utils.locate_db import locate_session
 from ..utils.normalize import rename,pick_stats
 from ..utils.fetch import get_keyStats
+from ..models import Keystats
 import requests
 from bs4 import BeautifulSoup
 import re
 
 
-def fundamental_output(s_dic, ticker):
+def fundamental_output(s_dic, s_fin, ticker):
     output = ''
     try:
         if(locate_session(s_dic, ticker) != None):
             print('Found in local Database:')
             s, db_name, ticker, company_name = locate_session(s_dic, ticker)
             print(40*'-' + '\n' + ticker + ' - ' + company_name + "\n" + 40*'-')
-            get_statistics(ticker,db_name)
+            get_statistics(ticker, s_fin, db_name)
             get_news(company_name)
         else:
             print('external')
             print(40*'-' + '\n' + ticker + ' - ' "\n" + 40*'-')
-            get_statistics(ticker,None)
+            get_statistics(ticker, s_fin, None)
     except Exception as e:
-        # print(e)
+        print(e)
         print("Unable to search! Try again.")
 
 
-def get_statistics(ticker, db_name):
+def get_statistics(ticker, s, db_name):
+    ticker = ticker.upper()
     if(db_name == 'tsxci'):
         ticker = ticker+'.TO'
-    ticker = ticker.upper()
-    IVps = intrinsic_value(get_keyStats(ticker))
+        df = pd.read_sql(s.query(Keystats).filter(Keystats.symbol == ticker).statement, s.bind, index_col='date')
+        df = df.replace([0], [np.nan])
+    elif(db_name != None):
+        df = pd.read_sql(s.query(Keystats).filter(Keystats.symbol == ticker).statement, s.bind, index_col='date')
+        df = df.replace([0], [np.nan])
+    elif(db_name == None):
+        df = get_keyStats(ticker)
+    IVps = intrinsic_value(df)
+    # fetching key-stats from Yahoo
     url = 'https://finance.yahoo.com/quote/{0}/key-statistics?p={0}'.format(ticker)
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -98,30 +107,20 @@ def get_ratios(ticker):
     return pe,pb
 
 
-# def get_roe(ticker):
-#     url = 'https://finance.yahoo.com/quote/{0}/key-statistics?p={0}'.format(ticker)
-#     response = requests.get(url)
-#     soup = BeautifulSoup(response.text, 'html.parser')
-#     dic = {}
-#     rows = soup.findAll('tr')
-#     try:
-#         for row in rows:
-#             cols = row.find_all('td')
-#             cols = [ele.text.strip() for ele in cols]
-#             dic.update(dict([cols]))
-#             roe = float(dic['Return on Equity (ttm)'][:-1])
-#         return roe
-#     except:
-#         return None
-
-
 def intrinsic_value(df):
     # http://news.morningstar.com/classroom2/course.asp?docId=145102&page=1&CN=sample
+    try:
+        FCF = df['freeCashFlow'].dropna() # Free cash flow
+        nic = df['netIncome'].dropna()
+        shares = df['shares'].dropna()
+    except:
+        FCF = df['FreeCashFlow'].dropna() # Free cash flow
+        nic = df['NetIncome'].dropna()
+        shares = df['Shares'].dropna()
+        pass
     g = 0.03 # Inflation rate 3% as the perpetuity growth rate, which is close to the historical average growth rate of the U.S. economy
     R = 0.1 # Required Return (Discount Rate)
-    FCF = df['FreeCashFlow'].dropna() # Free cash flow
     avg_FCF = FCF.mean() # Average Free cash flow
-    nic = df['NetIncome'].dropna()
     begining = int(round(nic[nic.index.min()])) # begining income
     ending = int(round(nic[nic.index.max()])) # ending income
     klength = len(FCF) # number of years in Free Cash Flow
@@ -145,10 +144,26 @@ def intrinsic_value(df):
     perV = round((CFlast*(1+g)/(R-g)),2) # Perpetuity Value
     PVPV = round(perV/(1+R)**N,2) # Present Value of Perpetuity Value (Present Value of Cash Flow in Year N)
     intrinsic_value = sum_DFCF + PVPV
-    shares = df['Shares'].dropna()
     sharesLast = shares[shares.index.max()] # latest year the number of shares
     IVps = round(intrinsic_value/sharesLast,2)
     if(IVps > 0):
         return IVps
     else:
         return None
+
+
+# def get_roe(ticker):
+#     url = 'https://finance.yahoo.com/quote/{0}/key-statistics?p={0}'.format(ticker)
+#     response = requests.get(url)
+#     soup = BeautifulSoup(response.text, 'html.parser')
+#     dic = {}
+#     rows = soup.findAll('tr')
+#     try:
+#         for row in rows:
+#             cols = row.find_all('td')
+#             cols = [ele.text.strip() for ele in cols]
+#             dic.update(dict([cols]))
+#             roe = float(dic['Return on Equity (ttm)'][:-1])
+#         return roe
+#     except:
+#         return None

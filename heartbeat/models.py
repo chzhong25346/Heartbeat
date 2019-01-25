@@ -116,3 +116,25 @@ class Cashflow(db.Model):
     changeInCash = db.Column(db.BIGINT, nullable=True)
     changeToInventory = db.Column(db.BIGINT, nullable=True)
     repurchaseOfStock = db.Column(db.BIGINT, nullable=True)
+
+
+class Keystats(db.Model):
+    __tablename__ = 'keystats'
+    id = db.Column(db.String(40), unique=True, nullable=False, primary_key=True)
+    symbol = db.Column(db.String(10), nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    revenue = db.Column(db.Float, nullable=True)
+    grossMargin = db.Column(db.Float, nullable=True)
+    operatingIncome = db.Column(db.Float, nullable=True)
+    operatingMargin = db.Column(db.Float, nullable=True)
+    netIncome = db.Column(db.Float, nullable=True)
+    earningsPerShare = db.Column(db.Float, nullable=True)
+    dividends = db.Column(db.Float, nullable=True)
+    payoutRatio = db.Column(db.Float, nullable=True)
+    shares = db.Column(db.Float, nullable=True)
+    bookValuePerShare = db.Column(db.Float, nullable=True)
+    operatingCashFlow = db.Column(db.Float, nullable=True)
+    capSpending = db.Column(db.Float, nullable=True)
+    freeCashFlow = db.Column(db.Float, nullable=True)
+    freeCashFlowPerShare = db.Column(db.Float, nullable=True)
+    workingCapital = db.Column(db.Float, nullable=True)

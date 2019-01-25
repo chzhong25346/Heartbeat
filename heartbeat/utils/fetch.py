@@ -101,14 +101,19 @@ def get_keyStats(ticker):
         url = 'http://financials.morningstar.com/ajax/keystatsAjax.html?t='+ticker+'&culture=en-CA&region=CAN'
     else:
         url = 'http://financials.morningstar.com/ajax/keystatsAjax.html?t='+ticker+'&culture=en-USa&region=USA'
-    lm_json = requests.get(url).json()
+    try:
+        lm_json = requests.get(url).json()
+    except Exception as e:
+        print('%s: retry after 30 seconds' % ticker)
+        time.sleep(30)
+        lm_json = requests.get(url).json()
     df = pd.read_html(lm_json["ksContent"])[0]
     df = df.rename(columns = {'Unnamed: 0':'date'})
     df = df[df.columns.drop(list(df.filter(regex='Unnamed|TTM')))]
     df = df[df['date'].notnull()]
     df.reset_index(drop=True, inplace=True)
     df = df.loc[0:14]
-    df['date'] = df['date'].str.replace(r'[^\w]|CAD|USD|Mil|IDR|CNY', '')
+    df['date'] = df['date'].str.replace(r'[^\w]|CAD|USD|Mil|IDR|CNY|EUR', '')
     df = df.replace('—', np.nan)
     df.set_index('date', inplace=True)
     df = df.astype(np.float64)

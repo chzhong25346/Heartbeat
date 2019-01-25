@@ -1,15 +1,15 @@
-from ..utils.fetch import get_financials
+from ..utils.fetch import get_financials, get_keyStats
 from ..utils.normalize import normalize_financials, reindex_missing
-from ..db.mapping import map_income, map_balancesheet, map_cashflow
+from ..db.mapping import map_income, map_balancesheet, map_cashflow, map_keystats
 from ..db.write import bulk_save
 import time
+import pandas as pd
 
 
 def update_financials(s, list):
-    # list = ['TOU.TO']  ## Testing
-
+    list = ['AAL']  ## Testing
     for ticker in list:
-        print('Processing: %s' % ticker)
+        print('--> %s' % ticker)
         time.sleep(10)
         fin_data = get_financials(ticker)
         try:
@@ -17,9 +17,12 @@ def update_financials(s, list):
             mapping_write(s, income, 'income')
             mapping_write(s, balancesheet, 'balancesheet')
             mapping_write(s, cashflow, 'cashflow')
+            # update keystats
+            mapping_keystats(s, ticker)
         except Exception as e:
             print(e)
             pass
+
 
 
 def classify_findata(data, ticker):
@@ -58,3 +61,12 @@ def mapping_write(s, list, type):
         for df in list:
             models = map_cashflow(df)
             bulk_save(s, models)
+
+
+def mapping_keystats(s, ticker):
+    df = get_keyStats(ticker.replace("-", ".")).fillna(0)
+    df['date'] = df.index
+    df['symbol'] = ticker
+    for d in df.to_dict(orient='records'):
+        models = map_keystats(pd.DataFrame.from_dict(d,orient='index').T)
+        bulk_save(s, models)

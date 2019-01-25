@@ -1,6 +1,7 @@
 import collections
 import pandas as pd
-from ..models import Income, BalanceSheet, Cashflow
+import numpy as np
+from ..models import Income, BalanceSheet, Cashflow, Keystats
 from ..report.fundamental import get_ratios, intrinsic_value
 from ..utils.fetch import get_keyStats
 
@@ -21,7 +22,7 @@ def screening(s):
     list = vigilance_L + prospects_L + liquidity_L
     picks = [item for item, count in collections.Counter(list).items() if count > 2]
     print(40*'-' + '\n' + 15*' ' +"Screening Picks" + "\n" + 40*'-')
-    print(intrinsicValue(picks))
+    print(intrinsicValue(s, picks))
 
     print(40*'-' + '\n' + 10*' ' + "Undervalued (PE,PB)" + "\n" + 40*'-')
     print((', '.join(underValued(picks))))
@@ -94,11 +95,13 @@ def liquidity(df_list):
 #     return list
 
 
-def intrinsicValue(tickerL):
+def intrinsicValue(s, tickerL):
     # Calculate IV/ps with filterd list
     dic = {}
     for ticker in tickerL:
-        df = get_keyStats(ticker)
+        # df = get_keyStats(ticker)   ---- web way
+        df = pd.read_sql(s.query(Keystats).filter(Keystats.symbol == ticker).statement, s.bind, index_col='date')
+        df = df.replace([0], [np.nan])
         IVps = intrinsic_value(df)
         dic.update({ticker:IVps})
     result = pd.DataFrame.from_dict(dic,orient='index')
