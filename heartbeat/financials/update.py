@@ -7,7 +7,7 @@ import pandas as pd
 
 
 def update_financials(s, list):
-    list = ['AAL']  ## Testing
+    # list = ['AAL']  ## Testing
     for ticker in list:
         print('--> %s' % ticker)
         time.sleep(10)
