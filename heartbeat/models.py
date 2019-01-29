@@ -138,3 +138,13 @@ class Keystats(db.Model):
     freeCashFlow = db.Column(db.Float, nullable=True)
     freeCashFlowPerShare = db.Column(db.Float, nullable=True)
     workingCapital = db.Column(db.Float, nullable=True)
+
+
+class Findex(db.Model):
+    # Financial Index wiht Sector and Industry Information
+    __tablename__ = 'findex'
+    Symbol = db.Column(db.String(10), unique=True, nullable=False, primary_key=True)
+    Name = db.Column(db.String(60), nullable=False)
+    Sector = db.Column(db.String(60), nullable=False)
+    Industry = db.Column(db.String(60), nullable=False)
+    Index = db.Column(db.String(20), nullable=False)

@@ -1,0 +1,765 @@
+Symbol,Name,Sector,Industry,Index
+ATVI, Activision Blizzard Inc,Technology,Electronic Gaming & Multimedia,NASDAQ100
+ADBE, Adobe Inc.,Technology,Software - Application,NASDAQ100
+AMD, Advanced Micro Devices Inc.,Technology,Semiconductors,NASDAQ100
+ALXN, Alexion Pharmaceuticals Inc.,Healthcare,Biotechnology,NASDAQ100
+ALGN, Align Technology Inc.,Healthcare,Medical Devices,NASDAQ100
+GOOG, Alphabet Inc.,Technology,Internet Content & Information,NASDAQ100
+GOOGL, Alphabet Inc.,Technology,Internet Content & Information,NASDAQ100
+AMZN, Amazon.com Inc.,Consumer Cyclical,Specialty Retail,NASDAQ100
+AAL, American Airlines Group Inc.,Industrials,Airlines,NASDAQ100
+AMGN, Amgen Inc.,Healthcare,Biotechnology,NASDAQ100
+ADI, Analog Devices Inc.,Technology,Semiconductors,NASDAQ100
+AAPL, Apple Inc.,Technology,Consumer Electronics,NASDAQ100
+AMAT, Applied Materials Inc.,Technology,Semiconductor Equipment & Materials,NASDAQ100
+ASML, ASML Holding N.V.,Technology,Semiconductor Equipment & Materials,NASDAQ100
+ADSK, Autodesk Inc.,Technology,Software - Application,NASDAQ100
+ADP, Automatic Data Processing Inc.,Industrials,Business Services,NASDAQ100
+BIDU, Baidu Inc.,Technology,Internet Content & Information,NASDAQ100
+BIIB, Biogen Inc.,Healthcare,Biotechnology,NASDAQ100
+BMRN, BioMarin Pharmaceutical Inc.,Healthcare,Biotechnology,NASDAQ100
+BKNG, Booking Holdings Inc.,Consumer Cyclical,Leisure,NASDAQ100
+AVGO, Broadcom Inc.,Technology,Semiconductors,NASDAQ100
+CDNS, Cadence Design Systems Inc.,Technology,Software - Application,NASDAQ100
+CELG, Celgene Corporation,Healthcare,Biotechnology,NASDAQ100
+CERN, Cerner Corporation,Technology,Health Information Services,NASDAQ100
+CHTR, Charter Communications Inc.,Communication Services,Pay TV,NASDAQ100
+CHKP, Check Point Software Technologies Ltd.,Technology,Software - Application,NASDAQ100
+CTAS, Cintas Corporation,Industrials,Business Services,NASDAQ100
+CSCO, Cisco Systems Inc.,Technology,Communication Equipment,NASDAQ100
+CTXS, Citrix Systems Inc.,Technology,Software - Infrastructure,NASDAQ100
+CTSH, Cognizant Technology Solutions Corporation,Technology,Information Technology Services,NASDAQ100
+CMCSA, Comcast Corporation,Communication Services,Pay TV,NASDAQ100
+COST, Costco Wholesale Corporation,Consumer Defensive,Discount Stores,NASDAQ100
+CSX, CSX Corporation,Industrials,Railroads,NASDAQ100
+CTRP, Ctrip.com International Ltd.,Consumer Cyclical,Leisure,NASDAQ100
+DLTR, Dollar Tree Inc.,Consumer Defensive,Discount Stores,NASDAQ100
+EBAY, eBay Inc.,Consumer Cyclical,Specialty Retail,NASDAQ100
+EA, Electronic Arts Inc.,Technology,Electronic Gaming & Multimedia,NASDAQ100
+EXPE, Expedia Group Inc.,Consumer Cyclical,Leisure,NASDAQ100
+FB, Facebook Inc.,Technology,Internet Content & Information,NASDAQ100
+FAST, Fastenal Company,Industrials,Industrial Distribution,NASDAQ100
+FISV, Fiserv Inc.,Industrials,Business Services,NASDAQ100
+GILD, Gilead Sciences Inc.,Healthcare,Biotechnology,NASDAQ100
+HAS, Hasbro Inc.,Consumer Cyclical,Leisure,NASDAQ100
+HSIC, Henry Schein Inc.,Healthcare,Medical Distribution,NASDAQ100
+IDXX, IDEXX Laboratories Inc.,Healthcare,Diagnostics & Research,NASDAQ100
+ILMN, Illumina Inc.,Healthcare,Diagnostics & Research,NASDAQ100
+INCY, Incyte Corporation,Healthcare,Biotechnology,NASDAQ100
+INTC, Intel Corporation,Technology,Semiconductors,NASDAQ100
+INTU, Intuit Inc.,Technology,Software - Application,NASDAQ100
+ISRG, Intuitive Surgical Inc.,Healthcare,Medical Instruments & Supplies,NASDAQ100
+JBHT, J.B. Hunt Transport Services Inc.,Industrials,Integrated Shipping & Logistics,NASDAQ100
+JD, JD.com Inc.,Consumer Cyclical,Specialty Retail,NASDAQ100
+KLAC, KLA-Tencor Corporation,Technology,Semiconductor Equipment & Materials,NASDAQ100
+LRCX, Lam Research Corporation,Technology,Semiconductor Equipment & Materials,NASDAQ100
+LBTYA, Liberty Global plc,Communication Services,Pay TV,NASDAQ100
+LBTYK, Liberty Global plc,Communication Services,Pay TV,NASDAQ100
+LULU, lululemon athletica inc.,Consumer Cyclical,Apparel Stores,NASDAQ100
+MAR, Marriott International,Consumer Cyclical,Lodging,NASDAQ100
+MXIM, Maxim Integrated Products Inc.,Technology,Semiconductors,NASDAQ100
+MELI, MercadoLibre Inc.,Consumer Cyclical,Specialty Retail,NASDAQ100
+MCHP, Microchip Technology Incorporated,Technology,Semiconductors,NASDAQ100
+MU, Micron Technology Inc.,Technology,Semiconductor Memory,NASDAQ100
+MSFT, Microsoft Corporation,Technology,Software - Infrastructure,NASDAQ100
+MDLZ, Mondelez International Inc.,Consumer Defensive,Confectioners,NASDAQ100
+MNST, Monster Beverage Corporation,Consumer Defensive,Beverages - Soft Drinks,NASDAQ100
+MYL, Mylan N.V.,Healthcare,Drug Manufacturers - Specialty & Generic,NASDAQ100
+NTAP, NetApp Inc.,Technology,Data Storage,NASDAQ100
+NTES, NetEase Inc.,Technology,Internet Content & Information,NASDAQ100
+NFLX, Netflix Inc.,Consumer Cyclical,Media - Diversified,NASDAQ100
+NVDA, NVIDIA Corporation,Technology,Semiconductors,NASDAQ100
+NXPI, NXP Semiconductors N.V.,Technology,Semiconductors,NASDAQ100
+ORLY, O'Reilly Automotive Inc.,Consumer Cyclical,Specialty Retail,NASDAQ100
+PCAR, PACCAR Inc.,Industrials,Truck Manufacturing,NASDAQ100
+PAYX, Paychex Inc.,Industrials,Business Services,NASDAQ100
+PYPL, PayPal Holdings Inc.,Financial Services,Credit Services,NASDAQ100
+PEP, Pepsico Inc.,Consumer Defensive,Beverages - Soft Drinks,NASDAQ100
+QCOM, QUALCOMM Incorporated,Technology,Semiconductors,NASDAQ100
+REGN, Regeneron Pharmaceuticals Inc.,Healthcare,Biotechnology,NASDAQ100
+ROST, Ross Stores Inc.,Consumer Cyclical,Apparel Stores,NASDAQ100
+SIRI, Sirius XM Holdings Inc.,Consumer Cyclical,Broadcasting - Radio,NASDAQ100
+SWKS, Skyworks Solutions Inc.,Technology,Semiconductors,NASDAQ100
+SBUX, Starbucks Corporation,Consumer Cyclical,Restaurants,NASDAQ100
+SYMC, Symantec Corporation,Technology,Software - Application,NASDAQ100
+SNPS, Synopsys Inc.,Technology,Software - Application,NASDAQ100
+TMUS, T-Mobile US Inc.,Communication Services,Telecom Services,NASDAQ100
+TTWO, Take-Two Interactive Software Inc.,Technology,Electronic Gaming & Multimedia,NASDAQ100
+TSLA, Tesla Inc.,Consumer Cyclical,Auto Manufacturers,NASDAQ100
+TXN, Texas Instruments Incorporated,Technology,Semiconductors,NASDAQ100
+KHC, The Kraft Heinz Company,Consumer Defensive,Packaged Foods,NASDAQ100
+FOX, Twenty-First Century Fox Inc.,Consumer Cyclical,Media - Diversified,NASDAQ100
+FOXA, Twenty-First Century Fox Inc.,Consumer Cyclical,Media - Diversified,NASDAQ100
+ULTA, Ulta Beauty Inc.,Consumer Cyclical,Specialty Retail,NASDAQ100
+UAL, United Continental Holdings Inc.,Industrials,Airlines,NASDAQ100
+VRSN, VeriSign Inc.,Technology,Internet Content & Information,NASDAQ100
+VRSK, Verisk Analytics Inc.,Industrials,Business Services,NASDAQ100
+VRTX, Vertex Pharmaceuticals Incorporated,Healthcare,Biotechnology,NASDAQ100
+WBA, Walgreens Boots Alliance Inc.,Consumer Defensive,Pharmaceutical Retailers,NASDAQ100
+WDC, Western Digital Corporation,Technology,Data Storage,NASDAQ100
+WLTW, Willis Towers Watson Public Limited Company,Financial Services,Insurance Brokers,NASDAQ100
+WDAY, Workday Inc.,Technology,Software - Application,NASDAQ100
+WYNN, Wynn Resorts Limited,Consumer Cyclical,Resorts & Casinos,NASDAQ100
+XEL, Xcel Energy Inc.,Utilities,Utilities - Regulated Electric,NASDAQ100
+XLNX, Xilinx Inc.,Technology,Semiconductors,NASDAQ100
+ABBV,AbbVie Inc.,Healthcare,Drug Manufacturers - Major,SP100
+ABT,Abbott Laboratories,Healthcare,Medical Devices,SP100
+ACN,Accenture plc,Technology,Information Technology Services,SP100
+AGN,Allergan plc,Healthcare,Drug Manufacturers - Specialty & Generic,SP100
+AIG,American International Group Inc.,Financial Services,Insurance - Diversified,SP100
+ALL,Allstate Corp.,Financial Services,Insurance - Property & Casualty,SP100
+AXP,American Express,Financial Services,Credit Services,SP100
+BA,Boeing Co.,Industrials,Aerospace & Defense,SP100
+BAC,Bank of America Corp,Financial Services,Banks - Global,SP100
+BK,The Bank of New York Mellon,Financial Services,Asset Management,SP100
+BLK,BlackRock Inc,Financial Services,Asset Management,SP100
+BMY,Bristol-Myers Squibb,Healthcare,Drug Manufacturers - Major,SP100
+BRK-B,Berkshire Hathaway,Financial Services,Insurance - Diversified,SP100
+C,Citigroup Inc,Financial Services,Banks - Global,SP100
+CAT,Caterpillar Inc.,Industrials,Farm & Construction Equipment,SP100
+CL,Colgate-Palmolive,Consumer Defensive,Household & Personal Products,SP100
+COF,Capital One Financial Corp.,Financial Services,Credit Services,SP100
+COP,ConocoPhillips,Energy,Oil & Gas E&P,SP100
+CVS,CVS Health,Healthcare,Health Care Plans,SP100
+CVX,Chevron Corporation,Energy,Oil & Gas Integrated,SP100
+DHR,Danaher Corporation,Healthcare,Diagnostics & Research,SP100
+DIS,The Walt Disney Company,Consumer Cyclical,Media - Diversified,SP100
+DUK,Duke Energy,Utilities,Utilities - Regulated Electric,SP100
+DWDP,DowDuPont,Basic Materials,Chemicals,SP100
+EMR,Emerson Electric Co.,Industrials,Diversified Industrials,SP100
+EXC,Exelon,Utilities,Utilities - Diversified,SP100
+F,Ford Motor Company,Consumer Cyclical,Auto Manufacturers,SP100
+FDX,FedEx,Industrials,Integrated Shipping & Logistics,SP100
+GD,General Dynamics,Industrials,Aerospace & Defense,SP100
+GE,General Electric,Industrials,Diversified Industrials,SP100
+GM,General Motors,Consumer Cyclical,Auto Manufacturers,SP100
+GS,Goldman Sachs,Financial Services,Capital Markets,SP100
+HAL,Halliburton,Energy,Oil & Gas Equipment & Services,SP100
+HD,Home Depot,Consumer Cyclical,Home Improvement Stores,SP100
+HON,Honeywell,Industrials,Diversified Industrials,SP100
+IBM,International Business Machines,Technology,Information Technology Services,SP100
+JNJ,Johnson & Johnson,Healthcare,Drug Manufacturers - Major,SP100
+JPM,JPMorgan Chase & Co.,Financial Services,Banks - Global,SP100
+KMI,Kinder Morgan,Energy,Oil & Gas Midstream,SP100
+KO,The Coca-Cola Company,Consumer Defensive,Beverages - Soft Drinks,SP100
+LLY,Eli Lilly and Company,Healthcare,Drug Manufacturers - Major,SP100
+LMT,Lockheed Martin,Industrials,Aerospace & Defense,SP100
+LOW,Lowe's,Consumer Cyclical,Home Improvement Stores,SP100
+MA,MasterCard Inc,Financial Services,Credit Services,SP100
+MCD,McDonald's Corp,Consumer Cyclical,Restaurants,SP100
+MDT,Medtronic plc,Healthcare,Medical Devices,SP100
+MET,MetLife Inc.,Financial Services,Insurance - Life,SP100
+MMM,3M Company,Industrials,Diversified Industrials,SP100
+MO,Altria Group,Consumer Defensive,Tobacco,SP100
+MRK,Merck & Co.,Healthcare,Drug Manufacturers - Major,SP100
+MS,Morgan Stanley,Financial Services,Capital Markets,SP100
+NEE,NextEra Energy,Utilities,Utilities - Regulated Electric,SP100
+NKE,"Nike, Inc.",Consumer Cyclical,Footwear & Accessories,SP100
+ORCL,Oracle Corporation,Technology,Software - Infrastructure,SP100
+OXY,Occidental Petroleum Corp.,Energy,Oil & Gas E&P,SP100
+PFE,Pfizer Inc,Healthcare,Drug Manufacturers - Major,SP100
+PG,Procter & Gamble Co,Consumer Defensive,Household & Personal Products,SP100
+PM,Philip Morris International,Consumer Defensive,Tobacco,SP100
+RTN,Raytheon Co.,Industrials,Aerospace & Defense,SP100
+SLB,Schlumberger,Energy,Oil & Gas Equipment & Services,SP100
+SO,Southern Company,Utilities,Utilities - Regulated Electric,SP100
+SPG,"Simon Property Group, Inc.",Real Estate,REIT - Retail,SP100
+T,AT&T Inc,Communication Services,Telecom Services,SP100
+TGT,Target Corporation,Consumer Defensive,Discount Stores,SP100
+UNH,UnitedHealth Group,Healthcare,Health Care Plans,SP100
+UNP,Union Pacific Corporation,Industrials,Railroads,SP100
+UPS,United Parcel Service,Industrials,Integrated Shipping & Logistics,SP100
+USB,U.S. Bancorp,Financial Services,Banks - Regional - US,SP100
+UTX,United Technologies,Industrials,Aerospace & Defense,SP100
+V,Visa Inc.,Financial Services,Credit Services,SP100
+VZ,Verizon Communications,Communication Services,Telecom Services,SP100
+WFC,Wells Fargo,Financial Services,Banks - Global,SP100
+WMT,Walmart,Consumer Defensive,Discount Stores,SP100
+XOM,Exxon Mobil Corp.,Energy,Oil & Gas Integrated,SP100
+ABMD,ABIOMED Inc,Healthcare,Medical Devices,SP500
+AAP,Advance Auto Parts,Consumer Cyclical,Specialty Retail,SP500
+AES,AES Corp,Utilities,Utilities - Diversified,SP500
+AMG,Affiliated Managers Group Inc,Financial Services,Asset Management,SP500
+AFL,AFLAC Inc,Financial Services,Insurance - Life,SP500
+A,Agilent Technologies Inc,Healthcare,Diagnostics & Research,SP500
+APD,Air Products & Chemicals Inc,Basic Materials,Chemicals,SP500
+AKAM,Akamai Technologies Inc,Technology,Software - Application,SP500
+ALK,Alaska Air Group Inc,Industrials,Airlines,SP500
+ALB,Albemarle Corp,Basic Materials,Specialty Chemicals,SP500
+ARE,Alexandria Real Estate Equities Inc,Real Estate,REIT - Office,SP500
+ALLE,Allegion,Industrials,Security & Protection Services,SP500
+ADS,Alliance Data Systems,Financial Services,Credit Services,SP500
+LNT,Alliant Energy Corp,Utilities,Utilities - Regulated Electric,SP500
+AEE,Ameren Corp,Utilities,Utilities - Regulated Electric,SP500
+AEP,American Electric Power,Utilities,Utilities - Regulated Electric,SP500
+AMT,American Tower Corp.,Communication Services,Telecom Services,SP500
+AWK,American Water Works Company Inc,Utilities,Utilities - Regulated Water,SP500
+AMP,Ameriprise Financial,Financial Services,Asset Management,SP500
+ABC,AmerisourceBergen Corp,Healthcare,Medical Distribution,SP500
+AME,AMETEK Inc.,Industrials,Diversified Industrials,SP500
+APH,Amphenol Corp,Technology,Electronic Components,SP500
+APC,Anadarko Petroleum Corp,Energy,Oil & Gas E&P,SP500
+ANSS,ANSYS,Technology,Software - Application,SP500
+ANTM,Anthem Inc.,Healthcare,Health Care Plans,SP500
+AON,Aon plc,Financial Services,Insurance Brokers,SP500
+AOS,A.O. Smith Corp,Industrials,Diversified Industrials,SP500
+APA,Apache Corporation,Energy,Oil & Gas E&P,SP500
+AIV,Apartment Investment & Management (Aimco),Real Estate,REIT - Residential,SP500
+APTV,Aptiv Plc,Consumer Cyclical,Auto Parts,SP500
+ADM,Archer-Daniels-Midland Co,Consumer Defensive,Farm Products,SP500
+ARNC,Arconic Inc.,Industrials,Diversified Industrials,SP500
+ANET,Arista Networks,Technology,Computer Systems,SP500
+AJG,Arthur J. Gallagher & Co.,Financial Services,Insurance Brokers,SP500
+AIZ,Assurant Inc.,Financial Services,Insurance - Diversified,SP500
+AZO,AutoZone Inc,Consumer Cyclical,Specialty Retail,SP500
+AVB,"AvalonBay Communities, Inc.",Real Estate,REIT - Residential,SP500
+AVY,Avery Dennison Corp,Industrials,Business Equipment,SP500
+BHGE,"Baker Hughes, a GE Company",Energy,Oil & Gas Equipment & Services,SP500
+BLL,Ball Corp,Consumer Cyclical,Packaging & Containers,SP500
+BAX,Baxter International Inc.,Healthcare,Medical Instruments & Supplies,SP500
+BBT,BB&T Corporation,Financial Services,Banks - Regional - US,SP500
+BDX,Becton Dickinson,Healthcare,Medical Instruments & Supplies,SP500
+BBY,Best Buy Co. Inc.,Consumer Cyclical,Specialty Retail,SP500
+HRB,Block H&R,Consumer Cyclical,Personal Services,SP500
+BWA,BorgWarner,Consumer Cyclical,Auto Parts,SP500
+BXP,Boston Properties,Real Estate,REIT - Office,SP500
+BSX,Boston Scientific,Healthcare,Medical Devices,SP500
+BHF,Brighthouse Financial Inc,Financial Services,Insurance - Life,SP500
+BR,Broadridge Financial Solutions,Industrials,Business Services,SP500
+BF-B,Brown-Forman Corp.,Consumer Defensive,Beverages - Wineries & Distilleries,SP500
+CHRW,C. H. Robinson Worldwide,Industrials,Integrated Shipping & Logistics,SP500
+COG,Cabot Oil & Gas,Energy,Oil & Gas E&P,SP500
+CPB,Campbell Soup,Consumer Defensive,Packaged Foods,SP500
+CPRI,Capri Holdings,Consumer Cyclical,Apparel Manufacturing,SP500
+CAH,Cardinal Health Inc.,Healthcare,Medical Distribution,SP500
+KMX,Carmax Inc,Consumer Cyclical,Auto & Truck Dealerships,SP500
+CCL,Carnival Corp.,Consumer Cyclical,Leisure,SP500
+CBRE,CBRE Group,Real Estate,Real Estate Services,SP500
+CBS,CBS Corp.,Consumer Cyclical,Media - Diversified,SP500
+CE,Celanese Corp.,Basic Materials,Chemicals,SP500
+CNC,Centene Corporation,Healthcare,Health Care Plans,SP500
+CNP,CenterPoint Energy,Utilities,Utilities - Regulated Gas,SP500
+CTL,CenturyLink Inc,Communication Services,Telecom Services,SP500
+CF,CF Industries Holdings Inc,Basic Materials,Agricultural Inputs,SP500
+SCHW,Charles Schwab Corporation,Financial Services,Capital Markets,SP500
+CMG,Chipotle Mexican Grill,Consumer Cyclical,Restaurants,SP500
+CB,Chubb Limited,Financial Services,Insurance - Property & Casualty,SP500
+CHD,Church & Dwight,Consumer Defensive,Household & Personal Products,SP500
+CI,CIGNA Corp.,Healthcare,Health Care Plans,SP500
+XEC,Cimarex Energy,Energy,Oil & Gas E&P,SP500
+CINF,Cincinnati Financial,Financial Services,Insurance - Property & Casualty,SP500
+CFG,Citizens Financial Group,Financial Services,Banks - Regional - US,SP500
+CLX,The Clorox Company,Consumer Defensive,Household & Personal Products,SP500
+CME,CME Group Inc.,Financial Services,Financial Exchanges,SP500
+CMS,CMS Energy,Utilities,Utilities - Regulated Electric,SP500
+CMA,Comerica Inc.,Financial Services,Banks - Regional - US,SP500
+CAG,Conagra Brands,Consumer Defensive,Packaged Foods,SP500
+CXO,Concho Resources,Energy,Oil & Gas E&P,SP500
+ED,Consolidated Edison,Utilities,Utilities - Regulated Electric,SP500
+STZ,Constellation Brands,Consumer Defensive,Beverages - Wineries & Distilleries,SP500
+COO,The Cooper Companies,Healthcare,Medical Instruments & Supplies,SP500
+CPRT,Copart Inc,Consumer Cyclical,Auto & Truck Dealerships,SP500
+GLW,Corning Inc.,Technology,Electronic Components,SP500
+COTY,"Coty, Inc",Consumer Defensive,Household & Personal Products,SP500
+CCI,Crown Castle International Corp.,Real Estate,REIT - Diversified,SP500
+CMI,Cummins Inc.,Industrials,Diversified Industrials,SP500
+DHI,D. R. Horton,Consumer Cyclical,Residential Construction,SP500
+DRI,Darden Restaurants,Consumer Cyclical,Restaurants,SP500
+DVA,DaVita Inc.,Healthcare,Medical Care,SP500
+DE,Deere & Co.,Industrials,Farm & Construction Equipment,SP500
+DAL,Delta Air Lines Inc.,Industrials,Airlines,SP500
+XRAY,Dentsply Sirona,Healthcare,Medical Instruments & Supplies,SP500
+DVN,Devon Energy Corp.,Energy,Oil & Gas E&P,SP500
+FANG,Diamondback Energy Inc,Energy,Oil & Gas E&P,SP500
+DLR,Digital Realty Trust Inc,Real Estate,REIT - Office,SP500
+DFS,Discover Financial Services,Financial Services,Credit Services,SP500
+DISCA,Discovery Inc. Class A,Consumer Cyclical,Media - Diversified,SP500
+DISCK,Discovery Inc. Class C,Consumer Cyclical,Media - Diversified,SP500
+DISH,Dish Network,Communication Services,Pay TV,SP500
+DG,Dollar General,Consumer Defensive,Discount Stores,SP500
+D,Dominion Energy,Utilities,Utilities - Diversified,SP500
+DOV,Dover Corp.,Industrials,Diversified Industrials,SP500
+DTE,DTE Energy Co.,Utilities,Utilities - Regulated Electric,SP500
+DRE,Duke Realty Corp,Real Estate,REIT - Industrial,SP500
+DXC,DXC Technology,Technology,Information Technology Services,SP500
+ETFC,E*Trade,Financial Services,Capital Markets,SP500
+EMN,Eastman Chemical,Basic Materials,Chemicals,SP500
+ETN,Eaton Corporation,Industrials,Diversified Industrials,SP500
+ECL,Ecolab Inc.,Basic Materials,Specialty Chemicals,SP500
+EIX,Edison Int'l,Utilities,Utilities - Regulated Electric,SP500
+EW,Edwards Lifesciences,Healthcare,Medical Devices,SP500
+ETR,Entergy Corp.,Utilities,Utilities - Diversified,SP500
+EOG,EOG Resources,Energy,Oil & Gas E&P,SP500
+EFX,Equifax Inc.,Industrials,Business Services,SP500
+EQIX,Equinix,Real Estate,REIT - Diversified,SP500
+EQR,Equity Residential,Real Estate,REIT - Residential,SP500
+ESS,"Essex Property Trust, Inc.",Real Estate,REIT - Residential,SP500
+EL,Estee Lauder Cos.,Consumer Defensive,Household & Personal Products,SP500
+EVRG,Evergy,Utilities,Utilities - Regulated Electric,SP500
+ES,Eversource Energy,Utilities,Utilities - Regulated Electric,SP500
+RE,Everest Re Group Ltd.,Financial Services,Insurance - Reinsurance,SP500
+EXPD,Expeditors,Industrials,Integrated Shipping & Logistics,SP500
+EXR,Extra Space Storage,Real Estate,REIT - Industrial,SP500
+FFIV,F5 Networks,Technology,Software - Infrastructure,SP500
+FRT,Federal Realty Investment Trust,Real Estate,REIT - Retail,SP500
+FIS,Fidelity National Information Services,Industrials,Business Services,SP500
+FITB,Fifth Third Bancorp,Financial Services,Banks - Regional - US,SP500
+FE,FirstEnergy Corp,Utilities,Utilities - Diversified,SP500
+FRC,First Republic Bank,Financial Services,Banks - Regional - US,SP500
+FLT,FleetCor Technologies Inc,Industrials,Business Services,SP500
+FLIR,FLIR Systems,Technology,Scientific & Technical Instruments,SP500
+FLS,Flowserve Corporation,Industrials,Diversified Industrials,SP500
+FLR,Fluor Corp.,Industrials,Engineering & Construction,SP500
+FMC,FMC Corporation,Basic Materials,Agricultural Inputs,SP500
+FL,Foot Locker Inc,Consumer Cyclical,Footwear & Accessories,SP500
+FTNT,Fortinet,Technology,Software - Application,SP500
+FTV,Fortive Corp,Technology,Scientific & Technical Instruments,SP500
+FBHS,Fortune Brands Home & Security,Consumer Cyclical,Home Furnishings & Fixtures,SP500
+BEN,Franklin Resources,Financial Services,Asset Management,SP500
+FCX,Freeport-McMoRan Inc.,Basic Materials,Copper,SP500
+GPS,Gap Inc.,Consumer Cyclical,Apparel Stores,SP500
+GRMN,Garmin Ltd.,Technology,Scientific & Technical Instruments,SP500
+IT,Gartner Inc,Technology,Information Technology Services,SP500
+GIS,General Mills,Consumer Defensive,Packaged Foods,SP500
+GPC,Genuine Parts,Consumer Cyclical,Specialty Retail,SP500
+GPN,Global Payments Inc.,Industrials,Business Services,SP500
+GT,Goodyear Tire & Rubber,Consumer Cyclical,Rubber & Plastics,SP500
+HBI,Hanesbrands Inc,Consumer Cyclical,Apparel Stores,SP500
+HOG,Harley-Davidson,Consumer Cyclical,Recreational Vehicles,SP500
+HRS,Harris Corporation,Technology,Communication Equipment,SP500
+HIG,Hartford Financial Svc.Gp.,Financial Services,Insurance - Property & Casualty,SP500
+HCA,HCA Holdings,Healthcare,Medical Care,SP500
+HCP,HCP Inc.,Real Estate,REIT - Retail,SP500
+HP,Helmerich & Payne,Energy,Oil & Gas Drilling,SP500
+HSY,The Hershey Company,Consumer Defensive,Confectioners,SP500
+HES,Hess Corporation,Energy,Oil & Gas E&P,SP500
+HPE,Hewlett Packard Enterprise,Technology,Communication Equipment,SP500
+HLT,Hilton Worldwide Holdings Inc,Consumer Cyclical,Lodging,SP500
+HFC,HollyFrontier Corp,Energy,Oil & Gas Refining & Marketing,SP500
+HOLX,Hologic,Healthcare,Medical Instruments & Supplies,SP500
+HRL,Hormel Foods Corp.,Consumer Defensive,Packaged Foods,SP500
+HST,Host Hotels & Resorts,Real Estate,REIT - Hotel & Motel,SP500
+HPQ,HP Inc.,Technology,Consumer Electronics,SP500
+HUM,Humana Inc.,Healthcare,Health Care Plans,SP500
+HBAN,Huntington Bancshares,Financial Services,Banks - Regional - US,SP500
+HII,Huntington Ingalls Industries,Industrials,Aerospace & Defense,SP500
+INFO,IHS Markit Ltd.,Industrials,Business Services,SP500
+ITW,Illinois Tool Works,Industrials,Diversified Industrials,SP500
+IR,Ingersoll-Rand PLC,Industrials,Diversified Industrials,SP500
+ICE,Intercontinental Exchange,Financial Services,Financial Exchanges,SP500
+IP,International Paper,Consumer Cyclical,Packaging & Containers,SP500
+IPG,Interpublic Group,Consumer Cyclical,Advertising Agencies,SP500
+IFF,Intl Flavors & Fragrances,Basic Materials,Specialty Chemicals,SP500
+IVZ,Invesco Ltd.,Financial Services,Asset Management,SP500
+IPGP,IPG Photonics Corp.,Technology,Semiconductor Equipment & Materials,SP500
+IQV,IQVIA Holdings Inc.,Healthcare,Diagnostics & Research,SP500
+IRM,Iron Mountain Incorporated,Industrials,Business Services,SP500
+JKHY,Jack Henry & Associates Inc,Industrials,Business Services,SP500
+JEC,Jacobs Engineering Group,Industrials,Engineering & Construction,SP500
+JEF,Jefferies Financial Group,Financial Services,Asset Management,SP500
+SJM,JM Smucker,Consumer Defensive,Packaged Foods,SP500
+JCI,Johnson Controls International,Industrials,Engineering & Construction,SP500
+JNPR,Juniper Networks,Technology,Communication Equipment,SP500
+KSU,Kansas City Southern,Industrials,Railroads,SP500
+K,Kellogg Co.,Consumer Defensive,Packaged Foods,SP500
+KEY,KeyCorp,Financial Services,Banks - Regional - US,SP500
+KEYS,Keysight Technologies,Technology,Scientific & Technical Instruments,SP500
+KMB,Kimberly-Clark,Consumer Defensive,Household & Personal Products,SP500
+KIM,Kimco Realty,Real Estate,REIT - Retail,SP500
+KSS,Kohl's Corp.,Consumer Cyclical,Department Stores,SP500
+KR,Kroger Co.,Consumer Defensive,Grocery Stores,SP500
+LB,L Brands Inc.,Consumer Cyclical,Apparel Stores,SP500
+LLL,L-3 Communications Holdings,Industrials,Aerospace & Defense,SP500
+LH,Laboratory Corp. of America Holding,Healthcare,Diagnostics & Research,SP500
+LW,Lamb Weston Holdings Inc,Consumer Defensive,Packaged Foods,SP500
+LEG,Leggett & Platt,Consumer Cyclical,Home Furnishings & Fixtures,SP500
+LEN,Lennar Corp.,Consumer Cyclical,Residential Construction,SP500
+LNC,Lincoln National,Financial Services,Insurance - Life,SP500
+LIN,Linde plc,Basic Materials,Specialty Chemicals,SP500
+LKQ,LKQ Corporation,Consumer Cyclical,Auto Parts,SP500
+L,Loews Corp.,Financial Services,Insurance - Property & Casualty,SP500
+LYB,LyondellBasell,Basic Materials,Specialty Chemicals,SP500
+MTB,M&T Bank Corp.,Financial Services,Banks - Regional - US,SP500
+MAC,Macerich,Real Estate,REIT - Retail,SP500
+M,Macy's Inc.,Consumer Cyclical,Department Stores,SP500
+MRO,Marathon Oil Corp.,Energy,Oil & Gas E&P,SP500
+MPC,Marathon Petroleum,Energy,Oil & Gas Refining & Marketing,SP500
+MMC,Marsh & McLennan,Financial Services,Insurance Brokers,SP500
+MLM,Martin Marietta Materials,Basic Materials,Building Materials,SP500
+MAS,Masco Corp.,Basic Materials,Building Materials,SP500
+MAT,Mattel Inc.,Consumer Cyclical,Leisure,SP500
+MKC,McCormick & Co.,Consumer Defensive,Packaged Foods,SP500
+MCK,McKesson Corp.,Healthcare,Medical Distribution,SP500
+MTD,Mettler Toledo,Healthcare,Diagnostics & Research,SP500
+MGM,MGM Resorts International,Consumer Cyclical,Resorts & Casinos,SP500
+MAA,Mid-America Apartments,Real Estate,REIT - Residential,SP500
+MHK,Mohawk Industries,Consumer Cyclical,Home Furnishings & Fixtures,SP500
+TAP,Molson Coors Brewing Company,Consumer Defensive,Beverages - Brewers,SP500
+MCO,Moody's Corp,Financial Services,Capital Markets,SP500
+MOS,The Mosaic Company,Basic Materials,Agricultural Inputs,SP500
+MSI,Motorola Solutions Inc.,Technology,Communication Equipment,SP500
+MSCI,MSCI Inc,Financial Services,Capital Markets,SP500
+NDAQ,"Nasdaq, Inc.",Financial Services,Financial Exchanges,SP500
+NOV,National Oilwell Varco Inc.,Energy,Oil & Gas Equipment & Services,SP500
+NKTR,Nektar Therapeutics,Healthcare,Biotechnology,SP500
+NWL,Newell Brands,Consumer Defensive,Household & Personal Products,SP500
+NFX,Newfield Exploration Co,Energy,Oil & Gas E&P,SP500
+NEM,Newmont Mining Corporation,Basic Materials,Gold,SP500
+NWSA,News Corp. Class A,Consumer Cyclical,Broadcasting - TV,SP500
+NWS,News Corp. Class B,Consumer Cyclical,Broadcasting - TV,SP500
+NLSN,Nielsen Holdings,Industrials,Business Services,SP500
+NI,NiSource Inc.,Utilities,Utilities - Regulated Gas,SP500
+NBL,Noble Energy Inc,Energy,Oil & Gas E&P,SP500
+JWN,Nordstrom,Consumer Cyclical,Department Stores,SP500
+NSC,Norfolk Southern Corp.,Industrials,Railroads,SP500
+NTRS,Northern Trust Corp.,Financial Services,Asset Management,SP500
+NOC,Northrop Grumman Corp.,Industrials,Aerospace & Defense,SP500
+NCLH,Norwegian Cruise Line,Consumer Cyclical,Leisure,SP500
+NRG,NRG Energy,Utilities,Utilities - Independent Power Producers,SP500
+NUE,Nucor Corp.,Basic Materials,Steel,SP500
+OMC,Omnicom Group,Consumer Cyclical,Advertising Agencies,SP500
+OKE,ONEOK,Energy,Oil & Gas Midstream,SP500
+PKG,Packaging Corporation of America,Consumer Cyclical,Packaging & Containers,SP500
+PH,Parker-Hannifin,Industrials,Diversified Industrials,SP500
+PNR,Pentair plc,Industrials,Diversified Industrials,SP500
+PBCT,People's United Financial,Financial Services,Banks - Regional - US,SP500
+PKI,PerkinElmer,Healthcare,Diagnostics & Research,SP500
+PRGO,Perrigo,Healthcare,Drug Manufacturers - Specialty & Generic,SP500
+PSX,Phillips 66,Energy,Oil & Gas Refining & Marketing,SP500
+PNW,Pinnacle West Capital,Utilities,Utilities - Regulated Electric,SP500
+PXD,Pioneer Natural Resources,Energy,Oil & Gas E&P,SP500
+PNC,PNC Financial Services,Financial Services,Banks - Regional - US,SP500
+RL,Polo Ralph Lauren Corp.,Consumer Cyclical,Apparel Manufacturing,SP500
+PPG,PPG Industries,Basic Materials,Specialty Chemicals,SP500
+PPL,PPL Corp.,Utilities,Utilities - Regulated Electric,SP500
+PFG,Principal Financial Group,Financial Services,Insurance - Life,SP500
+PGR,Progressive Corp.,Financial Services,Insurance - Property & Casualty,SP500
+PLD,Prologis,Real Estate,REIT - Industrial,SP500
+PRU,Prudential Financial,Financial Services,Insurance - Life,SP500
+PEG,Public Serv. Enterprise Inc.,Utilities,Utilities - Diversified,SP500
+PSA,Public Storage,Real Estate,REIT - Industrial,SP500
+PHM,Pulte Homes Inc.,Consumer Cyclical,Residential Construction,SP500
+PVH,PVH Corp.,Consumer Cyclical,Apparel Manufacturing,SP500
+QRVO,Qorvo,Technology,Semiconductors,SP500
+PWR,Quanta Services Inc.,Industrials,Engineering & Construction,SP500
+DGX,Quest Diagnostics,Healthcare,Diagnostics & Research,SP500
+RJF,Raymond James Financial Inc.,Financial Services,Capital Markets,SP500
+O,Realty Income Corporation,Real Estate,REIT - Retail,SP500
+RHT,Red Hat Inc.,Technology,Software - Application,SP500
+REG,Regency Centers Corporation,Real Estate,REIT - Retail,SP500
+RF,Regions Financial Corp.,Financial Services,Banks - Regional - US,SP500
+RSG,Republic Services Inc,Industrials,Waste Management,SP500
+RMD,ResMed,Healthcare,Medical Instruments & Supplies,SP500
+RHI,Robert Half International,Industrials,Staffing & Outsourcing Services,SP500
+ROK,Rockwell Automation Inc.,Industrials,Diversified Industrials,SP500
+ROL,Rollins Inc.,Industrials,Business Services,SP500
+ROP,Roper Technologies,Industrials,Diversified Industrials,SP500
+RCL,Royal Caribbean Cruises Ltd,Consumer Cyclical,Leisure,SP500
+CRM,Salesforce.com,Technology,Software - Application,SP500
+SBAC,SBA Communications,Communication Services,Telecom Services,SP500
+STX,Seagate Technology,Technology,Data Storage,SP500
+SEE,Sealed Air,Consumer Cyclical,Packaging & Containers,SP500
+SRE,Sempra Energy,Utilities,Utilities - Diversified,SP500
+SHW,Sherwin-Williams,Basic Materials,Specialty Chemicals,SP500
+SLG,SL Green Realty,Real Estate,REIT - Office,SP500
+SNA,Snap-on,Industrials,Tools & Accessories,SP500
+LUV,Southwest Airlines,Industrials,Airlines,SP500
+SPGI,"S&P Global, Inc.",Financial Services,Capital Markets,SP500
+SWK,Stanley Black & Decker,Industrials,Tools & Accessories,SP500
+STT,State Street Corp.,Financial Services,Asset Management,SP500
+SYK,Stryker Corp.,Healthcare,Medical Devices,SP500
+STI,SunTrust Banks,Financial Services,Banks - Regional - US,SP500
+SIVB,SVB Financial,Financial Services,Banks - Regional - US,SP500
+SYF,Synchrony Financial,Financial Services,Credit Services,SP500
+SYY,Sysco Corp.,Consumer Defensive,Food Distribution,SP500
+TROW,T. Rowe Price Group,Financial Services,Asset Management,SP500
+TPR,"Tapestry, Inc.",Consumer Cyclical,Luxury Goods,SP500
+TEL,TE Connectivity Ltd.,Technology,Electronic Components,SP500
+FTI,TechnipFMC,Energy,Oil & Gas Equipment & Services,SP500
+TFX,Teleflex Inc,Healthcare,Medical Instruments & Supplies,SP500
+TXT,Textron Inc.,Industrials,Aerospace & Defense,SP500
+TMO,Thermo Fisher Scientific,Healthcare,Diagnostics & Research,SP500
+TIF,Tiffany & Co.,Consumer Cyclical,Luxury Goods,SP500
+TWTR,"Twitter, Inc.",Technology,Internet Content & Information,SP500
+TJX,TJX Companies Inc.,Consumer Cyclical,Apparel Stores,SP500
+TMK,Torchmark Corp.,Financial Services,Insurance - Life,SP500
+TSS,Total System Services,Financial Services,Credit Services,SP500
+TSCO,Tractor Supply Company,Consumer Cyclical,Specialty Retail,SP500
+TDG,TransDigm Group,Industrials,Aerospace & Defense,SP500
+TRV,The Travelers Companies Inc.,Financial Services,Insurance - Property & Casualty,SP500
+TRIP,TripAdvisor,Consumer Cyclical,Leisure,SP500
+TSN,Tyson Foods,Consumer Defensive,Farm Products,SP500
+UDR,UDR Inc,Real Estate,REIT - Residential,SP500
+UAA,Under Armour Class A,Consumer Cyclical,Apparel Manufacturing,SP500
+UA,Under Armour Class C,Consumer Cyclical,Apparel Manufacturing,SP500
+URI,"United Rentals, Inc.",Industrials,Rental & Leasing Services,SP500
+UHS,"Universal Health Services, Inc.",Healthcare,Medical Care,SP500
+UNM,Unum Group,Financial Services,Insurance - Life,SP500
+VFC,V.F. Corp.,Consumer Cyclical,Apparel Manufacturing,SP500
+VLO,Valero Energy,Energy,Oil & Gas Refining & Marketing,SP500
+VAR,Varian Medical Systems,Healthcare,Medical Instruments & Supplies,SP500
+VTR,Ventas Inc,Real Estate,REIT - Healthcare Facilities,SP500
+VIAB,Viacom Inc.,Consumer Cyclical,Media - Diversified,SP500
+VNO,Vornado Realty Trust,Real Estate,REIT - Office,SP500
+VMC,Vulcan Materials,Basic Materials,Building Materials,SP500
+WM,Waste Management Inc.,Industrials,Waste Management,SP500
+WAT,Waters Corporation,Healthcare,Diagnostics & Research,SP500
+WEC,Wec Energy Group Inc,Utilities,Utilities - Regulated Electric,SP500
+WCG,WellCare,Healthcare,Health Care Plans,SP500
+WELL,Welltower Inc.,Real Estate,REIT - Healthcare Facilities,SP500
+WU,Western Union Co,Financial Services,Credit Services,SP500
+WRK,WestRock,Consumer Cyclical,Packaging & Containers,SP500
+WY,Weyerhaeuser,Basic Materials,Lumber & Wood Production,SP500
+WHR,Whirlpool Corp.,Consumer Cyclical,Home Furnishings & Fixtures,SP500
+WMB,Williams Cos.,Energy,Oil & Gas Midstream,SP500
+XRX,Xerox,Technology,Information Technology Services,SP500
+XYL,Xylem Inc.,Industrials,Diversified Industrials,SP500
+YUM,Yum! Brands Inc,Consumer Cyclical,Restaurants,SP500
+ZBH,Zimmer Biomet Holdings,Healthcare,Medical Devices,SP500
+ZION,Zions Bancorp,Financial Services,Banks - Regional - US,SP500
+ZTS,Zoetis,Healthcare,Drug Manufacturers - Specialty & Generic,SP500
+AAV.TO,Advantage Oil & Gas Ltd.,Energy,Oil & Gas E&P,TSXCI
+ARE.TO,Aecon Group Inc.,Industrials,Engineering & Construction,TSXCI
+AEM.TO,Agnico Eagle Mines Limited,Basic Materials,Gold,TSXCI
+AC.TO,Air Canada,Industrials,Airlines,TSXCI
+ASR.TO,Alacer Gold Corp.,Basic Materials,Gold,TSXCI
+AGI.TO,Alamos Gold Inc.,Basic Materials,Gold,TSXCI
+AD.TO,Alaris Royalty Corp.,Financial Services,Credit Services,TSXCI
+AQN.TO,Algonquin Power & Utilities Corp.,Utilities,Utilities - Independent Power Producers,TSXCI
+ATD-B.TO,Alimentation Couche-Tard Inc.,Consumer Defensive,Grocery Stores,TSXCI
+AP-UN.TO,Allied Properties Real Estate Investment Trust,Real Estate,REIT - Office,TSXCI
+ALA.TO,AltaGas Ltd.,Energy,Oil & Gas Midstream,TSXCI
+AIF.TO,Altus Group Limited,Real Estate,Real Estate Services,TSXCI
+APHA.TO,Aphria Inc.,Healthcare,Drug Manufacturers - Specialty & Generic,TSXCI
+ARX.TO,ARC Resources Ltd.,Energy,Oil & Gas E&P,TSXCI
+AX-UN.TO,Artis Real Estate Investment Trust,Real Estate,REIT - Diversified,TSXCI
+ACO-X.TO,ATCO Ltd.,Utilities,Utilities - Diversified,TSXCI
+ATA.TO,ATS Automation Tooling Systems Inc.,Industrials,Diversified Industrials,TSXCI
+ACB.TO,Aurora Cannabis Inc.,Healthcare,Drug Manufacturers - Specialty & Generic,TSXCI
+BTO.TO,B2Gold Corp.,Basic Materials,Gold,TSXCI
+BAD.TO,Badger Daylighting Ltd.,Industrials,Engineering & Construction,TSXCI
+BMO.TO,Bank of Montreal,Financial Services,Banks - Global,TSXCI
+BNS.TO,Bank of Nova Scotia,Financial Services,Banks - Global,TSXCI
+ABX.TO,Barrick Gold Corporation,Basic Materials,Gold,TSXCI
+BHC.TO,Bausch Health Companies Ltd.,Healthcare,Drug Manufacturers - Specialty & Generic,TSXCI
+BTE.TO,Baytex Energy Corp.,Energy,Oil & Gas E&P,TSXCI
+BCE.TO,BCE Inc.,Communication Services,Telecom Services,TSXCI
+BIR.TO,Birchcliff Energy Ltd.,Energy,Oil & Gas E&P,TSXCI
+BB.TO,BlackBerry Limited,Technology,Communication Equipment,TSXCI
+BEI-UN.TO,Boardwalk Real Estate Investment Trust,Real Estate,REIT - Residential,TSXCI
+BBD-B.TO,Bombardier Inc.,Industrials,Aerospace & Defense,TSXCI
+BLX.TO,Boralex Inc.,Utilities,Utilities - Independent Power Producers,TSXCI
+BYD-UN.TO,Boyd Group Income Fund,Consumer Cyclical,Personal Services,TSXCI
+BAM-A.TO,Brookfield Asset Management Inc.,Financial Services,Asset Management,TSXCI
+BBU-UN.TO,Brookfield Business Partners L.P.,Industrials,Conglomerates,TSXCI
+BIP-UN.TO,Brookfield Infrastructure Partners L.P.,Utilities,Utilities - Diversified,TSXCI
+BPY-UN.TO,Brookfield Property Partners L.P.,Real Estate,Real Estate Services,TSXCI
+BEP-UN.TO,Brookfield Renewable Partners L.P.,Utilities,Utilities - Independent Power Producers,TSXCI
+DOO.TO,BRP Inc.,Consumer Cyclical,Recreational Vehicles,TSXCI
+CAE.TO,CAE Inc.,Industrials,Aerospace & Defense,TSXCI
+CCO.TO,Cameco Corporation,Basic Materials,Industrial Metals & Minerals,TSXCI
+GOOS.TO,Canada Goose Holdings Inc.,Consumer Cyclical,Apparel Manufacturing,TSXCI
+CAR-UN.TO,Canadian Apartment Properties Real Estate Investment Trust,Real Estate,REIT - Residential,TSXCI
+CM.TO,Canadian Imperial Bank of Commerce,Financial Services,Banks - Global,TSXCI
+CNR.TO,Canadian National Railway Company,Industrials,Railroads,TSXCI
+CNQ.TO,Canadian Natural Resources Limited,Energy,Oil & Gas E&P,TSXCI
+CP.TO,Canadian Pacific Railway Limited,Industrials,Railroads,TSXCI
+CTC-A.TO,Canadian Tire Corporation Limited,Consumer Cyclical,Specialty Retail,TSXCI
+CU.TO,Canadian Utilities Limited,Utilities,Utilities - Diversified,TSXCI
+CWB.TO,Canadian Western Bank,Financial Services,Banks - Regional - Canada,TSXCI
+CFP.TO,Canfor Corporation,Basic Materials,Lumber & Wood Production,TSXCI
+WEED.TO,Canopy Growth Corporation,Healthcare,Drug Manufacturers - Specialty & Generic,TSXCI
+CPX.TO,Capital Power Corporation,Utilities,Utilities - Regulated Electric,TSXCI
+CAS.TO,Cascades Inc.,Basic Materials,Paper & Paper Products,TSXCI
+CCL-B.TO,CCL Industries Inc.,Consumer Cyclical,Packaging & Containers,TSXCI
+CLS.TO,Celestica Inc.,Technology,Contract Manufacturers,TSXCI
+CVE.TO,Cenovus Energy Inc.,Energy,Oil & Gas Integrated,TSXCI
+CG.TO,Centerra Gold Inc.,Basic Materials,Gold,TSXCI
+CEU.TO,CES Energy Solutions Corp.,Energy,Oil & Gas Drilling,TSXCI
+GIB-A.TO,CGI Group Inc.,Technology,Information Technology Services,TSXCI
+CSH-UN.TO,Chartwell Retirement Residences,Real Estate,REIT - Healthcare Facilities,TSXCI
+CHE-UN.TO,Chemtrade Logistics Income Fund,Basic Materials,Specialty Chemicals,TSXCI
+CHP-UN.TO,Choice Properties Real Estate Investment Trust,Real Estate,REIT - Retail,TSXCI
+CHR.TO,Chorus Aviation Inc.,Industrials,Airlines,TSXCI
+CIX.TO,CI Financial Corp.,Financial Services,Asset Management,TSXCI
+CGX.TO,Cineplex Inc.,Consumer Cyclical,Media - Diversified,TSXCI
+CCA.TO,Cogeco Communications Inc.,Communication Services,Telecom Services,TSXCI
+CIGI.TO,Colliers International Group Inc.,Real Estate,Real Estate Services,TSXCI
+CUF-UN.TO,Cominar Real Estate Investment Trust,Real Estate,REIT - Diversified,TSXCI
+CMG.TO,Computer Modelling Group Ltd.,Technology,Software - Application,TSXCI
+CSU.TO,Constellation Software Inc.,Technology,Software - Application,TSXCI
+BCB.TO,Cott Corporation,Consumer Defensive,Beverages - Soft Drinks,TSXCI
+CPG.TO,Crescent Point Energy Corp.,Energy,Oil & Gas E&P,TSXCI
+CRR-UN.TO,Crombie Real Estate Investment Trust,Real Estate,REIT - Diversified,TSXCI
+DSG.TO,Descartes Systems Group Inc.,Technology,Software - Application,TSXCI
+DGC.TO,Detour Gold Corporation,Basic Materials,Gold,TSXCI
+DOL.TO,Dollarama Inc.,Consumer Defensive,Discount Stores,TSXCI
+DII-B.TO,Dorel Industries Inc.,Consumer Cyclical,Home Furnishings & Fixtures,TSXCI
+DRG-UN.TO,Dream Global Real Estate Investment Trust,Real Estate,REIT - Office,TSXCI
+D-UN.TO,Dream Office Real Estate Investment Trust,Real Estate,REIT - Office,TSXCI
+ECN.TO,ECN Capital Corp.,Financial Services,Credit Services,TSXCI
+ELD.TO,Eldorado Gold Corporation,Basic Materials,Gold,TSXCI
+EFN.TO,Element Fleet Management Corp.,Financial Services,Credit Services,TSXCI
+EMA.TO,Emera Incorporated,Utilities,Utilities - Diversified,TSXCI
+EMP-A.TO,Empire Company Limited,Consumer Defensive,Grocery Stores,TSXCI
+ENB.TO,Enbridge Inc.,Energy,Oil & Gas Midstream,TSXCI
+ECA.TO,Encana Corporation,Energy,Oil & Gas E&P,TSXCI
+EDV.TO,Endeavour Mining Corporation,Basic Materials,Gold,TSXCI
+EFX.TO,Enerflex Ltd.,Energy,Oil & Gas Equipment & Services,TSXCI
+ERF.TO,Enerplus Corporation,Energy,Oil & Gas E&P,TSXCI
+ENGH.TO,Enghouse Systems Limited,Technology,Software - Application,TSXCI
+ESI.TO,Ensign Energy Services Inc.,Energy,Oil & Gas Drilling,TSXCI
+EIF.TO,Exchange Income Corporation,Industrials,Airlines,TSXCI
+EXE.TO,Extendicare Real Estate Investment Trust,Healthcare,Long-Term Care Facilities,TSXCI
+FFH.TO,Fairfax Financial Holdings Limited,Financial Services,Insurance - Property & Casualty,TSXCI
+FTT.TO,Finning International Inc.,Industrials,Industrial Distribution,TSXCI
+FCR.TO,First Capital Realty Inc.,Real Estate,Real Estate Services,TSXCI
+FR.TO,First Majestic Silver Corp.,Basic Materials,Silver,TSXCI
+FM.TO,First Quantum Minerals Ltd.,Basic Materials,Copper,TSXCI
+FSV.TO,FirstService Corporation,Real Estate,Real Estate Services,TSXCI
+FTS.TO,Fortis Inc.,Utilities,Utilities - Regulated Electric,TSXCI
+FVI.TO,Fortuna Silver Mines Inc.,Basic Materials,Silver,TSXCI
+FNV.TO,Franco-Nevada Corporation,Basic Materials,Gold,TSXCI
+FRU.TO,Freehold Royalties Ltd.,Energy,Oil & Gas E&P,TSXCI
+MIC.TO,Genworth MI Canada Inc.,Financial Services,Insurance - Specialty,TSXCI
+WN.TO,George Weston Limited,Consumer Defensive,Grocery Stores,TSXCI
+GEI.TO,Gibson Energy Inc.,Energy,Oil & Gas Midstream,TSXCI
+GIL.TO,Gildan Activewear Inc.,Consumer Cyclical,Apparel Manufacturing,TSXCI
+G.TO,Goldcorp Inc.,Basic Materials,Gold,TSXCI
+GTE.TO,Gran Tierra Energy Inc.,Energy,Oil & Gas E&P,TSXCI
+GRT-UN.TO,Granite Real Estate Investment Trust,Real Estate,REIT - Industrial,TSXCI
+GC.TO,Great Canadian Gaming Corporation,Consumer Cyclical,Gambling,TSXCI
+GWO.TO,Great-West Lifeco Inc.,Financial Services,Insurance - Life,TSXCI
+GUY.TO,Guyana Goldfields Inc.,Basic Materials,Gold,TSXCI
+HR-UN.TO,H&R Real Estate Investment Trust,Real Estate,REIT - Diversified,TSXCI
+HCG.TO,Home Capital Group Inc.,Financial Services,Specialty Finance,TSXCI
+HBM.TO,HudBay Minerals Inc.,Basic Materials,Copper,TSXCI
+HBC.TO,Hudson's Bay Company,Consumer Cyclical,Department Stores,TSXCI
+HSE.TO,Husky Energy Inc.,Energy,Oil & Gas Integrated,TSXCI
+H.TO,Hydro One Limited,Utilities,Utilities - Regulated Electric,TSXCI
+IMG.TO,Iamgold Corporation,Basic Materials,Gold,TSXCI
+IGM.TO,IGM Financial Inc.,Financial Services,Asset Management,TSXCI
+IMO.TO,Imperial Oil Limited,Energy,Oil & Gas Integrated,TSXCI
+IAG.TO,Industrial Alliance Insurance and Financial Services Inc.,Financial Services,Insurance - Diversified,TSXCI
+INE.TO,Innergex Renewable Energy Inc.,Utilities,Utilities - Independent Power Producers,TSXCI
+IFC.TO,Intact Financial Corporation,Financial Services,Insurance - Property & Casualty,TSXCI
+IPL.TO,Inter Pipeline Ltd.,Energy,Oil & Gas Midstream,TSXCI
+IFP.TO,Interfor Corporation,Basic Materials,Lumber & Wood Production,TSXCI
+ITP.TO,Intertape Polymer Group Inc.,Consumer Cyclical,Packaging & Containers,TSXCI
+IIP-UN.TO,InterRent Real Estate Investement Trust,Real Estate,REIT - Residential,TSXCI
+IVN.TO,Ivanhoe Mines Ltd.,Basic Materials,Industrial Metals & Minerals,TSXCI
+KEL.TO,Kelt Exploration Ltd.,Energy,Oil & Gas E&P,TSXCI
+KEY.TO,Keyera Corp.,Energy,Oil & Gas Midstream,TSXCI
+KMP-UN.TO,Killiam Apartment Real Estate Investment Trust,Real Estate,REIT - Residential,TSXCI
+KXS.TO,Kinaxis Inc.,Technology,Software - Application,TSXCI
+KML.TO,Kinder Morgan Canada,Energy,Oil & Gas Midstream,TSXCI
+K.TO,Kinross Gold Corporation,Basic Materials,Gold,TSXCI
+KL.TO,Kirkland Lake Gold Ltd.,Basic Materials,Gold,TSXCI
+GUD.TO,Knight Therapeutics Inc.,Healthcare,Drug Manufacturers - Specialty & Generic,TSXCI
+LIF.TO,Labrador Iron Ore Royalty Corporation,Basic Materials,Steel,TSXCI
+LB.TO,Laurentian Bank of Canada,Financial Services,Banks - Regional - Canada,TSXCI
+LNR.TO,Linamar Corporation,Consumer Cyclical,Auto Parts,TSXCI
+L.TO,Loblaw Companies Limited,Consumer Defensive,Grocery Stores,TSXCI
+LUC.TO,Lucara Diamond Corp.,Basic Materials,Industrial Metals & Minerals,TSXCI
+LUN.TO,Lundin Mining Corporation,Basic Materials,Copper,TSXCI
+MAG.TO,MAG Silver Corp.,Basic Materials,Silver,TSXCI
+MG.TO,Magna International Inc.,Consumer Cyclical,Auto Parts,TSXCI
+MFC.TO,Manulife Financial Corporation,Financial Services,Insurance - Life,TSXCI
+MFI.TO,Maple Leaf Foods Inc.,Consumer Defensive,Packaged Foods,TSXCI
+MRE.TO,Martinrea International Inc.,Consumer Cyclical,Auto Parts,TSXCI
+MAXR.TO,Maxar Technologies Ltd.,Technology,Communication Equipment,TSXCI
+MEG.TO,MEG Energy Corp.,Energy,Oil & Gas E&P,TSXCI
+MX.TO,Methanex Corporation,Basic Materials,Chemicals,TSXCI
+MRU.TO,Metro Inc.,Consumer Defensive,Grocery Stores,TSXCI
+MSI.TO,Morneau Shepell Inc.,Industrials,Staffing & Outsourcing Services,TSXCI
+MTY.TO,MTY Food Group Inc.,Consumer Cyclical,Restaurants,TSXCI
+MTL.TO,Mullen Group Ltd.,Energy,Oil & Gas Equipment & Services,TSXCI
+NA.TO,National Bank of Canada,Financial Services,Banks - Global,TSXCI
+NSU.TO,Nevsun Resources Ltd.,Basic Materials,Industrial Metals & Minerals,TSXCI
+NFI.TO,New Flyer Industries Inc.,Consumer Cyclical,Auto Manufacturers,TSXCI
+NGD.TO,New Gold Inc.,Basic Materials,Gold,TSXCI
+NXE.TO,NexGen Energy Ltd.,Basic Materials,Industrial Metals & Minerals,TSXCI
+OSB.TO,Norbord Inc.,Basic Materials,Lumber & Wood Production,TSXCI
+NPI.TO,Northland Power Inc.,Utilities,Utilities - Independent Power Producers,TSXCI
+NVU-UN.TO,Northview Apartment Real Estate Investment Trust,Real Estate,REIT - Residential,TSXCI
+NG.TO,NovaGold Resources Inc.,Basic Materials,Gold,TSXCI
+NTR.TO,Nutrien Ltd.,Basic Materials,Agricultural Inputs,TSXCI
+NVA.TO,NuVista Energy Ltd.,Energy,Oil & Gas E&P,TSXCI
+OGC.TO,OceanaGold Corporation,Basic Materials,Gold,TSXCI
+ONEX.TO,Onex Corporation,Financial Services,Asset Management,TSXCI
+OTEX.TO,Open Text Corporation,Technology,Software - Application,TSXCI
+OR.TO,Osisko Gold Royalties Ltd,Basic Materials,Gold,TSXCI
+PAAS.TO,Pan American Silver Corp.,Basic Materials,Silver,TSXCI
+POU.TO,Paramount Resources Ltd.,Energy,Oil & Gas E&P,TSXCI
+PXT.TO,Parex Resources Inc.,Energy,Oil & Gas E&P,TSXCI
+PKI.TO,Parkland Fuel Corporation,Energy,Oil & Gas Refining & Marketing,TSXCI
+PSI.TO,Pason Systems Inc.,Energy,Oil & Gas Equipment & Services,TSXCI
+PPL.TO,Pembina Pipeline Corporation,Energy,Oil & Gas Midstream,TSXCI
+PEY.TO,Peyto Exploration & Development Corp.,Energy,Oil & Gas E&P,TSXCI
+POW.TO,Power Corporation of Canada,Financial Services,Insurance - Life,TSXCI
+PWF.TO,Power Financial Corporation,Financial Services,Insurance - Life,TSXCI
+PSK.TO,PrairieSky Royalty Ltd.,Energy,Oil & Gas E&P,TSXCI
+PD.TO,Precision Drilling Corporation,Energy,Oil & Gas Equipment & Services,TSXCI
+PBH.TO,Premium Brands Holdings Corporation,Consumer Defensive,Packaged Foods,TSXCI
+PVG.TO,Pretium Resources Inc.,Basic Materials,Industrial Metals & Minerals,TSXCI
+QBR-B.TO,Quebecor Inc.,Communication Services,Telecom Services,TSXCI
+QSR.TO,Restaurant Brands International Inc.,Consumer Cyclical,Restaurants,TSXCI
+RCH.TO,Richelieu Hardware Ltd.,Consumer Cyclical,Home Furnishings & Fixtures,TSXCI
+REI-UN.TO,RioCan Real Estate Investment Trust,Real Estate,REIT - Retail,TSXCI
+RBA.TO,Ritchie Bros. Auctioneers Incorporated,Industrials,Business Services,TSXCI
+RCI-B.TO,Rogers Communications Inc.,Communication Services,Telecom Services,TSXCI
+RY.TO,Royal Bank of Canada,Financial Services,Banks - Global,TSXCI
+RUS.TO,Russel Metals Inc.,Industrials,Industrial Distribution,TSXCI
+SSL.TO,Sandstorm Gold Ltd.,Basic Materials,Gold,TSXCI
+SAP.TO,Saputo Inc.,Consumer Defensive,Packaged Foods,TSXCI
+SES.TO,Secure Energy Services Inc.,Energy,Oil & Gas Equipment & Services,TSXCI
+SMF.TO,Semafo Inc.,Basic Materials,Gold,TSXCI
+VII.TO,Seven Generations Energy Ltd.,Energy,Oil & Gas E&P,TSXCI
+SJR-B.TO,Shaw Communications Inc.,Communication Services,Telecom Services,TSXCI
+SCL.TO,ShawCor Ltd.,Energy,Oil & Gas Equipment & Services,TSXCI
+SHOP.TO,Shopify Inc.,Technology,Software - Application,TSXCI
+SIA.TO,Sienna Senior Living Inc.,Healthcare,Long-Term Care Facilities,TSXCI
+SW.TO,Sierra Wireless Inc.,Technology,Communication Equipment,TSXCI
+ZZZ.TO,Sleep Country Canada Holdings Inc.,Consumer Cyclical,Specialty Retail,TSXCI
+SRU-UN.TO,SmartCentres Real Estate Investment Trust,Real Estate,REIT - Retail,TSXCI
+SNC.TO,SNC-Lavalin Group Inc.,Industrials,Engineering & Construction,TSXCI
+TOY.TO,Spin Master Corp.,Consumer Cyclical,Leisure,TSXCI
+SSRM.TO,SSR Mining,Basic Materials,Gold,TSXCI
+STN.TO,Stantec Inc.,Industrials,Engineering & Construction,TSXCI
+SJ.TO,Stella-Jones Inc.,Basic Materials,Lumber & Wood Production,TSXCI
+SLF.TO,Sun Life Financial Inc.,Financial Services,Insurance - Diversified,TSXCI
+SU.TO,Suncor Energy Inc.,Energy,Oil & Gas Integrated,TSXCI
+SPB.TO,Superior Plus Corp.,Utilities,Utilities - Diversified,TSXCI
+THO.TO,Tahoe Resources Inc.,Basic Materials,Gold,TSXCI
+TVE.TO,Tamarack Valley Energy Ltd.,Energy,Oil & Gas E&P,TSXCI
+TECK-B.TO,Teck Resources Limited,Basic Materials,Industrial Metals & Minerals,TSXCI
+T.TO,Telus Corporation,Communication Services,Telecom Services,TSXCI
+TFII.TO,TFI International Inc.,Industrials,Trucking,TSXCI
+NWC.TO,The North West Company Inc.,Consumer Defensive,Grocery Stores,TSXCI
+TSGI.TO,The Stars Group Inc.,Consumer Cyclical,Gambling,TSXCI
+TRI.TO,Thomson Reuters Corporation,Financial Services,Capital Markets,TSXCI
+X.TO,TMX Group Limited,Financial Services,Financial Exchanges,TSXCI
+TOG.TO,TORC Oil & Gas Ltd.,Energy,Oil & Gas E&P,TSXCI
+TXG.TO,Torex Gold Resources Inc.,Basic Materials,Gold,TSXCI
+TIH.TO,Toromont Industries Ltd.,Industrials,Industrial Distribution,TSXCI
+TD.TO,Toronto-Dominion Bank,Financial Services,Banks - Global,TSXCI
+TOU.TO,Tourmaline Oil Corp.,Energy,Oil & Gas E&P,TSXCI
+TA.TO,TransAlta Corporation,Utilities,Utilities - Independent Power Producers,TSXCI
+RNW.TO,TransAlta Renewables Inc.,Utilities,Utilities - Independent Power Producers,TSXCI
+TRP.TO,TransCanada Corporation,Energy,Oil & Gas Midstream,TSXCI
+TCL-A.TO,Transcontinental Inc.,Consumer Cyclical,Publishing,TSXCI
+TCW.TO,Trican Well Service Ltd.,Energy,Oil & Gas Equipment & Services,TSXCI
+TCN.TO,Tricon Capital Group Inc.,Real Estate,Real Estate Services,TSXCI
+TRQ.TO,Turquoise Hill Resources Ltd.,Basic Materials,Copper,TSXCI
+UNS.TO,Uni-Select Inc.,Consumer Cyclical,Auto Parts,TSXCI
+VET.TO,Vermilion Energy Inc.,Energy,Oil & Gas E&P,TSXCI
+WCN.TO,Waste Connections Inc.,Industrials,Waste Management,TSXCI
+WFT.TO,West Fraser Timber Co. Ltd.,Basic Materials,Lumber & Wood Production,TSXCI
+WEF.TO,Western Forest Products Inc.,Basic Materials,Lumber & Wood Production,TSXCI
+WJA.TO,WestJet Airlines Ltd.,Industrials,Airlines,TSXCI
+WTE.TO,Westshore Terminals Investment Corporation,Basic Materials,Coal,TSXCI
+WPM.TO,Wheaton Precious Metals Corp.,Basic Materials,Silver,TSXCI
+WCP.TO,Whitecap Resources Inc.,Energy,Oil & Gas E&P,TSXCI
+WPK.TO,Winpak Ltd.,Consumer Cyclical,Packaging & Containers,TSXCI
+WSP.TO,WSP Global Inc.,Industrials,Engineering & Construction,TSXCI
+YRI.TO,Yamana Gold Inc.,Basic Materials,Gold,TSXCI

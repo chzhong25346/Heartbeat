@@ -15,12 +15,12 @@ def read_exist(s, ticker):
     return ret
 
 
-# def has_table(e, tname):
-#     return e.dialect.has_table(e, table)
-
-
 def has_index(s):
     return s.query(Index).first()
+
+
+def has_table(s, obj):
+    return s.query(obj).first()
 
 
 def pd_read_table(tname,engine,index_name):

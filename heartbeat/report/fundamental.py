@@ -3,9 +3,10 @@ import numpy as np
 from ..utils.locate_db import locate_session
 from ..utils.normalize import rename,pick_stats
 from ..utils.fetch import get_keyStats
-from ..models import Keystats
-import requests
+from ..models import Income, BalanceSheet, Cashflow, Keystats
 from bs4 import BeautifulSoup
+from datetime import datetime
+import requests
 import re
 
 
@@ -29,6 +30,7 @@ def fundamental_output(s_dic, s_fin, ticker):
 
 def get_statistics(ticker, s, db_name):
     ticker = ticker.upper()
+    # Intrinsic Value
     if(db_name == 'tsxci'):
         ticker = ticker+'.TO'
         df = pd.read_sql(s.query(Keystats).filter(Keystats.symbol == ticker).statement, s.bind, index_col='date')
@@ -39,6 +41,8 @@ def get_statistics(ticker, s, db_name):
     elif(db_name == None):
         df = get_keyStats(ticker)
     IVps = intrinsic_value(df)
+    # Net Trade Cyclce
+    NTC = netTradeCycle(s, ticker)
     # fetching key-stats from Yahoo
     url = 'https://finance.yahoo.com/quote/{0}/key-statistics?p={0}'.format(ticker)
     response = requests.get(url)
@@ -72,6 +76,8 @@ def get_statistics(ticker, s, db_name):
             'Payout Ratio 4']
     dividends = pick_stats(df, list, 'Dividends') ###
     print(35*'-' + '\n' + 'Financial Statistics' + '\n'+ 35*'-' + '\n' )
+    if (NTC is not None):
+        print(NTC)
     print('Intrinsic Value Per Share: ', IVps)
     print(valuation, profitability, manag_eff, inc_stat, balance_sheet, cash_flow, dividends,  sep='\n')
 
@@ -152,18 +158,29 @@ def intrinsic_value(df):
         return None
 
 
-# def get_roe(ticker):
-#     url = 'https://finance.yahoo.com/quote/{0}/key-statistics?p={0}'.format(ticker)
-#     response = requests.get(url)
-#     soup = BeautifulSoup(response.text, 'html.parser')
-#     dic = {}
-#     rows = soup.findAll('tr')
-#     try:
-#         for row in rows:
-#             cols = row.find_all('td')
-#             cols = [ele.text.strip() for ele in cols]
-#             dic.update(dict([cols]))
-#             roe = float(dic['Return on Equity (ttm)'][:-1])
-#         return roe
-#     except:
-#         return None
+def netTradeCycle(s, ticker):
+    try:
+        bs = pd.read_sql(s.query(BalanceSheet).filter(BalanceSheet.period == "annual").statement, s.bind, index_col='symbol')
+        ic = pd.read_sql(s.query(Income).filter(Income.period == "annual").statement, s.bind, index_col='symbol')
+        bs.fillna(0, inplace=True)
+        ic.fillna(0, inplace=True)
+        netReceivables = bs.iloc[bs.index == ticker].sort_values(by='date')['netReceivables']
+        inventory = bs.iloc[bs.index == ticker].sort_values(by='date')['inventory']
+        accountsPayable = bs.iloc[bs.index == ticker].sort_values(by='date')['accountsPayable']
+        totalRevenue = ic.iloc[ic.index == ticker].sort_values(by='date')['totalRevenue']
+        costOfRevenue = ic.iloc[ic.index == ticker].sort_values(by='date')['costOfRevenue']
+        if (all(totalRevenue != 0) & all(costOfRevenue != 0)):
+            DSO = round(netReceivables/totalRevenue*360, 2)
+            DIO = round(inventory/costOfRevenue*360, 2)
+            DPO = round(accountsPayable/costOfRevenue*360, 2)
+            NTC = DSO + DIO - DPO
+            df = pd.concat([DSO, DIO, DPO, NTC], axis=1).reset_index()
+            df.rename(index=str, columns={0: "DSO", 1: "DIO", 2: "DPO", 3: "N-T-C"}, inplace=True)
+            df = df[['DSO', 'DIO', 'DPO', 'N-T-C']]
+            df.index  = bs.iloc[bs.index == ticker]['date'].sort_values().tolist()
+            df.index = df.index.strftime("%Y")
+            return df
+        else:
+            return None
+    except:
+        return None

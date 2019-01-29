@@ -3,7 +3,7 @@ import datetime as dt
 from datetime import datetime
 from ..utils.fetch import fetch_index, get_daily_adjusted
 from ..utils.util import gen_id
-from ..models import Income,BalanceSheet,Cashflow,Keystats
+from ..models import Income,BalanceSheet,Cashflow,Keystats,Findex
 
 
 def map_income(df):
@@ -132,5 +132,17 @@ def map_keystats(df):
         freeCashFlow = r['FreeCashFlow'],
         freeCashFlowPerShare = r['FreeCashFlowPerShare'],
         workingCapital = r['WorkingCapital'],
+    ) for r in df_records]
+    return model_instnaces
+
+
+def map_findex(df):
+    df_records = df.to_dict('r')
+    model_instnaces = [Findex(
+        Symbol = r['Symbol'],
+        Name = r['Name'],
+        Sector = r['Sector'],
+        Industry = r['Industry'],
+        Index = r['Index'],
     ) for r in df_records]
     return model_instnaces

@@ -1,13 +1,19 @@
-from ..utils.fetch import get_financials, get_keyStats
+from ..utils.fetch import get_financials, get_keyStats, fetch_findex
 from ..utils.normalize import normalize_financials, reindex_missing
-from ..db.mapping import map_income, map_balancesheet, map_cashflow, map_keystats
+from ..db.mapping import map_income, map_balancesheet, map_cashflow, map_keystats, map_findex
 from ..db.write import bulk_save
+from ..db.read import has_table
+from ..models import Findex
 import time
 import pandas as pd
 
 
-def update_financials(s, list):
+def update_financials(s):
     # list = ['AAL']  ## Testing
+    if (has_table(s, Findex) is None):
+        print('Creating Index in financials db.')
+        mapping_findex(s)
+    list = pd.read_sql(s.query(Findex).statement, s.bind)['Symbol'].tolist()
     for ticker in list:
         print('--> %s' % ticker)
         time.sleep(10)
@@ -22,7 +28,6 @@ def update_financials(s, list):
         except Exception as e:
             print(e)
             pass
-
 
 
 def classify_findata(data, ticker):
@@ -70,3 +75,9 @@ def mapping_keystats(s, ticker):
     for d in df.to_dict(orient='records'):
         models = map_keystats(pd.DataFrame.from_dict(d,orient='index').T)
         bulk_save(s, models)
+
+
+def mapping_findex(s):
+    df = fetch_findex()
+    models = map_findex(df)
+    bulk_save(s, models)

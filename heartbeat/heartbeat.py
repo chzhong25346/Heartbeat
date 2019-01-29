@@ -6,13 +6,13 @@ from prompt_toolkit.validation import Validator
 from prompt_toolkit.completion import WordCompleter
 from .utils.config import Config
 from .utils.normalize import generate_tickerL
-from .utils.fetch import fetch_index
+from .utils.fetch import fetch_index, fetch_findex
 from .report.technical import technical_output
 from .report.fundamental import fundamental_output
 from .financials.update import update_financials
 from .screener.screener import screening
 from .db.db import Db
-from .models import Income,BalanceSheet,Cashflow,Keystats
+from .models import Income,BalanceSheet,Cashflow,Keystats,Findex
 import sys
 
 cmd_completer = WordCompleter(['exit'])
@@ -110,19 +110,15 @@ def fundamental_report(ticker):
 
 
 def financials(index):
-    if (index == 'sp500'):
-        tickerL = fetch_index(index)['symbol'].tolist()
-    else:
-        index_L = ['nasdaq100','tsxci','sp100']
-        tickerL = generate_tickerL(index.lower(), index_L)
     Config.DB_NAME = 'financials'
     db = Db(Config)
     s = db.session()
+    db.create_all([Findex.__table__])
     db.create_all([Income.__table__])
     db.create_all([BalanceSheet.__table__])
     db.create_all([Cashflow.__table__])
     db.create_all([Keystats.__table__])
-    update_financials(s, tickerL)
+    update_financials(s)  ### Update function
     s.close()
 
 
