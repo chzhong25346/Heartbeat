@@ -61,11 +61,10 @@ def main(argv):
                 elif(ticker != '' and ticker != 'exit'):
                     fundamental_report(ticker)
             if(mode == 'Update Financials'):
+                financials()
                 index = prompt('Enter index: ', bottom_toolbar=bottom_toolbar(mode), completer=cmd_completer).replace(" ", "")
                 if(index == 'exit'):
                     mode = None
-                elif(index != '' and index != 'exit'):
-                    financials(index)
             if(mode == 'Screener'):
                 screener()
                 cmd = prompt('Command : ', bottom_toolbar=bottom_toolbar(mode), completer=cmd_completer).replace(" ", "")
@@ -109,7 +108,7 @@ def fundamental_report(ticker):
         s.close()
 
 
-def financials(index):
+def financials():
     Config.DB_NAME = 'financials'
     db = Db(Config)
     s = db.session()
