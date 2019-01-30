@@ -102,6 +102,8 @@ def get_keyStats(ticker):
         print('%s: retry after 30 seconds' % ticker)
         time.sleep(30)
         lm_json = requests.get(url).json()
+    finally:
+        return None
     df = pd.read_html(lm_json["ksContent"])[0]
     df = df.rename(columns = {'Unnamed: 0':'date'})
     df = df[df.columns.drop(list(df.filter(regex='Unnamed|TTM')))]

@@ -178,7 +178,7 @@ def netTradeCycle(s, ticker):
             DPO = round(accountsPayable/costOfRevenue*360, 2)
             NTC = DSO + DIO - DPO
             df = pd.concat([DSO, DIO, DPO, NTC], axis=1).reset_index()
-            df.rename(index=str, columns={0: "DSO", 1: "DIO", 2: "DPO", 3: "N-T-C"}, inplace=True)
+            df.rename(index=str, columns={0: "DSO", 1: "DIO", 2: "DPO", 3: "CCC"}, inplace=True)
             df = df[['DSO', 'DIO', 'DPO', 'N-T-C']]
             df.index  = bs.iloc[bs.index == ticker]['date'].sort_values().tolist()
             df.index = df.index.strftime("%Y")

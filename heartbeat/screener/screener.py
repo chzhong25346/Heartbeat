@@ -15,21 +15,17 @@ def screening(s):
     cf_ann = pd.read_sql(s.query(Cashflow).filter(Cashflow.period == "annual").statement, s.bind, index_col='symbol')
     cf_quart = pd.read_sql(s.query(Cashflow).filter(Cashflow.period == "quarterly").statement, s.bind, index_col='symbol')
 
-    # vigilance_L = vigilance([bs_ann, bs_quart])
+    vigilance_L = vigilance([bs_ann, bs_quart])
     prospects_L = prospects([ic_ann, ic_quart])
-    # fidelity_L = fidelity([cf_ann, cf_quart])
+    fidelity_L = fidelity([cf_ann, cf_quart])
 
-    # print(len(vigilance_L))
-    print(len(prospects_L))
-    # print(len(fidelity_L))
+    list = vigilance_L + prospects_L + fidelity_L
+    picks = [item for item, count in collections.Counter(list).items() if count > 2]
+    print(40*'-' + '\n' + 15*' ' +"Screening Picks" + "\n" + 40*'-')
+    print(intrinsicValue(s, picks))
 
-    # list = vigilance_L + prospects_L + fidelity_L
-    # picks = [item for item, count in collections.Counter(list).items() if count > 2]
-    # print(40*'-' + '\n' + 15*' ' +"Screening Picks" + "\n" + 40*'-')
-    # print(intrinsicValue(s, picks))
-    #
-    # print(40*'-' + '\n' + 10*' ' + "Undervalued (PE,PB)" + "\n" + 40*'-')
-    # print((', '.join(underValued(picks))))
+    print(40*'-' + '\n' + 10*' ' + "Undervalued (PE,PB)" + "\n" + 40*'-')
+    print((', '.join(underValued(picks))))
 
 
 def vigilance(df_list):
