@@ -3,42 +3,45 @@ import numpy as np
 from ..utils.locate_db import locate_session
 from ..utils.normalize import rename,pick_stats
 from ..utils.fetch import get_keyStats
-from ..models import Income, BalanceSheet, Cashflow, Keystats
+from ..models import Income, BalanceSheet, Cashflow, Keystats, Findex
 from bs4 import BeautifulSoup
 from datetime import datetime
 import requests
 import re
 
 
-def fundamental_output(s_dic, s_fin, ticker):
+def fundamental_output(s, ticker):
+    df = pd.read_sql(s.query(Findex).filter(Findex.Symbol == ticker).statement,
+                        s.bind, index_col='Symbol')
+    tickerL = df.index.tolist()
     output = ''
     try:
-        if(locate_session(s_dic, ticker) != None):
-            print('Found in local Database:')
-            s, db_name, ticker, company_name = locate_session(s_dic, ticker)
-            print(40*'-' + '\n' + ticker + ' - ' + company_name + "\n" + 40*'-')
-            get_statistics(ticker, s_fin, db_name)
-            get_news(company_name)
-        else:
-            print('external')
+        if(len(tickerL) == 0):
+            print('Searching external sources...')
+            ticker = ticker.upper()
             print(40*'-' + '\n' + ticker + ' - ' "\n" + 40*'-')
-            get_statistics(ticker, s_fin, None)
+            get_statistics(ticker, s, 'external')
+        else:
+            print('Found in local Database.')
+            ticker = tickerL[0]
+            company = df.loc[ticker]['Name']
+            print(40*'-' + '\n' + ticker + ' - ' + company + "\n" + 40*'-')
+            get_statistics(ticker, s, 'local')
+            get_news(company)
+            get_Indinfo(ticker, s)
     except Exception as e:
-        print(e)
+        # print(e)
+        print('if %s is a Canadian stock, please suffix .TO' % ticker)
         print("Unable to search! Try again.")
 
 
-def get_statistics(ticker, s, db_name):
+def get_statistics(ticker, s, type):
     ticker = ticker.upper()
     # Intrinsic Value
-    if(db_name == 'tsxci'):
-        ticker = ticker+'.TO'
+    if(type == 'local'):
         df = pd.read_sql(s.query(Keystats).filter(Keystats.symbol == ticker).statement, s.bind, index_col='date')
         df = df.replace([0], [np.nan])
-    elif(db_name != None):
-        df = pd.read_sql(s.query(Keystats).filter(Keystats.symbol == ticker).statement, s.bind, index_col='date')
-        df = df.replace([0], [np.nan])
-    elif(db_name == None):
+    elif(type == 'external'):
         df = get_keyStats(ticker)
     IVps = intrinsic_value(df)
     # Net Trade Cyclce
@@ -184,3 +187,18 @@ def netTradeCycle(s, ticker):
             return None
     except:
         return None
+
+
+def get_Indinfo(ticker, s):
+    try:
+        df = pd.read_sql(s.query(Findex).filter(Findex.Symbol == ticker).statement, s.bind, index_col='Symbol')
+        indcode = df.loc[ticker]['Indcode']
+        ind_tick = pd.read_sql(s.query(Findex).filter(Findex.Indcode == indcode).statement, s.bind, index_col='Symbol').index.tolist()
+        print('\n'+ 35*'-' + '\n' + 'Industry Info' + '\n'+ 35*'-' )
+        # print('Company Name: %s' % df.loc[ticker]['Name'])
+        print('Sector: %s' % df.loc[ticker]['Sector'])
+        print('Industry: %s' % df.loc[ticker]['Industry'])
+        print('Peers in industry: %s' % ', '.join(ind_tick))
+    except Exception as e:
+        print(e)
+        pass

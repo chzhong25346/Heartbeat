@@ -55,7 +55,7 @@ def main(argv):
                 if(ticker != '' and ticker != 'exit'):
                     technical_report(ticker)
             if(mode == 'Fundamental Analysis'):
-                ticker = prompt('Enter ticker: ', bottom_toolbar=bottom_toolbar(mode), completer=cmd_completer).replace(" ", "")
+                ticker = prompt('Enter ticker(.TO): ', bottom_toolbar=bottom_toolbar(mode), completer=cmd_completer).replace(" ", "")
                 if(ticker == 'exit'):
                     mode = None
                 elif(ticker != '' and ticker != 'exit'):
@@ -87,25 +87,17 @@ def technical_report(ticker):
     Config.DB_NAME = 'financials'
     db = Db(Config)
     s = db.session()
-    technical_output(s_dic, s, ticker)
+    technical_output(s_dic, s, ticker) # .report.technical
     for name, s in s_dic.items():
         s.close()
 
 
 def fundamental_report(ticker):
-    db_name_list = ['nasdaq100','tsxci','sp100']
-    s_dic = {}
-    for name in db_name_list:
-        Config.DB_NAME = name
-        db = Db(Config)
-        s = db.session()
-        s_dic.update({name:s})
     Config.DB_NAME = 'financials'
     db = Db(Config)
     s = db.session()
-    fundamental_output(s_dic, s, ticker)
-    for name, s in s_dic.items():
-        s.close()
+    fundamental_output(s, ticker) # .report.fundamental
+    s.close()
 
 
 def financials():
@@ -117,7 +109,7 @@ def financials():
     db.create_all([BalanceSheet.__table__])
     db.create_all([Cashflow.__table__])
     db.create_all([Keystats.__table__])
-    update_financials(s)  ### Update function
+    update_financials(s)  # .financials.upate
     s.close()
 
 
@@ -125,5 +117,5 @@ def screener():
     Config.DB_NAME = 'financials'
     db = Db(Config)
     s = db.session()
-    screening(s)
+    screening(s) # .screener.screener
     s.close()

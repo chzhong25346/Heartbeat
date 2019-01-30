@@ -148,3 +148,5 @@ class Findex(db.Model):
     Sector = db.Column(db.String(60), nullable=False)
     Industry = db.Column(db.String(60), nullable=False)
     Index = db.Column(db.String(20), nullable=False)
+    Secode = db.Column(db.String(10), nullable=False)
+    Indcode = db.Column(db.String(10), nullable=False)

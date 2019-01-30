@@ -144,5 +144,7 @@ def map_findex(df):
         Sector = r['Sector'],
         Industry = r['Industry'],
         Index = r['Index'],
+        Secode = r['Secode'],
+        Indcode = r['Indcode'],
     ) for r in df_records]
     return model_instnaces

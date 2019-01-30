@@ -36,10 +36,10 @@ def fetch_findex():
     filename = os.path.join(path, 'findex.csv')
     try:
         data = pd.read_csv(filename, na_filter = False)
-        data.columns = ['Symbol', 'Name', 'Sector', 'Industry', 'Index']
+        data.columns = ['Symbol', 'Name', 'Sector', 'Industry', 'Index', 'Secode', 'Indcode']
         return data
     except Exception as e:
-        logger.error('Unable to fetch index! {%s}' % e)
+        print('Unable to fetch index! (%s)' % e)
 
 
 def get_daily_adjusted(config,ticker,size,today_only,index_name):
