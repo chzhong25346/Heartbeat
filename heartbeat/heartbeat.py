@@ -68,8 +68,8 @@ def main(argv):
             if(mode == 'Screener'):
                 if(submode == None):
                     code = ''
-                    dic = {1:'Full', 2:'By Sector', 3:'By Industry'}
-                    print("Enter Option:\n" , '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()))
+                    dic = {1:'Full', 2:'By Sector', 3:'By Industry', 0:'Return'}
+                    print("Screening mode:\n" , '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()))
                     key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode, submode)))
                     if(key not in list(dic.keys()) ):
                         print('Invalid option!')
@@ -85,7 +85,7 @@ def main(argv):
                                 submode = None
                                 break
                             else:
-                                print(code)
+                                print(code) # testing
                     elif(submode == 'By Industry'):
                         while True:
                             code = prompt('Industry code: ', bottom_toolbar=bottom_toolbar(mode, submode), completer=cmd_completer).replace(" ", "")
@@ -93,7 +93,11 @@ def main(argv):
                                 submode = None
                                 break
                             else:
-                                print(code)
+                                print(code) # testing
+                    elif(submode == 'Return'):
+                        submode = None
+                        mode = None
+
 
         except KeyboardInterrupt:
             continue
