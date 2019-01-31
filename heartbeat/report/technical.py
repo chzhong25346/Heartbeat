@@ -20,10 +20,12 @@ def technical_output(s_dic, s_fin, ticker):
         ticker = ticker.upper()
         if(db_name == 'tsxci'):
             ticker = ticker+'.TO'
-        ks = get_keyStats(ticker)
-        if (ks != None):
+        try:
+            ks = get_keyStats(ticker)
             IVps = intrinsic_value(ks)
             print('IVps: ' + str(IVps))
+        except:
+            pass
         print('close: ' + str(today.close) + ', open: ' + str(today.open) + '\n'
               + 'high: ' + str(today.high) + ', low: ' + str(today.low) + '\n' + 35*'-')
         print("52-week high: " + ft_max

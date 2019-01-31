@@ -26,8 +26,10 @@ validator = Validator.from_callable(
     move_cursor_to_end=True)
 
 
-def bottom_toolbar(mode):
-    if(mode != None):
+def bottom_toolbar(mode, submode=None):
+    if(submode != None):
+        return HTML(' <b><style bg="ansired">Heartbeat</style></b> > %s > %s' % (mode, submode))
+    elif(mode != None):
         return HTML(' <b><style bg="ansired">Heartbeat</style></b> > %s' % mode)
     else:
         return HTML(' Welcome to Project <b><style bg="ansired">Heartbeat</style></b>!')
@@ -35,6 +37,7 @@ def bottom_toolbar(mode):
 
 def main(argv):
     mode = None
+    submode = None
     while True:
         try:
             if(mode == None):
@@ -47,7 +50,6 @@ def main(argv):
                     sys.exit()
                 else:
                     mode = dic[key]
-
             if(mode == 'Technical Analysis'):
                 ticker = prompt('Enter ticker: ', bottom_toolbar=bottom_toolbar(mode), completer=cmd_completer).replace(" ", "")
                 if(ticker == 'exit'):
@@ -62,14 +64,37 @@ def main(argv):
                     fundamental_report(ticker)
             if(mode == 'Update Financials'):
                 financials()
-                index = prompt('Enter index: ', bottom_toolbar=bottom_toolbar(mode), completer=cmd_completer).replace(" ", "")
-                if(index == 'exit'):
-                    mode = None
+                mode = None
             if(mode == 'Screener'):
-                screener()
-                cmd = prompt('Command : ', bottom_toolbar=bottom_toolbar(mode), completer=cmd_completer).replace(" ", "")
-                if(cmd == 'exit'):
-                    mode = None
+                if(submode == None):
+                    code = ''
+                    dic = {1:'Full', 2:'By Sector', 3:'By Industry'}
+                    print("Enter Option:\n" , '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()))
+                    key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode, submode)))
+                    if(key not in list(dic.keys()) ):
+                        print('Invalid option!')
+                    else:
+                        submode = dic[key]
+                    if(submode == 'Full'):
+                        screener()
+                        submode = None
+                    elif(submode == 'By Sector'):
+                        while True:
+                            code = prompt('Sector code: ', bottom_toolbar=bottom_toolbar(mode, submode), completer=cmd_completer).replace(" ", "")
+                            if (code == 'exit'):
+                                submode = None
+                                break
+                            else:
+                                print(code)
+                    elif(submode == 'By Industry'):
+                        while True:
+                            code = prompt('Industry code: ', bottom_toolbar=bottom_toolbar(mode, submode), completer=cmd_completer).replace(" ", "")
+                            if (code == 'exit'):
+                                submode = None
+                                break
+                            else:
+                                print(code)
+
         except KeyboardInterrupt:
             continue
         except EOFError:
