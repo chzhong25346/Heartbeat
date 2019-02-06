@@ -10,7 +10,8 @@ from .utils.fetch import fetch_index, fetch_findex
 from .report.technical import technical_output
 from .report.fundamental import fundamental_output
 from .financials.update import update_financials
-from .screener.screener import screening
+from .screener.screener import screen_full
+from .screener.screener_bycode import screen_bycode
 from .db.db import Db
 from .models import Income,BalanceSheet,Cashflow,Keystats,Findex
 import sys
@@ -42,7 +43,7 @@ def main(argv):
         try:
             if(mode == None):
                 dic = {1:'Technical Analysis', 2:'Fundamental Analysis', 3:'Update Financials', 4:'Screener', 0:'End Program'}
-                print("Enter Module:\n" , '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()))
+                print(9*'-',"Modules", 9*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
                 key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode) ))
                 if(key not in list(dic.keys()) ):
                     print('Invalid option!')
@@ -55,28 +56,28 @@ def main(argv):
                 if(ticker == 'exit'):
                     mode = None
                 if(ticker != '' and ticker != 'exit'):
-                    technical_report(ticker)
+                    reporting_technical(ticker)
             if(mode == 'Fundamental Analysis'):
                 ticker = prompt('Enter ticker(.TO): ', bottom_toolbar=bottom_toolbar(mode), completer=cmd_completer).replace(" ", "")
                 if(ticker == 'exit'):
                     mode = None
                 elif(ticker != '' and ticker != 'exit'):
-                    fundamental_report(ticker)
+                    reporting_fundamental(ticker)
             if(mode == 'Update Financials'):
-                financials()
+                updating_financials()
                 mode = None
             if(mode == 'Screener'):
                 if(submode == None):
                     code = ''
                     dic = {1:'Full', 2:'By Sector', 3:'By Industry', 0:'Return'}
-                    print("Screening mode:\n" , '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()))
+                    print(5*'-',"Screening Mode", 5*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
                     key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode, submode)))
                     if(key not in list(dic.keys()) ):
                         print('Invalid option!')
                     else:
                         submode = dic[key]
                     if(submode == 'Full'):
-                        screener()
+                        screening_full()
                         submode = None
                     elif(submode == 'By Sector'):
                         while True:
@@ -85,7 +86,7 @@ def main(argv):
                                 submode = None
                                 break
                             else:
-                                print(code) # testing
+                                screening_bycode(code, 'Secode')
                     elif(submode == 'By Industry'):
                         while True:
                             code = prompt('Industry code: ', bottom_toolbar=bottom_toolbar(mode, submode), completer=cmd_completer).replace(" ", "")
@@ -93,19 +94,17 @@ def main(argv):
                                 submode = None
                                 break
                             else:
-                                print(code) # testing
+                                screening_bycode(code, 'Indcode')
                     elif(submode == 'Return'):
                         submode = None
                         mode = None
-
-
         except KeyboardInterrupt:
             continue
         except EOFError:
             break
 
 
-def technical_report(ticker):
+def reporting_technical(ticker):
     db_name_list = ['nasdaq100','tsxci','sp100']
     s_dic = {}
     for name in db_name_list:
@@ -121,7 +120,7 @@ def technical_report(ticker):
         s.close()
 
 
-def fundamental_report(ticker):
+def reporting_fundamental(ticker):
     Config.DB_NAME = 'financials'
     db = Db(Config)
     s = db.session()
@@ -129,7 +128,7 @@ def fundamental_report(ticker):
     s.close()
 
 
-def financials():
+def updating_financials():
     Config.DB_NAME = 'financials'
     db = Db(Config)
     s = db.session()
@@ -142,9 +141,17 @@ def financials():
     s.close()
 
 
-def screener():
+def screening_full():
     Config.DB_NAME = 'financials'
     db = Db(Config)
     s = db.session()
-    screening(s) # .screener.screener
+    screen_full(s) # .screener.screen_full
+    s.close()
+
+
+def screening_bycode(code, type):
+    Config.DB_NAME = 'financials'
+    db = Db(Config)
+    s = db.session()
+    screen_bycode(s, code, type) # .screener_bycode.screen_bycode
     s.close()

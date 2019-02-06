@@ -1,19 +1,19 @@
 from ..utils.fetch import get_financials, get_keyStats, fetch_findex
 from ..utils.normalize import normalize_financials, reindex_missing
 from ..db.mapping import map_income, map_balancesheet, map_cashflow, map_keystats, map_findex
-from ..db.write import bulk_save
+from ..db.write import bulk_save, bulk_update
 from ..db.read import has_table
-from ..models import Findex
+from ..models import Income,BalanceSheet,Cashflow,Keystats,Findex
 import time
 import pandas as pd
 
 
 def update_financials(s):
-    # list = ['AAL']  ## Testing
     if (has_table(s, Findex) is None):
         print('Creating Index in financials db.')
         mapping_findex(s)
     list = pd.read_sql(s.query(Findex).statement, s.bind)['Symbol'].tolist()
+    # list = ['ALK']  ## Testing
     for ticker in list:
         print('--> %s' % ticker)
         time.sleep(10)
@@ -58,14 +58,17 @@ def mapping_write(s, list, type):
         for df in list:
             models = map_income(df)
             bulk_save(s, models)
+            bulk_update(s, Income, models)
     elif (type == 'balancesheet'):
         for df in list:
             models = map_balancesheet(df)
             bulk_save(s, models)
+            bulk_update(s, BalanceSheet, models)
     elif (type == 'cashflow'):
         for df in list:
             models = map_cashflow(df)
             bulk_save(s, models)
+            bulk_update(s, Cashflow, models)
 
 
 def mapping_keystats(s, ticker):
@@ -75,6 +78,7 @@ def mapping_keystats(s, ticker):
     for d in df.to_dict(orient='records'):
         models = map_keystats(pd.DataFrame.from_dict(d,orient='index').T)
         bulk_save(s, models)
+        bulk_update(s, Keystats, models)
 
 
 def mapping_findex(s):

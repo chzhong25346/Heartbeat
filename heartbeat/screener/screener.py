@@ -6,7 +6,7 @@ from ..report.fundamental import get_ratios, intrinsic_value
 from ..utils.fetch import get_keyStats
 
 
-def screening(s):
+def screen_full(s):
     print('Processing...')
     bs_ann = pd.read_sql(s.query(BalanceSheet).filter(BalanceSheet.period == "annual").statement, s.bind, index_col='symbol')
     bs_quart = pd.read_sql(s.query(BalanceSheet).filter(BalanceSheet.period == "quarterly").statement, s.bind, index_col='symbol')
