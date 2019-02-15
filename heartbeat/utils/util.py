@@ -21,3 +21,10 @@ def model_dicL(model_list):
     for model in model_list:
         list.append(model.__dict__)
     return list
+
+
+def beautify_dict(dict):
+    str = ''
+    for key, value in dict.items():
+        str += ("{} ({}), ".format(key, value))
+    return str

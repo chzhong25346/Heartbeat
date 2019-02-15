@@ -107,13 +107,17 @@ def get_ratios(ticker):
         cols = row.find_all('td')
         cols = [ele.text.strip() for ele in cols]
         dic.update(dict([cols]))
-    try:
-        pe = float(dic['Trailing P/E'])
-        pb = float(dic['Price/Book (mrq)'])
-    except:
-        pe = float(dic['Forward P/E 1'])
-        pb = float(dic['Price/Book (mrq)'])
-    return pe,pb
+    # print(ticker) CHECKPOINT
+    if(dic['Forward P/E 1'] != 'N/A' and dic['Price/Book (mrq)'] != 'N/A'):
+        try:
+            pe = float(dic['Trailing P/E'])
+            pb = float(dic['Price/Book (mrq)'])
+        except:
+            pe = float(dic['Forward P/E 1'])
+            pb = float(dic['Price/Book (mrq)'])
+        return pe,pb
+    else:
+        return None, None
 
 
 def intrinsic_value(df):

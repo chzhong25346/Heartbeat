@@ -105,8 +105,9 @@ def underValued(tickerL):
     list = []
     for ticker in tickerL:
         pe, pb = get_ratios(ticker)
-        if (pe < 15 and pb < 1.5):
-            list.append(ticker)
+        if ((pe != None) or (pb != None)):
+            if (pe < 15 and pb < 1.5):
+                list.append(ticker)
     return list
 
 
