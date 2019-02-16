@@ -25,7 +25,10 @@ def screen_bycode(s, code, type):
         lq_ann,lq_qtr = liquidity([cf_ann,cf_quart])
         chosenL = set(CR+DE+si_ann+si_qtr+lq_ann+lq_qtr)
         uv = underValued(chosenL)
-        ivps = intrinsicValue(s, chosenL)
+        if(len(chosenL) != 0):
+            ivps = intrinsicValue(s, chosenL)
+        else:
+            ivps = None
         ### PRINTS #####
         print(50*'-' + '\n' + 10*' ' + business + "\n" + 50*'-')
         print(', '.join(tickerL) + "\n" + 50*'-')
