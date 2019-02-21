@@ -107,8 +107,8 @@ def get_ratios(ticker):
         cols = row.find_all('td')
         cols = [ele.text.strip() for ele in cols]
         dic.update(dict([cols]))
-    # print(ticker) CHECKPOINT
-    if(dic['Forward P/E 1'] != 'N/A' and dic['Price/Book (mrq)'] != 'N/A'):
+    print(ticker) #CHECKPOINT
+    if(dic['Forward P/E 1'] != 'N/A' and '-' not in dic['Forward P/E 1'] and dic['Price/Book (mrq)'] != 'N/A'):
         try:
             pe = float(dic['Trailing P/E'])
             pb = float(dic['Price/Book (mrq)'])
