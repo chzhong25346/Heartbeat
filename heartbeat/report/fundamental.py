@@ -107,7 +107,7 @@ def get_ratios(ticker):
         cols = row.find_all('td')
         cols = [ele.text.strip() for ele in cols]
         dic.update(dict([cols]))
-    print(ticker) #CHECKPOINT
+    # print(ticker) #CHECKPOINT
     if(dic['Forward P/E 1'] != 'N/A' and '-' not in dic['Forward P/E 1'] and dic['Price/Book (mrq)'] != 'N/A'):
         try:
             pe = float(dic['Trailing P/E'])
@@ -176,13 +176,13 @@ def netTradeCycle(s, ticker):
         accountsPayable = bs.iloc[bs.index == ticker].sort_values(by='date')['accountsPayable']
         totalRevenue = ic.iloc[ic.index == ticker].sort_values(by='date')['totalRevenue']
         costOfRevenue = ic.iloc[ic.index == ticker].sort_values(by='date')['costOfRevenue']
-        if (all(totalRevenue != 0) & all(costOfRevenue != 0)):
+        if (all(totalRevenue != 0) and all(costOfRevenue != 0)):
             DSO = round(netReceivables/totalRevenue*360, 2)
             DIO = round(inventory/costOfRevenue*360, 2)
             DPO = round(accountsPayable/costOfRevenue*360, 2)
             NTC = DSO + DIO - DPO
             df = pd.concat([DSO, DIO, DPO, NTC], axis=1).reset_index()
-            df.rename(index=str, columns={0: "DSO", 1: "DIO", 2: "DPO", 3: "CCC"}, inplace=True)
+            df.rename(index=str, columns={0: "DSO", 1: "DIO", 2: "DPO", 3: "N-T-C"}, inplace=True)
             df = df[['DSO', 'DIO', 'DPO', 'N-T-C']]
             df.index  = bs.iloc[bs.index == ticker]['date'].sort_values().tolist()
             df.index = df.index.strftime("%Y")
