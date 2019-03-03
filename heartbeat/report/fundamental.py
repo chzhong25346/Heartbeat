@@ -31,7 +31,7 @@ def fundamental_output(s, ticker):
             get_Indinfo(ticker, s)
     except Exception as e:
         # print(e)
-        print('if %s is a Canadian stock, please suffix .TO' % ticker)
+        print('If %s is a Canadian stock, please suffix .TO' % ticker)
         print("Unable to search! Try again.")
 
 
@@ -57,8 +57,7 @@ def get_statistics(ticker, s, type):
         cols = [ele.text.strip() for ele in cols]
         dic.update(dict([cols]))
     df = pd.DataFrame(dic, index=[0])
-    # df = rename(df)
-    # df['Market Price(mrq)'] = float(df['Price/Book (mrq)']) * float(df['Book Value Per Share (mrq)'])
+    # print(df.columns)
     list = ['Market Cap (intraday) 5', 'Enterprise Value 3', 'Trailing P/E',
             'Forward P/E 1', 'PEG Ratio (5 yr expected) 1', 'Price/Sales (ttm)',
             'Price/Book (mrq)']#, 'Market Price(mrq)']
@@ -78,11 +77,13 @@ def get_statistics(ticker, s, type):
     list = ['Forward Annual Dividend Yield 4','Trailing Annual Dividend Yield 3',
             'Payout Ratio 4']
     dividends = pick_stats(df, list, 'Dividends') ###
+    list = ['Beta (3Y Monthly)', '52-Week Change 3']
+    price_his = pick_stats(df, list, 'Price History') ###
     print(35*'-' + '\n' + 'Financial Statistics' + '\n'+ 35*'-' + '\n' )
     if (NTC is not None):
         print(NTC)
     print('Intrinsic Value Per Share: ', IVps)
-    print(valuation, profitability, manag_eff, inc_stat, balance_sheet, cash_flow, dividends,  sep='\n')
+    print(valuation, profitability, manag_eff, inc_stat, balance_sheet, cash_flow, dividends, price_his,  sep='\n')
 
 
 def get_news(text):
