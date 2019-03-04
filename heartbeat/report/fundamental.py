@@ -44,6 +44,8 @@ def get_statistics(ticker, s, type):
     elif(type == 'external'):
         df = get_keyStats(ticker)
     IVps = intrinsic_value(df)
+    # YoY_financials
+    yoy = yoy_financials(df)
     # Net Trade Cyclce
     NTC = netTradeCycle(s, ticker)
     # fetching key-stats from Yahoo
@@ -80,9 +82,12 @@ def get_statistics(ticker, s, type):
     list = ['Beta (3Y Monthly)', '52-Week Change 3']
     price_his = pick_stats(df, list, 'Price History') ###
     print(35*'-' + '\n' + 'Financial Statistics' + '\n'+ 35*'-' + '\n' )
+    if (yoy is not None):
+        print(yoy)
+    print('Intrinsic Value Per Share: %s' % IVps)
     if (NTC is not None):
+        print('\n' + '------ Net Trading Cycle ------')
         print(NTC)
-    print('Intrinsic Value Per Share: ', IVps)
     print(valuation, profitability, manag_eff, inc_stat, balance_sheet, cash_flow, dividends, price_his,  sep='\n')
 
 
@@ -192,6 +197,26 @@ def netTradeCycle(s, ticker):
             return None
     except:
         return None
+
+
+def yoy_financials(df):
+    try:
+        df = df[['revenue','netIncome','operatingIncome','grossMargin','operatingMargin',
+                'freeCashFlow','earningsPerShare','bookValuePerShare']].fillna('-')
+        df.index = df.index.strftime('%Y')
+        df.sort_index(inplace=True)
+        df = df.tail(6)
+        df.columns = ['Revenue','Net-Income','Opt-Income','Gross-Margin','Opt-Margin','FCF','EPS','BVPS']
+        return df.T
+    except:
+        df = df[['revenue','netIncome','operatingIncome','grossMargin','operatingMargin',
+                'FreeCashFlow','earningsPerShare','bookValuePerShare']].fillna('-')
+        df.index = df.index.strftime('%Y')
+        df.sort_index(inplace=True)
+        df = df.tail(6)
+        df.columns = ['Revenue','Net-Income','Opt-Income','Gross-Margin','Opt-Margin','FCF','EPS','BVPS']
+        return df.T
+
 
 
 def get_Indinfo(ticker, s):
