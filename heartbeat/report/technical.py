@@ -59,10 +59,10 @@ def active_events(s, ticker):
     '''
     ticker = ticker.replace('.TO','')
     df = pd.read_sql(s.query(Report).filter(Report.symbol == ticker).statement, s.bind, index_col='date')\
-        .drop(columns="id")\
+        .drop("id", axis=1)\
         .sort_index()
     mask = (df.index.month == pd.to_datetime(datetime.today().strftime("%Y-%m")).month)
-    df = df.loc[mask].drop(columns="symbol")
+    df = df.loc[mask].drop("symbol",axis=1)
     df.columns = ['Yh', 'Yl', 'D', 'U', 'Hv', 'Lv', 'S', 'P', 'Vp']
     df = df.loc[:, (df != 0).any(axis=0) & (df != '0').any(axis=0)]
     events = df.columns.tolist()
