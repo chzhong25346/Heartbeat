@@ -3,9 +3,10 @@ from ..utils.util import groupby_na_to_zero
 from ..utils.locate_db import locate_session
 from ..utils.fetch import get_keyStats
 from ..db.read import read_ticker
-from ..models import Index, Quote
+from ..models import Index, Quote, Report
 from .volume_price import volume_price,today_price,fiftytwo_week
 from .fundamental import intrinsic_value
+from datetime import datetime
 
 
 def technical_output(s_dic, s_fin, ticker):
@@ -20,20 +21,24 @@ def technical_output(s_dic, s_fin, ticker):
         ticker = ticker.upper()
         if(db_name == 'tsxci'):
             ticker = ticker+'.TO'
+        events = active_events(s, ticker)
         try:
             ks = get_keyStats(ticker)
             IVps = intrinsic_value(ks)
+            events = active_events(s, ticker)
             print('IVps: ' + str(IVps))
         except:
             pass
         print('close: ' + str(today.close) + ', open: ' + str(today.open) + '\n'
               + 'high: ' + str(today.high) + ', low: ' + str(today.low) + '\n' + 35*'-')
-        print("52-week high: " + ft_max
-                + "\n52-week low: " + ft_min
-                + "\n52-week change: " + ft_delta + "\n" + 35*'-')
+        print("1Year high: " + ft_max
+                + "\n1Year low: " + ft_min
+                + "\n1Year fluctuation: " + ft_delta + "\n" + 35*'-')
+        print('Events: '+ ', '.join(events) + "\n" + 35*'-')
         print(df_pv)
     except Exception as e:
         print("Unable to search! Try again.")
+
 
 
 def get_quote(s, ticker):
@@ -46,3 +51,22 @@ def get_quote(s, ticker):
     # drop rows have 0
     df = df[(df != 0).all(1)]
     return df
+
+
+def active_events(s, ticker):
+    '''
+    Get current month events happened
+    '''
+    ticker = ticker.replace('.TO','')
+    df = pd.read_sql(s.query(Report).filter(Report.symbol == ticker).statement, s.bind, index_col='date')\
+        .drop(columns="id")\
+        .sort_index()
+    mask = (df.index.month == pd.to_datetime(datetime.today().strftime("%Y-%m")).month)
+    df = df.loc[mask].drop(columns="symbol")
+    df.columns = ['Yh', 'Yl', 'D', 'U', 'Hv', 'Lv', 'S', 'P', 'Vp']
+    df = df.loc[:, (df != 0).any(axis=0) & (df != '0').any(axis=0)]
+    events = df.columns.tolist()
+    if 'P' in events:
+        events = events + df['P'].tolist()
+    events = [e for e in events if e not in ('0', 'P')]
+    return events

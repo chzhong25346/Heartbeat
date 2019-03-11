@@ -23,6 +23,22 @@ class Quote(db.Model):
     volume = db.Column(db.BIGINT, nullable=True)
 
 
+class Report(db.Model):
+    __tablename__ = 'report'
+    id = db.Column(db.String(40), unique=True, nullable=False, primary_key=True)
+    date = db.Column(db.DateTime, nullable=False)
+    symbol = db.Column(db.String(6), db.ForeignKey("index.symbol"), nullable=False)
+    yr_high = db.Column(db.Boolean, nullable=True)
+    yr_low = db.Column(db.Boolean, nullable=True)
+    downtrend = db.Column(db.Boolean, nullable=True)
+    uptrend = db.Column(db.Boolean, nullable=True)
+    high_volume = db.Column(db.Boolean, nullable=True)
+    low_volume = db.Column(db.Boolean, nullable=True)
+    support = db.Column(db.Boolean, nullable=True)
+    pattern = db.Column(db.String(20), nullable=True)
+    volume_price = db.Column(db.Boolean, nullable=True)
+
+
 class Income(db.Model):
     __tablename__ = 'income'
     id = db.Column(db.String(40), unique=True, nullable=False, primary_key=True)

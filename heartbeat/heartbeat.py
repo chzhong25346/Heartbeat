@@ -108,9 +108,8 @@ def reporting_technical(ticker):
     db_name_list = ['nasdaq100','tsxci','sp100']
     s_dic = {}
     for name in db_name_list:
-        Config.DB_NAME=name
-        db_nasdaq = Db(Config)
-        s = db_nasdaq.session()
+        Config.DB_NAME = name
+        s = Db(Config).session()
         s_dic.update({name:s})
     Config.DB_NAME = 'financials'
     db = Db(Config)
