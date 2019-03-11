@@ -17,7 +17,7 @@ def technical_output(s_dic, s_fin, ticker):
         today = today_price(df)
         ft_max, ft_min, ft_delta = fiftytwo_week(df)
         df_pv = volume_price(df)
-        print(35*'-' + '\n' + ticker + ' - ' + company_name + "\n" + 35*'-')
+        print('\n' + 35*'-' + '\n' + ticker + ' - ' + company_name + "\n" + 35*'-')
         ticker = ticker.upper()
         if(db_name == 'tsxci'):
             ticker = ticker+'.TO'
