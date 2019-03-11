@@ -21,7 +21,6 @@ def technical_output(s_dic, s_fin, ticker):
         ticker = ticker.upper()
         if(db_name == 'tsxci'):
             ticker = ticker+'.TO'
-        events = active_events(s, ticker)
         try:
             ks = get_keyStats(ticker)
             IVps = intrinsic_value(ks)
@@ -64,7 +63,9 @@ def active_events(s, ticker):
     mask = (df.index.month == pd.to_datetime(datetime.today().strftime("%Y-%m")).month)
     df = df.loc[mask].drop("symbol",axis=1)
     df.columns = ['Yh', 'Yl', 'D', 'U', 'Hv', 'Lv', 'S', 'P', 'Vp']
-    df = df.loc[:, (df != 0).any(axis=0) & (df != '0').any(axis=0)]
+    df = df.loc[:, (df != 0).any(axis=0)]
+    if(all((df['P'] == '0'))):
+        df = df.drop("P",axis=1)
     events = df.columns.tolist()
     if 'P' in events:
         events = events + df['P'].tolist()
