@@ -8,10 +8,7 @@ from ..db.write import bulk_save, bulk_update
 
 
 def learning_data(s_dic):
-    s_nq = s_dic['nasdaq100']
-    s_t = s_dic['tsxci']
-    s_sp = s_dic['sp100']
-    s_f = s_dic['financials']
+    # s_f = s_dic['financials']
     s_l = s_dic['learning']
 
     for db_name in ('tsxci','nasdaq100','sp100'):
@@ -22,8 +19,8 @@ def learning_data(s_dic):
         if(db_name == 'tsxci'):
             df['symbol'] = df['symbol'] + '.TO'
         models = map_training_data(df)
-        bulk_save(s, models)
-        
+        bulk_save(s_l, models)
+
 
 def ema(df, span):
     df = df.sort_index(ascending=True).last("18M")

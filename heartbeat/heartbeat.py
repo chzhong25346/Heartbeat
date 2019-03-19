@@ -100,8 +100,24 @@ def main(argv):
                         submode = None
                         mode = None
             if(mode == 'Learning'): #### Option 5
-                start_learning()
-                mode = None
+                if(submode == None):
+                    code = ''
+                    dic = {1:'Renew data', 2:'Learning', 0:'Return'}
+                    print(5*'-',"Learning Mode", 5*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
+                    key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode, submode)))
+                    if(key not in list(dic.keys()) ):
+                        print('Invalid option!')
+                    else:
+                        submode = dic[key]
+                    if(submode == 'Renew data'):  #### Option 5-1
+                        renew_tdata()
+                        submode = None
+                    elif(submode == 'Learning'): #### Option 5-2
+                        print('building...')
+                        submode = None
+                    elif(submode == 'Return'): #### Option 5-0
+                        submode = None
+                        mode = None
         except KeyboardInterrupt:
             continue
         except EOFError:
@@ -160,8 +176,7 @@ def screening_bycode(code, type):
     s.close()
 
 
-def start_learning():
-    print('\nStart Learning...\n')
+def renew_tdata():
     db_name_list = ['nasdaq100','tsxci','sp100','financials','learning']
     s_dic = {}
     for name in db_name_list:
@@ -171,7 +186,7 @@ def start_learning():
         s_dic.update({name:s})
         if ('learning' in s_dic):
             db.create_all([Training_data.__table__])
-    learning_data(s_dic)
+    learning_data(s_dic) # .learning.update
     # Close all sessions
     for name, s in s_dic.items():
         s.close()
