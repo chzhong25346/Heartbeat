@@ -166,3 +166,22 @@ class Findex(db.Model):
     Index = db.Column(db.String(20), nullable=False)
     Secode = db.Column(db.String(10), nullable=False)
     Indcode = db.Column(db.String(10), nullable=False)
+
+
+class Training_data(db.Model):
+    __tablename__ = 'training_data'
+    id = db.Column(db.String(40), unique=True, nullable=False, primary_key=True)
+    date = db.Column(db.DateTime, nullable=False)
+    symbol = db.Column(db.String(10), nullable=False)
+    yr_high = db.Column(db.Boolean, nullable=True)
+    yr_low = db.Column(db.Boolean, nullable=True)
+    downtrend = db.Column(db.Boolean, nullable=True)
+    uptrend = db.Column(db.Boolean, nullable=True)
+    high_volume = db.Column(db.Boolean, nullable=True)
+    low_volume = db.Column(db.Boolean, nullable=True)
+    support = db.Column(db.Boolean, nullable=True)
+    pattern = db.Column(db.String(20), nullable=True)
+    volume_price = db.Column(db.Boolean, nullable=True)
+    buy = db.Column(db.Boolean, nullable=True)
+    sell = db.Column(db.Boolean, nullable=True)
+    hold = db.Column(db.Boolean, nullable=True)

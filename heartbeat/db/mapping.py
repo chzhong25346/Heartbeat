@@ -3,7 +3,7 @@ import datetime as dt
 from datetime import datetime
 from ..utils.fetch import fetch_index, get_daily_adjusted
 from ..utils.util import gen_id
-from ..models import Income,BalanceSheet,Cashflow,Keystats,Findex
+from ..models import Income,BalanceSheet,Cashflow,Keystats,Findex,Training_data
 
 
 def map_income(df):
@@ -146,5 +146,27 @@ def map_findex(df):
         Index = r['Index'],
         Secode = r['Secode'],
         Indcode = r['Indcode'],
+    ) for r in df_records]
+    return model_instnaces
+
+
+def map_training_data(df):
+    df_records = df.to_dict('r')
+    model_instnaces = [Training_data(
+        id = gen_id(record['symbol']+str(date)),
+        symbol = record['symbol'],
+        date = date,
+        yr_high = record['yr_high'],
+        yr_low = record['yr_low'],
+        downtrend = record['downtrend'],
+        uptrend = record['uptrend'],
+        high_volume = record['high_volume'],
+        low_volume = record['low_volume'],
+        pattern = record['pattern'],
+        support = record['support'],
+        volume_price = record['volume_price'],
+        buy = record['buy'],
+        sell = record['sell'],
+        hold = record['hold'],
     ) for r in df_records]
     return model_instnaces

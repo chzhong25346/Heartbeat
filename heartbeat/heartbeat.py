@@ -12,8 +12,9 @@ from .report.fundamental import fundamental_output
 from .financials.update import update_financials
 from .screener.screener import screen_full
 from .screener.screener_bycode import screen_bycode
+from .learning.training_data import learning_data
 from .db.db import Db
-from .models import Income,BalanceSheet,Cashflow,Keystats,Findex
+from .models import Income,BalanceSheet,Cashflow,Keystats,Findex,Training_data
 import sys
 
 cmd_completer = WordCompleter(['exit'])
@@ -42,7 +43,7 @@ def main(argv):
     while True:
         try:
             if(mode == None):
-                dic = {1:'Technical Analysis', 2:'Fundamental Analysis', 3:'Update Financials', 4:'Screener', 0:'End Program'}
+                dic = {1:'Technical Analysis', 2:'Fundamental Analysis', 3:'Update Financials', 4:'Screener', 5:'Learning',0:'End Program'}
                 print(9*'-',"Modules", 9*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
                 key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode) ))
                 if(key not in list(dic.keys()) ):
@@ -51,22 +52,22 @@ def main(argv):
                     sys.exit()
                 else:
                     mode = dic[key]
-            if(mode == 'Technical Analysis'):
+            if(mode == 'Technical Analysis'): #### Option 1
                 ticker = prompt('Enter ticker: ', bottom_toolbar=bottom_toolbar(mode), completer=cmd_completer).replace(" ", "")
                 if(ticker == 'exit'):
                     mode = None
                 if(ticker != '' and ticker != 'exit'):
                     reporting_technical(ticker)
-            if(mode == 'Fundamental Analysis'):
+            if(mode == 'Fundamental Analysis'): #### Option 2
                 ticker = prompt('Enter ticker(.TO): ', bottom_toolbar=bottom_toolbar(mode), completer=cmd_completer).replace(" ", "")
                 if(ticker == 'exit'):
                     mode = None
                 elif(ticker != '' and ticker != 'exit'):
                     reporting_fundamental(ticker)
-            if(mode == 'Update Financials'):
+            if(mode == 'Update Financials'): #### Option 3
                 updating_financials()
                 mode = None
-            if(mode == 'Screener'):
+            if(mode == 'Screener'): #### Option 4
                 if(submode == None):
                     code = ''
                     dic = {1:'Full', 2:'By Sector', 3:'By Industry', 0:'Return'}
@@ -76,10 +77,10 @@ def main(argv):
                         print('Invalid option!')
                     else:
                         submode = dic[key]
-                    if(submode == 'Full'):
+                    if(submode == 'Full'):  #### Option 4-1
                         screening_full()
                         submode = None
-                    elif(submode == 'By Sector'):
+                    elif(submode == 'By Sector'): #### Option 4-2
                         while True:
                             code = prompt('Sector code: ', bottom_toolbar=bottom_toolbar(mode, submode), completer=cmd_completer).replace(" ", "")
                             if (code == 'exit'):
@@ -87,7 +88,7 @@ def main(argv):
                                 break
                             else:
                                 screening_bycode(code, 'Secode')
-                    elif(submode == 'By Industry'):
+                    elif(submode == 'By Industry'): #### Option 4-3
                         while True:
                             code = prompt('Industry code: ', bottom_toolbar=bottom_toolbar(mode, submode), completer=cmd_completer).replace(" ", "")
                             if (code == 'exit'):
@@ -95,9 +96,12 @@ def main(argv):
                                 break
                             else:
                                 screening_bycode(code, 'Indcode')
-                    elif(submode == 'Return'):
+                    elif(submode == 'Return'): #### Option 4-0
                         submode = None
                         mode = None
+            if(mode == 'Learning'): #### Option 5
+                start_learning()
+                mode = None
         except KeyboardInterrupt:
             continue
         except EOFError:
@@ -154,3 +158,20 @@ def screening_bycode(code, type):
     s = db.session()
     screen_bycode(s, code, type) # .screener_bycode.screen_bycode
     s.close()
+
+
+def start_learning():
+    print('\nStart Learning...\n')
+    db_name_list = ['nasdaq100','tsxci','sp100','financials','learning']
+    s_dic = {}
+    for name in db_name_list:
+        Config.DB_NAME = name
+        db = Db(Config)
+        s = db.session()
+        s_dic.update({name:s})
+        if ('learning' in s_dic):
+            db.create_all([Training_data.__table__])
+    learning_data(s_dic)
+    # Close all sessions
+    for name, s in s_dic.items():
+        s.close()
