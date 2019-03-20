@@ -39,16 +39,12 @@ def bulk_insert(session, obj, model_list):
         pass
 
 
-def insert_onebyone(session, models):
-    try:
-        if isinstance(models, list):
-            for m in models():
-                session.add(m)
-                session.commit()
-        else:
-            session.add(models)
+def insert_onebyone(session, model_list):
+    for model in model_list:
+        try:
+            session.add(model)
             session.commit()
-    except Exception as e:
-        # print(e)
-        session.rollback()
-        pass
+        except Exception as e:
+            # print(e)
+            session.rollback()
+            pass
