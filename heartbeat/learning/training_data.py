@@ -2,16 +2,16 @@ import time
 import numpy as np
 import pandas as pd
 from datetime import timedelta
-from ..models import Quote,Report
+from ..models import Quote,Report,Tdata
 from ..db.mapping import map_tdata
-from ..db.write import bulk_save, bulk_update
+from ..db.write import insert_onebyone
 
 
 def collect_tdata(s_dic):
     # s_f = s_dic['financials']
     s_l = s_dic['learning']
 
-    for db_name in ['sp100','tsxci','nasdaq100']:
+    for db_name in ['nasdaq100','sp100','tsxci']:
         print('Processing db "%s"...' % db_name)
         s = s_dic[db_name]
         report = get_report(s)
@@ -19,7 +19,7 @@ def collect_tdata(s_dic):
         if(db_name == 'tsxci'):
             df['symbol'] = df['symbol'] + '.TO'
         models = map_tdata(df)
-        bulk_save(s_l, models)
+        insert_onebyone(s_l, models)
 
 
 def ema(df, span):

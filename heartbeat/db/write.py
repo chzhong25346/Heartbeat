@@ -11,9 +11,8 @@ def bulk_save(session, model_list):
     try:
         session.bulk_save_objects(model_list,update_changed_only=False)
         session.commit()
-        # logger.info('Worte to Db.')
     except Exception as e:
-        print(e)
+        # print(e)
         session.rollback()
         pass
 
@@ -23,7 +22,32 @@ def bulk_update(session, obj, model_list):
         list = model_dicL(model_list)
         session.bulk_update_mappings(obj, list)
         session.commit()
-        # logger.info('Worte to Db.')
+    except Exception as e:
+        # print(e)
+        session.rollback()
+        pass
+
+
+def bulk_insert(session, obj, model_list):
+    try:
+        list = model_dicL(model_list)
+        session.bulk_insert_mappings(obj, list)
+        session.commit()
+    except Exception as e:
+        # print(e)
+        session.rollback()
+        pass
+
+
+def insert_onebyone(session, models):
+    try:
+        if isinstance(models, list):
+            for m in models():
+                session.add(m)
+                session.commit()
+        else:
+            session.add(models)
+            session.commit()
     except Exception as e:
         # print(e)
         session.rollback()
