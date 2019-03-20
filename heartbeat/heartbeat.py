@@ -44,7 +44,7 @@ def main(argv):
         try:
             if(mode == None):
                 dic = {1:'Technical Analysis', 2:'Fundamental Analysis', 3:'Update Financials', 4:'Screener', 5:'Learning',0:'End Program'}
-                print(9*'-',"Modules", 9*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
+                print('\n', 9*'-',"Modules", 9*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',27 *'-')
                 key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode) ))
                 if(key not in list(dic.keys()) ):
                     print('Invalid option!')
@@ -71,7 +71,7 @@ def main(argv):
                 if(submode == None):
                     code = ''
                     dic = {1:'Full', 2:'By Sector', 3:'By Industry', 0:'Return'}
-                    print(5*'-',"Screening Mode", 5*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
+                    print('\n', 5*'-',"Screening Mode", 5*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
                     key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode, submode)))
                     if(key not in list(dic.keys()) ):
                         print('Invalid option!')
@@ -103,7 +103,7 @@ def main(argv):
                 if(submode == None):
                     code = ''
                     dic = {1:'Renew data', 2:'Learning', 0:'Return'}
-                    print(5*'-',"Learning Mode", 5*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
+                    print('\n', 5*'-',"Learning Mode", 5*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
                     key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode, submode)))
                     if(key not in list(dic.keys()) ):
                         print('Invalid option!')
