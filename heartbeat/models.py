@@ -168,8 +168,8 @@ class Findex(db.Model):
     Indcode = db.Column(db.String(10), nullable=False)
 
 
-class Training_data(db.Model):
-    __tablename__ = 'training_data'
+class Tdata(db.Model):
+    __tablename__ = 'tdata'
     id = db.Column(db.String(40), unique=True, nullable=False, primary_key=True)
     date = db.Column(db.DateTime, nullable=False)
     symbol = db.Column(db.String(10), nullable=False)

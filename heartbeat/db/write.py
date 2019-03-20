@@ -13,7 +13,7 @@ def bulk_save(session, model_list):
         session.commit()
         # logger.info('Worte to Db.')
     except Exception as e:
-        # print(e)
+        print(e)
         session.rollback()
         pass
 

@@ -12,9 +12,9 @@ from .report.fundamental import fundamental_output
 from .financials.update import update_financials
 from .screener.screener import screen_full
 from .screener.screener_bycode import screen_bycode
-from .learning.training_data import learning_data
+from .learning.training_data import collect_tdata
 from .db.db import Db
-from .models import Income,BalanceSheet,Cashflow,Keystats,Findex,Training_data
+from .models import Income,BalanceSheet,Cashflow,Keystats,Findex,Tdata
 import sys
 
 cmd_completer = WordCompleter(['exit'])
@@ -185,8 +185,8 @@ def renew_tdata():
         s = db.session()
         s_dic.update({name:s})
         if ('learning' in s_dic):
-            db.create_all([Training_data.__table__])
-    learning_data(s_dic) # .learning.update
+            db.create_all([Tdata.__table__])
+    collect_tdata(s_dic) # .learning.update
     # Close all sessions
     for name, s in s_dic.items():
         s.close()

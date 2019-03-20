@@ -3,22 +3,22 @@ import numpy as np
 import pandas as pd
 from datetime import timedelta
 from ..models import Quote,Report
-from ..db.mapping import map_training_data
+from ..db.mapping import map_tdata
 from ..db.write import bulk_save, bulk_update
 
 
-def learning_data(s_dic):
+def collect_tdata(s_dic):
     # s_f = s_dic['financials']
     s_l = s_dic['learning']
 
-    for db_name in ('tsxci','nasdaq100','sp100'):
-        print('Processing %s...' % db_name)
+    for db_name in ['sp100','tsxci','nasdaq100']:
+        print('Processing db "%s"...' % db_name)
         s = s_dic[db_name]
         report = get_report(s)
         df = fact_check(s, report)
         if(db_name == 'tsxci'):
             df['symbol'] = df['symbol'] + '.TO'
-        models = map_training_data(df)
+        models = map_tdata(df)
         bulk_save(s_l, models)
 
 
@@ -82,6 +82,9 @@ def fact_check(s, df):
         except:
             print('(%s)' % ticker)
             pass
-    # remove all buy/sell/hold all is False
+    # remove all buy/sell/hold all is False and do clearning
     df.dropna(subset=['buy', 'sell', 'hold'],how='all', inplace =True)
+    df.reset_index(inplace=True)
+    df.fillna(False, inplace=True)
+    df = df.drop('id', axis=1)
     return df
