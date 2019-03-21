@@ -20,6 +20,7 @@ def collect_tdata(s_dic):
             df['symbol'] = df['symbol'] + '.TO'
         models = map_tdata(df)
         insert_onebyone(s_l, models)
+        print('Completed writing "%s".' % db_name)
 
 
 
@@ -79,9 +80,9 @@ def fact_check(s, df):
                     df.ix[index, 'buy'] = True
                 else:
                     df.ix[index, 'hold'] = True
-            print('--> %s' % ticker)
+            # print('--> %s' % ticker)
         except:
-            print('(%s)' % ticker)
+            # print('(%s)' % ticker)
             pass
     # remove all buy/sell/hold all is False and do clearning
     df.dropna(subset=['buy', 'sell', 'hold'],how='all', inplace =True)
