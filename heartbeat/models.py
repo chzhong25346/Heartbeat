@@ -180,7 +180,7 @@ class Tdata(db.Model):
     high_volume = db.Column(db.Boolean, nullable=True)
     low_volume = db.Column(db.Boolean, nullable=True)
     support = db.Column(db.Boolean, nullable=True)
-    pattern = db.Column(db.String(20), nullable=True)
+    pattern = db.Column(db.Boolean, nullable=True)
     volume_price = db.Column(db.Boolean, nullable=True)
     buy = db.Column(db.Boolean, nullable=True)
     sell = db.Column(db.Boolean, nullable=True)

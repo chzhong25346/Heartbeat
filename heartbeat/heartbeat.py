@@ -13,6 +13,7 @@ from .financials.update import update_financials
 from .screener.screener import screen_full
 from .screener.screener_bycode import screen_bycode
 from .learning.training_data import collect_tdata
+from .learning.deep_learning import learning_hub
 from .db.db import Db
 from .models import Income,BalanceSheet,Cashflow,Keystats,Findex,Tdata
 import sys
@@ -113,7 +114,7 @@ def main(argv):
                         renew_tdata()
                         submode = None
                     elif(submode == 'Learning'): #### Option 5-2
-                        print('building...')
+                        machine_learning()
                         submode = None
                     elif(submode == 'Return'): #### Option 5-0
                         submode = None
@@ -187,6 +188,20 @@ def renew_tdata():
         if ('learning' in s_dic):
             db.create_all([Tdata.__table__])
     collect_tdata(s_dic) # .learning.update
+    # Close all sessions
+    for name, s in s_dic.items():
+        s.close()
+
+
+def machine_learning():
+    db_name_list = ['learning','financials']
+    s_dic = {}
+    for name in db_name_list:
+        Config.DB_NAME = name
+        db = Db(Config)
+        s = db.session()
+        s_dic.update({name:s})
+    learning_hub(s_dic) # .learning.deep_learning
     # Close all sessions
     for name, s in s_dic.items():
         s.close()
