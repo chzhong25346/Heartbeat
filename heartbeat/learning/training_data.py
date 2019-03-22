@@ -11,7 +11,7 @@ def collect_tdata(s_dic):
     # s_f = s_dic['financials']
     s_l = s_dic['learning']
 
-    for db_name in   ['learning']: #['nasdaq100','sp100','tsxci']:
+    for db_name in ['nasdaq100','sp100','tsxci']: # ['learning']: 
         print('Processing db "%s"...' % db_name)
         s = s_dic[db_name]
         report = get_report(s)
