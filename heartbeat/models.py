@@ -33,10 +33,9 @@ class Report(db.Model):
     downtrend = db.Column(db.Boolean, nullable=True)
     uptrend = db.Column(db.Boolean, nullable=True)
     high_volume = db.Column(db.Boolean, nullable=True)
-    low_volume = db.Column(db.Boolean, nullable=True)
-    support = db.Column(db.Boolean, nullable=True)
-    pattern = db.Column(db.String(20), nullable=True)
     volume_price = db.Column(db.Boolean, nullable=True)
+    rsi = db.Column(db.String(4), nullable=True)
+    macd = db.Column(db.String(4), nullable=True)
 
 
 class Income(db.Model):

@@ -22,9 +22,9 @@ def technical_output(s_dic, s_fin, ticker):
         if(db_name == 'tsxci'):
             ticker = ticker+'.TO'
         try:
+            events = active_events(s, ticker)
             ks = get_keyStats(ticker)
             IVps = intrinsic_value(ks)
-            events = active_events(s, ticker)
             print('IVps: ' + str(IVps))
         except:
             pass
@@ -36,6 +36,7 @@ def technical_output(s_dic, s_fin, ticker):
         print('Events: '+ ', '.join(events) + "\n" + 35*'-')
         print(df_pv)
     except Exception as e:
+        # print(e)
         print("Unable to search! Try again.")
 
 
@@ -57,17 +58,22 @@ def active_events(s, ticker):
     Get current month events happened
     '''
     ticker = ticker.replace('.TO','')
-    df = pd.read_sql(s.query(Report).filter(Report.symbol == ticker).statement, s.bind, index_col='date')\
-        .drop("id", axis=1)\
-        .sort_index()
-    mask = (df.index.month == pd.to_datetime(datetime.today().strftime("%Y-%m")).month)
-    df = df.loc[mask].drop("symbol",axis=1)
-    df.columns = ['Yh', 'Yl', 'D', 'U', 'Hv', 'Lv', 'S', 'P', 'Vp']
-    df = df.loc[:, (df != 0).any(axis=0)]
-    if(all((df['P'] == '0'))):
-        df = df.drop("P",axis=1)
-    events = df.columns.tolist()
-    if 'P' in events:
-        events = events + df['P'].tolist()
-    events = [e for e in events if e not in ('0', 'P')]
-    return events
+    try:
+        df = pd.read_sql(s.query(Report).filter(Report.symbol == ticker).statement, s.bind, index_col='date')\
+            .drop("id", axis=1)\
+            .sort_index()
+        mask = (df.index.month == pd.to_datetime(datetime.today().strftime("%Y-%m")).month)
+        df = df.loc[mask].drop("symbol",axis=1)
+        df.columns = ['Yh', 'Yl', 'D', 'U', 'Hv', 'Vp', 'rsi', 'macd']
+        df = df.loc[:, (df != 0).any(axis=0)]
+        if(all(df['rsi'] == '0')):
+            df = df.drop("rsi",axis=1)
+        elif(all(df['macd'] == '0')):
+            df = df.drop("macd",axis=1)
+        events = df.columns.tolist()
+        # if 'P' in events:
+        #     events = events + df['P'].tolist()
+        # events = [e for e in events if e not in ('0', 'P')]
+        return events
+    except:
+        return []
