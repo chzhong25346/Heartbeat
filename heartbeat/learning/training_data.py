@@ -11,7 +11,7 @@ def collect_tdata(s_dic):
     # s_f = s_dic['financials']
     s_l = s_dic['learning']
 
-    for db_name in ['nasdaq100','sp100','tsxci']: # ['learning']: 
+    for db_name in ['nasdaq100','sp100','tsxci']: # ['learning']:
         print('Processing db "%s"...' % db_name)
         s = s_dic[db_name]
         report = get_report(s)
@@ -42,12 +42,10 @@ def slice_datetime(df, rdate, span, ptype):
 
 def get_report(s):
     df = pd.read_sql(s.query(Report).statement, s.bind, index_col='id')
-    df['pattern'] = df['pattern'] != '0' # Pattern vlaues to True/False
     # Drop rows that are False in all columns
     df.drop(df.index[df['yr_high'] == 0] & df.index[df['yr_low'] == 0] &
             df.index[df['downtrend'] == 0] & df.index[df['uptrend'] == 0] &
-            df.index[df['high_volume'] == 0] & df.index[df['low_volume'] == 0] &
-            df.index[df['support'] == 0] & df.index[df['pattern'] == 0] &
+            df.index[df['high_volume'] == 0]  & df.index[df['rsi'] == '0'] & df.index[df['macd'] == '0'] &
             df.index[df['volume_price'] == 0], inplace=True)
     df['buy'] = np.nan
     df['hold'] = np.nan
