@@ -209,8 +209,8 @@ def yoy_financials(df):
         df.columns = ['Revenue','Net-Income','Opt-Income','Gross-Margin','Opt-Margin','FCF','EPS','BVPS']
         return df.T
     except:
-        df = df[['revenue','netIncome','operatingIncome','grossMargin','operatingMargin',
-                'FreeCashFlow','earningsPerShare','bookValuePerShare']].fillna('-')
+        df = df[['Revenue','NetIncome','OperatingIncome','GrossMargin','OperatingMargin',
+                'FreeCashFlow','EarningsPerShare','BookValuePerShare']].fillna('-')
         df.index = df.index.strftime('%Y')
         df.sort_index(inplace=True)
         df = df.tail(6)
