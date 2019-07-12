@@ -167,5 +167,8 @@ def map_tdata(df):
         buy = r['buy'],
         sell = r['sell'],
         hold = r['hold'],
+        rating = r['rating'],
+        secode = r['secode'],
+        indcode = r['indcode'],
     ) for r in df_records]
     return model_instnaces

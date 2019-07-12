@@ -186,3 +186,6 @@ class Tdata(db.Model):
     buy = db.Column(db.Boolean, nullable=True)
     sell = db.Column(db.Boolean, nullable=True)
     hold = db.Column(db.Boolean, nullable=True)
+    rating = db.Column(db.Float, nullable=True)
+    secode = db.Column(db.String(10), nullable=False)
+    indcode = db.Column(db.String(10), nullable=False)
