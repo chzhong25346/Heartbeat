@@ -13,17 +13,23 @@ def collect_tdata(s_dic):
     s_l = s_dic['learning']
     s_f = s_dic['financials']
 
+    tdata = pd.read_sql(s_l.query(Tdata).statement, s_l.bind, index_col='id')
+
     for db_name in ['tsxci','nasdaq100','sp100']:
     # for db_name in ['tsxci']:
     # for db_name in ['learning']:
         print('Processing db "%s"...' % db_name)
         s = s_dic[db_name]
-        report = get_report(s)
+
+        report = get_report(s, tdata, db_name)
+
         df = fact_check(s, report)
+
         if(db_name == 'tsxci'):
             df['symbol'] = df['symbol'] + '.TO'
+
         df = map_code(s_f, df)
-        print(df)
+
         models = map_tdata(df)
         insert_onebyone(s_l, models)
         print('Completed writing "%s".' % db_name)
@@ -45,13 +51,31 @@ def slice_datetime(df, rdate, span, ptype):
         return price
 
 
-def get_report(s):
+def get_report(s, tdata, db_name):
     df = pd.read_sql(s.query(Report).statement, s.bind, index_col='id')
+    # Copy tlatest that has latest tdata rows
+    tlatest = tdata.sort_values('date', ascending=False).drop_duplicates(['symbol'])
     # Drop rows that are False in all columns
     df.drop(df.index[df['yr_high'] == 0] & df.index[df['yr_low'] == 0] &
             df.index[df['downtrend'] == 0] & df.index[df['uptrend'] == 0] &
             df.index[df['high_volume'] == 0]  & df.index[df['rsi'] == '0'] & df.index[df['macd'] == '0'] &
             df.index[df['volume_price'] == 0], inplace=True)
+    # make a copy of orginal columns
+    df.reset_index(inplace=True)
+    cols = df.columns.values
+    # Copy symbol column
+    if db_name == 'tsxci':
+        df['symbol2'] = df['symbol']
+        df['symbol'] = df['symbol'] + '.TO'
+    # Choose reports newer than latest date in Tdata
+    df = df.merge(tlatest, on='symbol', suffixes={'','_y'}).query('date > date_y')
+    # Restore symbol without .TO
+    if db_name == 'tsxci':
+        df['symbol'] = df['symbol2']
+    # Restore orginal report columns
+    df.set_index('id', inplace=True, drop=False)
+    df = df[cols].drop('id', axis=1)
+    # Add tdata columns
     df['buy'] = np.nan
     df['hold'] = np.nan
     df['sell'] = np.nan
