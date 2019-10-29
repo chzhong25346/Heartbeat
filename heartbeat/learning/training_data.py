@@ -16,7 +16,7 @@ def collect_tdata(s_dic):
     tdata = pd.read_sql(s_l.query(Tdata).statement, s_l.bind, index_col='id')
 
     for db_name in ['tsxci','nasdaq100','sp100']:
-    # for db_name in ['tsxci']:
+    # for db_name in ['nasdaq100']:
     # for db_name in ['learning']:
         print('Processing db "%s"...' % db_name)
         s = s_dic[db_name]
@@ -68,7 +68,7 @@ def get_report(s, tdata, db_name):
         df['symbol2'] = df['symbol']
         df['symbol'] = df['symbol'] + '.TO'
     # Choose reports newer than latest date in Tdata
-    df = df.merge(tlatest, on='symbol', suffixes={'','_y'}).query('date > date_y')
+    df = df.merge(tlatest, on='symbol', suffixes={'','_y'}).query('date > date_y') ######### ALL TDATA UPDATE
     # Restore symbol without .TO
     if db_name == 'tsxci':
         df['symbol'] = df['symbol2']
