@@ -15,8 +15,8 @@ def collect_tdata(s_dic):
 
     tdata = pd.read_sql(s_l.query(Tdata).statement, s_l.bind, index_col='id')
 
-    for db_name in ['tsxci','sp100']:
-    # for db_name in ['nasdaq100']:
+    for db_name in ['tsxci','nasdaq100','sp100']:
+    # for db_name in []:
     # for db_name in ['learning']:
         print('Processing db "%s"...' % db_name)
         s = s_dic[db_name]
