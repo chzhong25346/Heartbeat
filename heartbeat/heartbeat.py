@@ -7,6 +7,7 @@ from prompt_toolkit.completion import WordCompleter
 from .utils.config import Config
 from .utils.normalize import generate_tickerL
 from .utils.fetch import fetch_index, fetch_findex
+from .utils.util import is_db
 from .report.technical import technical_output
 from .report.fundamental import fundamental_output
 from .financials.update import update_financials
@@ -14,6 +15,7 @@ from .screener.screener import screen_full
 from .screener.screener_bycode import screen_bycode
 from .learning.training_data import collect_tdata
 from .learning.deep_learning import learning_hub
+from .maintenance.remove import delete_ticker
 from .db.db import Db
 from .models import Income,BalanceSheet,Cashflow,Keystats,Findex,Tdata
 import sys
@@ -44,7 +46,7 @@ def main(argv):
     while True:
         try:
             if(mode == None):
-                dic = {1:'Technical Analysis', 2:'Fundamental Analysis', 3:'Update Financials', 4:'Screener', 5:'Learning',0:'End Program'}
+                dic = {1:'Technical Analysis', 2:'Fundamental Analysis', 3:'Update Financials', 4:'Screener', 5:'Learning',  6:'Maintenance', 0:'End Program'}
                 print('\n', 9*'-',"Modules", 9*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',27 *'-')
                 key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode) ))
                 if(key not in list(dic.keys()) ):
@@ -117,6 +119,31 @@ def main(argv):
                         machine_learning()
                         submode = None
                     elif(submode == 'Return'): #### Option 5-0
+                        submode = None
+                        mode = None
+            if(mode == 'Maintenance'): #### Option 6
+                if(submode == None):
+                    code = ''
+                    dic = {1:'Remove ticker', 0:'Return'}
+                    print('\n', 5*'-',"Maintenance Mode", 5*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
+                    key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode, submode)))
+                    if(key not in list(dic.keys()) ):
+                        print('Invalid option!')
+                    else:
+                        submode = dic[key]
+                    if(submode == 'Remove ticker'):  #### Option 6-1
+                        while True:
+                            dbname = prompt('Database name: ', bottom_toolbar=bottom_toolbar(mode, submode), completer=cmd_completer).replace(" ", "")
+                            db_exist = is_db(dbname)
+                            if db_exist and dbname != 'exit':
+                                ticker = prompt('Ticker(' + dbname +'): ', bottom_toolbar=bottom_toolbar(mode, submode), completer=cmd_completer).replace(" ", "")
+                                if ticker and ticker != 'exit':
+                                    purge_ticker(dbname, ticker)
+
+                            if (dbname == 'exit' or ticker == 'exit'):
+                                submode = None
+                                break
+                    elif(submode == 'Return'): #### Option 6-0
                         submode = None
                         mode = None
         except KeyboardInterrupt:
@@ -205,3 +232,11 @@ def machine_learning():
     # Close all sessions
     for name, s in s_dic.items():
         s.close()
+
+
+def purge_ticker(dbname, ticker):
+    Config.DB_NAME = dbname
+    db = Db(Config)
+    s = db.session()
+    delete_ticker(s, ticker)
+    s.close()

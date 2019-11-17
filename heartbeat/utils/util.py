@@ -28,3 +28,14 @@ def beautify_dict(dict):
     for key, value in dict.items():
         str += ("{} ({}), ".format(key, value))
     return str
+
+
+def is_db(dbname):
+    dbname = dbname.lower()
+    db_name_list = ['nasdaq100','tsxci','sp100','csi300','testing']
+    if dbname in db_name_list:
+        return True
+    else:
+        if dbname != 'exit':
+            print('(ERROR) Cannot find Db %s!\n' % dbname)
+        return False
