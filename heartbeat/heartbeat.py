@@ -139,8 +139,10 @@ def main(argv):
                                 ticker = prompt('Ticker(' + dbname +'): ', bottom_toolbar=bottom_toolbar(mode, submode), completer=cmd_completer).replace(" ", "")
                                 if ticker and ticker != 'exit':
                                     purge_ticker(dbname, ticker)
-
-                            if (dbname == 'exit' or ticker == 'exit'):
+                                elif ticker == 'exit':
+                                    submode = None
+                                    break
+                            elif dbname == 'exit':
                                 submode = None
                                 break
                     elif(submode == 'Return'): #### Option 6-0
