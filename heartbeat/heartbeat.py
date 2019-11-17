@@ -238,5 +238,5 @@ def purge_ticker(dbname, ticker):
     Config.DB_NAME = dbname
     db = Db(Config)
     s = db.session()
-    delete_ticker(s, ticker)
+    delete_ticker(s, ticker.upper())
     s.close()
