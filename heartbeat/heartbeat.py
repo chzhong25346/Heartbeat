@@ -16,6 +16,7 @@ from .screener.screener_bycode import screen_bycode
 from .learning.training_data import collect_tdata
 from .learning.deep_learning import learning_hub
 from .maintenance.remove import delete_ticker
+from .maintenance.keep_latest import keep_latest
 from .db.db import Db
 from .models import Income,BalanceSheet,Cashflow,Keystats,Findex,Tdata
 import sys
@@ -124,14 +125,14 @@ def main(argv):
             if(mode == 'Maintenance'): #### Option 6
                 if(submode == None):
                     code = ''
-                    dic = {1:'Remove ticker', 0:'Return'}
+                    dic = {1:'Remove Ticker',2:'Keep Latest', 0:'Return'}
                     print('\n', 5*'-',"Maintenance Mode", 5*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
                     key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode, submode)))
                     if(key not in list(dic.keys()) ):
                         print('Invalid option!')
                     else:
                         submode = dic[key]
-                    if(submode == 'Remove ticker'):  #### Option 6-1
+                    if(submode == 'Remove Ticker'):  #### Option 6-1
                         while True:
                             dbname = prompt('Database name: ', bottom_toolbar=bottom_toolbar(mode, submode), completer=cmd_completer).replace(" ", "")
                             db_exist = is_db(dbname)
@@ -142,6 +143,15 @@ def main(argv):
                                 elif ticker == 'exit':
                                     submode = None
                                     break
+                            elif dbname == 'exit':
+                                submode = None
+                                break
+                    elif(submode == 'Keep Latest'):  #### Option 6-2
+                        while True:
+                            dbname = prompt('Database name: ', bottom_toolbar=bottom_toolbar(mode, submode), completer=cmd_completer).replace(" ", "")
+                            db_exist = is_db(dbname)
+                            if db_exist and dbname != 'exit':
+                                keep_udpate(dbname)
                             elif dbname == 'exit':
                                 submode = None
                                 break
@@ -241,4 +251,12 @@ def purge_ticker(dbname, ticker):
     db = Db(Config)
     s = db.session()
     delete_ticker(s, ticker.upper())
+    s.close()
+
+
+def keep_udpate(dbname):
+    Config.DB_NAME = dbname
+    db = Db(Config)
+    s = db.session()
+    keep_latest(s)
     s.close()
