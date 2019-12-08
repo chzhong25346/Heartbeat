@@ -16,7 +16,7 @@ from .screener.screener_bycode import screen_bycode
 from .learning.training_data import collect_tdata
 from .learning.deep_learning import learning_hub
 from .maintenance.remove import delete_ticker
-from .maintenance.keep_latest import keep_latest
+from .maintenance.keep_latest import keep_latest, renew_findex
 from .db.db import Db
 from .models import Income,BalanceSheet,Cashflow,Keystats,Findex,Tdata
 import sys
@@ -125,7 +125,7 @@ def main(argv):
             if(mode == 'Maintenance'): #### Option 6
                 if(submode == None):
                     code = ''
-                    dic = {1:'Remove Ticker',2:'Keep Latest', 0:'Return'}
+                    dic = {1:'Remove Ticker',2:'Keep Latest', 3:'Update Findex', 0:'Return'}
                     print('\n', 5*'-',"Maintenance Mode", 5*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
                     key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode, submode)))
                     if(key not in list(dic.keys()) ):
@@ -155,6 +155,9 @@ def main(argv):
                             elif dbname == 'exit':
                                 submode = None
                                 break
+                    elif(submode == 'Update Findex'):  #### Option 6-3
+                        udpate_findex()
+                        submode = None
                     elif(submode == 'Return'): #### Option 6-0
                         submode = None
                         mode = None
@@ -260,3 +263,16 @@ def keep_udpate(dbname):
     s = db.session()
     keep_latest(s)
     s.close()
+
+
+def udpate_findex():
+    db_name_list = ['nasdaq100','tsxci','sp100','financials']
+    s_dic = {}
+    for name in db_name_list:
+        Config.DB_NAME = name
+        db = Db(Config)
+        s = db.session()
+        s_dic.update({name:s})
+    renew_findex(s_dic)
+    for name, s in s_dic.items():
+        s.close()

@@ -86,7 +86,7 @@ def get_report(s, tdata, db_name):
 def fact_check(s, df):
     for index, row in df.iterrows():
         ticker = row['symbol']
-        # print('--> %s' % ticker) ##### CHECKPOINT
+        print('--> %s' % ticker) ##### CHECKPOINT
         rdate = row['date']
         quote = pd.read_sql(s.query(Quote).filter(Quote.symbol == ticker).statement, s.bind, index_col='date').sort_index(ascending=True)
         rema5 = ema(quote,5)
