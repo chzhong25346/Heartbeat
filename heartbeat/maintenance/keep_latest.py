@@ -13,7 +13,7 @@ def keep_latest(s):
     if dbname == 'sp100':
         df = pd.read_html(sp100_url,header=0)[2].rename(columns={"Symbol": "symbol","Name":"company"})
     elif dbname == 'nasdaq100':
-        df = pd.read_html(nasdaq100_url,header=0)[2].rename(columns={"Ticker": "symbol","Company":"company"})
+        df = pd.read_html(nasdaq100_url,header=0)[1].rename(columns={"Ticker": "symbol","Company":"company"})
     elif dbname == 'tsxci':
         df = pd.read_html(tsxci_url,header=0)[0].rename(columns={"Symbol": "symbol","Company":"company"})
     else:
