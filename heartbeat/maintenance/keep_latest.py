@@ -13,9 +13,10 @@ def keep_latest(s):
     if dbname == 'sp100':
         df = pd.read_html(sp100_url,header=0)[2].rename(columns={"Symbol": "symbol","Name":"company"})
     elif dbname == 'nasdaq100':
-        df = pd.read_html(nasdaq100_url,header=0)[1].rename(columns={"Ticker": "symbol","Company":"company"})
+        df = pd.read_html(nasdaq100_url,header=0)[2].rename(columns={"Ticker": "symbol","Company":"company"})
+        print(df)
     elif dbname == 'tsxci':
-        df = pd.read_html(tsxci_url, header=0, keep_default_na=False)[0].rename(columns={"Symbol": "symbol","Company":"company"})
+        df = pd.read_html(tsxci_url, header=0, keep_default_na=False)[1].rename(columns={"Symbol": "symbol","Company":"company"})
         df['symbol'] = df.replace({'symbol': r'\.'}, {'symbol': '-'}, regex=True)
     else:
         return None
