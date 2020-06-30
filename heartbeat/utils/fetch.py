@@ -116,3 +116,27 @@ def get_keyStats(ticker):
     df.index = pd.to_datetime(df.index)
     df.sort_index(inplace=True)
     return df
+
+
+def get_outstanding_shares(ticker):
+    url = 'https://finance.yahoo.com/quote/{0}/key-statistics?p={0}'.format(ticker)
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    dic = {}
+    rows = soup.findAll('tr')
+    for row in rows:
+        cols = row.find_all('td')
+        cols = [ele.text.strip() for ele in cols]
+        dic.update(dict([cols]))
+    if(dic['Shares Outstanding 5'] != 'N/A' and '-' not in dic['Shares Outstanding 5']):
+        try:
+            shares = dic['Shares Outstanding 5']
+            if 'T' in shares:
+                shares = float(shares.replace('T',''))*1000
+            elif 'M' in shares:
+                shares = float(shares.replace('M',''))*1000000
+            elif 'B' in shares:
+                shares = float(shares.replace('B',''))*1000000000
+            return int(shares)
+        except:
+            pass

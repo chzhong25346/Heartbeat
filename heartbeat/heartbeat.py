@@ -18,7 +18,7 @@ from .learning.deep_learning import learning_hub
 from .maintenance.remove import delete_ticker
 from .maintenance.keep_latest import keep_latest, renew_findex
 from .db.db import Db
-from .models import Income,BalanceSheet,Cashflow,Keystats,Findex,Tdata
+from .models import Income,BalanceSheet,Cashflow,Keystats,Findex,Tdata,Shares_outstanding
 import sys
 
 cmd_completer = WordCompleter(['exit'])
@@ -199,6 +199,7 @@ def updating_financials():
     db.create_all([BalanceSheet.__table__])
     db.create_all([Cashflow.__table__])
     db.create_all([Keystats.__table__])
+    db.create_all([Shares_outstanding.__table__])
     update_financials(s)  # .financials.upate
     s.close()
 

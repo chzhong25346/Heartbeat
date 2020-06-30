@@ -191,3 +191,10 @@ class Tdata(db.Model):
     rating = db.Column(db.Float, nullable=True)
     secode = db.Column(db.String(10), nullable=False)
     indcode = db.Column(db.String(10), nullable=False)
+
+
+
+class Shares_outstanding(db.Model):
+    __tablename__ = 'shares_outstanding'
+    symbol = db.Column(db.String(10), nullable=False, primary_key=True, unique=True)
+    shares = db.Column(db.BIGINT, nullable=True)

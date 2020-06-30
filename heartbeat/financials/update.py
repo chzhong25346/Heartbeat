@@ -1,9 +1,10 @@
-from ..utils.fetch import get_financials, get_keyStats, fetch_findex
+from ..utils.fetch import get_financials, get_keyStats, fetch_findex, get_outstanding_shares
 from ..utils.normalize import normalize_financials, reindex_missing
 from ..db.mapping import map_income, map_balancesheet, map_cashflow, map_keystats, map_findex
 from ..db.write import bulk_save, bulk_update
 from ..db.read import has_table
-from ..models import Income,BalanceSheet,Cashflow,Keystats,Findex
+from ..models import Income,BalanceSheet,Cashflow,Keystats,Findex,Shares_outstanding
+from sqlalchemy import exc
 import time
 import pandas as pd
 
@@ -13,12 +14,17 @@ def update_financials(s):
         print('Creating Index in financials db.')
         mapping_findex(s)
     list = pd.read_sql(s.query(Findex).statement, s.bind)['Symbol'].tolist()
-    # list = ['ALK']  ## Testing
+    # list = ['TOU.TO']  ## Testing
     for ticker in list:
         print('--> %s' % ticker)
         time.sleep(10)
         fin_data = get_financials(ticker)
         try:
+            os_shares = get_outstanding_shares(ticker)
+            if os_shares != None:
+                mapping_write(s, [ticker, os_shares], 'os_shares')
+            else:
+                print('Cannot find outstanding shares - %s' % ticker)
             income, balancesheet, cashflow = classify_findata(fin_data, ticker)
             mapping_write(s, income, 'income')
             mapping_write(s, balancesheet, 'balancesheet')
@@ -69,6 +75,18 @@ def mapping_write(s, list, type):
             models = map_cashflow(df)
             bulk_save(s, models)
             bulk_update(s, Cashflow, models)
+    elif (type == 'os_shares'):
+        ticker, os_shares = list
+        try:
+            s.add(Shares_outstanding(symbol=ticker, shares=os_shares))
+            s.commit()
+        except exc.IntegrityError:
+            s.rollback()
+            s.query(Shares_outstanding).filter(Shares_outstanding.symbol == ticker).\
+            update({"shares":os_shares})
+            s.commit()
+        finally:
+            pass
 
 
 def mapping_keystats(s, ticker):
