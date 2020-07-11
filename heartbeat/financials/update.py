@@ -25,12 +25,13 @@ def update_financials(s):
                 mapping_write(s, [ticker, os_shares], 'os_shares')
             else:
                 print('Cannot find outstanding shares - %s' % ticker)
-            income, balancesheet, cashflow = classify_findata(fin_data, ticker)
-            mapping_write(s, income, 'income')
-            mapping_write(s, balancesheet, 'balancesheet')
-            mapping_write(s, cashflow, 'cashflow')
-            # update keystats
-            mapping_keystats(s, ticker)
+            if ('SH' not in ticker and 'SZ' not in ticker): # CSI stocks do not get financials
+                income, balancesheet, cashflow = classify_findata(fin_data, ticker)
+                mapping_write(s, income, 'income')
+                mapping_write(s, balancesheet, 'balancesheet')
+                mapping_write(s, cashflow, 'cashflow')
+                # update keystats
+                mapping_keystats(s, ticker)
         except Exception as e:
             print(e)
             pass

@@ -119,6 +119,8 @@ def get_keyStats(ticker):
 
 
 def get_outstanding_shares(ticker):
+    if 'SH' in ticker:
+        ticker = ticker.replace('SH','SS')
     url = 'https://finance.yahoo.com/quote/{0}/key-statistics?p={0}'.format(ticker)
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')

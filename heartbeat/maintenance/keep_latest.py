@@ -37,6 +37,8 @@ def keep_latest(s):
 
 
 def renew_findex(s_dic):
+    df_csi300 = pd.read_sql(s_dic['csi300'].query(Index).statement, s_dic['csi300'].bind)
+
     df_sp100 = pd.read_sql(s_dic['sp100'].query(Index).statement, s_dic['sp100'].bind)
     df_sp100['symbol'].replace(regex={r'\.': '-'}, inplace=True)
 
@@ -49,7 +51,7 @@ def renew_findex(s_dic):
 
     df_financials = pd.read_sql(s_dic['financials'].query(Findex).statement, s_dic['financials'].bind)
 
-    df_all_index =  pd.concat([df_sp100, df_nasdaq100, df_tsxci])
+    df_all_index =  pd.concat([df_sp100, df_nasdaq100, df_tsxci, df_csi300])
     df_all_index.rename(columns={"symbol": "Symbol", "company": "Name"}, inplace=True)
 
     retired = df_all_index.merge(df_financials.drop_duplicates(), on=['Symbol'], how='right', indicator=True)

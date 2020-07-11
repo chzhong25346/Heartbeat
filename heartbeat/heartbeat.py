@@ -267,7 +267,7 @@ def keep_udpate(dbname):
 
 
 def udpate_findex():
-    db_name_list = ['nasdaq100','tsxci','sp100','financials']
+    db_name_list = ['nasdaq100','tsxci','sp100','csi300','financials']
     s_dic = {}
     for name in db_name_list:
         Config.DB_NAME = name
