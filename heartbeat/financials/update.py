@@ -94,8 +94,8 @@ def mapping_keystats(s, ticker):
     df = get_keyStats(ticker.replace("-", ".")).fillna(0)
     df['date'] = df.index
     df['symbol'] = ticker
-    for d in df.to_dict(orient='records'):
-        models = map_keystats(pd.DataFrame.from_dict(d,orient='index').T)
+    for d in df.to_dict('records'):
+        models = map_keystats(pd.DataFrame.from_dict(d,'index').T)
         bulk_save(s, models)
         bulk_update(s, Keystats, models)
 
