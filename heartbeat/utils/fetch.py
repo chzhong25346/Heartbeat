@@ -129,7 +129,8 @@ def get_outstanding_shares(ticker):
     for row in rows:
         cols = row.find_all('td')
         cols = [ele.text.strip() for ele in cols]
-        dic.update(dict([cols]))
+        if cols:
+            dic.update({cols[0]:cols[1]})
     if(dic['Shares Outstanding 5'] != 'N/A' and '-' not in dic['Shares Outstanding 5']):
         try:
             shares = dic['Shares Outstanding 5']
