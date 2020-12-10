@@ -221,7 +221,7 @@ def screening_bycode(code, type):
 
 
 def renew_tdata():
-    db_name_list = ['nasdaq100','tsxci','sp100','financials','learning']
+    db_name_list = ['nasdaq100','tsxci','sp100','financials','learning','testing']
     s_dic = {}
     for name in db_name_list:
         Config.DB_NAME = name

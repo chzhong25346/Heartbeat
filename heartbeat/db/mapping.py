@@ -164,11 +164,13 @@ def map_tdata(df):
         rsi = r['rsi'],
         macd = r['macd'],
         bolling = r['bolling'],
+        gap=r['gap'],
         buy = r['buy'],
         sell = r['sell'],
         hold = r['hold'],
         rating = r['rating'],
-        secode = r['secode'],
-        indcode = r['indcode'],
+
+        # secode = r['secode'],
+        # indcode = r['indcode'],
     ) for r in df_records]
     return model_instnaces

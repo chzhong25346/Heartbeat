@@ -45,6 +45,6 @@ def insert_onebyone(session, model_list):
             session.add(model)
             session.commit()
         except Exception as e:
-            # print(e)
-            session.rollback()
-            pass
+            print(e)
+            # session.rollback()
+            # pass

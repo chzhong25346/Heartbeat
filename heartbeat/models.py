@@ -178,6 +178,7 @@ class Tdata(db.Model):
     downtrend = db.Column(db.Boolean, nullable=True)
     uptrend = db.Column(db.Boolean, nullable=True)
     high_volume = db.Column(db.Boolean, nullable=True)
+    gap = db.Column(db.Boolean, nullable=True)
     # low_volume = db.Column(db.Boolean, nullable=True)
     # support = db.Column(db.Boolean, nullable=True)
     # pattern = db.Column(db.Boolean, nullable=True)
@@ -189,8 +190,8 @@ class Tdata(db.Model):
     sell = db.Column(db.Boolean, nullable=True)
     hold = db.Column(db.Boolean, nullable=True)
     rating = db.Column(db.Float, nullable=True)
-    secode = db.Column(db.String(10), nullable=False)
-    indcode = db.Column(db.String(10), nullable=False)
+    # secode = db.Column(db.String(10), nullable=False)
+    # indcode = db.Column(db.String(10), nullable=False)
 
 
 
@@ -198,3 +199,13 @@ class Shares_outstanding(db.Model):
     __tablename__ = 'shares_outstanding'
     symbol = db.Column(db.String(10), nullable=False, primary_key=True, unique=True)
     shares = db.Column(db.BIGINT, nullable=True)
+
+
+class Gaps(db.Model):
+    __tablename__ = 'gaps'
+    id = db.Column(db.String(40), unique=True, nullable=False, primary_key=True)
+    date = db.Column(db.DateTime, nullable=False)
+    index = db.Column(db.String(20), nullable=False)
+    symbol = db.Column(db.String(10), nullable=False)
+    gap_high = db.Column(db.Float, nullable=True)
+    gap_low = db.Column(db.Float, nullable=True)
