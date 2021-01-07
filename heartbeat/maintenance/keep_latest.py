@@ -81,7 +81,7 @@ def get_profile(ticker):
         html = requests.get(url).text
         soup = BeautifulSoup(html,'html.parser')
         mydiv = soup.body.find("div", {"class": "Mb(25px)"})
-        sector = mydiv.find(text='Sector').parent.find_next_siblings("span", {"class": "Fw(600)"})[0].text
+        sector = mydiv.find(text='Sector(s)').parent.find_next_siblings("span", {"class": "Fw(600)"})[0].text
         industry = mydiv.find(text='Industry').parent.find_next_siblings("span", {"class": "Fw(600)"})[0].text
         return [sector, industry]
     except:
