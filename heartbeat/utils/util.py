@@ -39,3 +39,8 @@ def is_db(dbname):
         if dbname != 'exit':
             print('(ERROR) Cannot find Db %s!\n' % dbname)
         return False
+
+
+def close_alldb(s_dic):
+    for name, s in s_dic.items():
+        s.close()

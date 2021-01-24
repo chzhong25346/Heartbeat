@@ -7,7 +7,7 @@ from prompt_toolkit.completion import WordCompleter
 from .utils.config import Config
 from .utils.normalize import generate_tickerL
 from .utils.fetch import fetch_index, fetch_findex
-from .utils.util import is_db
+from .utils.util import is_db, close_alldb
 from .report.technical import technical_output
 from .report.fundamental import fundamental_output
 from .financials.update import update_financials
@@ -16,7 +16,7 @@ from .screener.screener_bycode import screen_bycode
 from .learning.training_data import collect_tdata
 from .learning.deep_learning import learning_hub
 from .maintenance.remove import delete_ticker
-from .maintenance.keep_latest import keep_latest, renew_findex
+from .maintenance.keep_latest import keep_latest, renew_findex, ticker_counter
 from .db.db import Db
 from .models import Income,BalanceSheet,Cashflow,Keystats,Findex,Tdata,Shares_outstanding
 import sys
@@ -125,7 +125,7 @@ def main(argv):
             if(mode == 'Maintenance'): #### Option 6
                 if(submode == None):
                     code = ''
-                    dic = {1:'Remove Ticker',2:'Keep Latest', 3:'Update Findex', 0:'Return'}
+                    dic = {1:'Remove Ticker',2:'Keep Latest', 3:'Update Findex', 4:'Ticker Summary', 0:'Return'}
                     print('\n', 5*'-',"Maintenance Mode", 5*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
                     key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode, submode)))
                     if(key not in list(dic.keys()) ):
@@ -157,6 +157,9 @@ def main(argv):
                                 break
                     elif(submode == 'Update Findex'):  #### Option 6-3
                         udpate_findex()
+                        submode = None
+                    elif(submode == 'Ticker Summary'):  #### Option 6-3
+                        total_ticker()
                         submode = None
                     elif(submode == 'Return'): #### Option 6-0
                         submode = None
@@ -231,9 +234,7 @@ def renew_tdata():
         if ('learning' in s_dic):
             db.create_all([Tdata.__table__])
     collect_tdata(s_dic) # .learning.update
-    # Close all sessions
-    for name, s in s_dic.items():
-        s.close()
+    close_alldb(s_dic)
 
 
 def machine_learning():
@@ -245,17 +246,19 @@ def machine_learning():
         s = db.session()
         s_dic.update({name:s})
     learning_hub(s_dic) # .learning.deep_learning
-    # Close all sessions
-    for name, s in s_dic.items():
-        s.close()
+    close_alldb(s_dic)
 
 
 def purge_ticker(dbname, ticker):
-    Config.DB_NAME = dbname
-    db = Db(Config)
-    s = db.session()
-    delete_ticker(s, ticker.upper())
-    s.close()
+    db_name_list = [dbname,'financials']
+    s_dic = {}
+    for name in db_name_list:
+        Config.DB_NAME = name
+        db = Db(Config)
+        s = db.session()
+        s_dic.update({name:s})
+    delete_ticker(dbname, s_dic, ticker.upper())
+    close_alldb(s_dic)
 
 
 def keep_udpate(dbname):
@@ -275,5 +278,16 @@ def udpate_findex():
         s = db.session()
         s_dic.update({name:s})
     renew_findex(s_dic)
-    for name, s in s_dic.items():
-        s.close()
+    close_alldb(s_dic)
+
+
+def total_ticker():
+    db_name_list = ['nasdaq100','tsxci','sp100']
+    s_dic = {}
+    for name in db_name_list:
+        Config.DB_NAME = name
+        db = Db(Config)
+        s = db.session()
+        s_dic.update({name:s})
+    ticker_counter(s_dic)
+    close_alldb(s_dic)
