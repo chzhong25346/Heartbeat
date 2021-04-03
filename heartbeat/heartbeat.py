@@ -250,7 +250,7 @@ def machine_learning():
 
 
 def purge_ticker(dbname, ticker):
-    db_name_list = [dbname,'financials']
+    db_name_list = [dbname, 'financials', 'learning']
     s_dic = {}
     for name in db_name_list:
         Config.DB_NAME = name

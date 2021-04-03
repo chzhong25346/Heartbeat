@@ -18,17 +18,20 @@ def screen_bycode(s, code, type):
             business = findex.Sector.values[0]
         if(type=='Indcode'):
             business = findex.Industry.values[0]
+        # try:
         bs_ann,bs_quart,ic_ann,ic_quart,cf_ann,cf_quart = query_financials(s, tickerL)
         CR = current_ratio([bs_ann,bs_quart])
         DE = debt_to_equity_ratio([bs_ann,bs_quart])
         si_ann,si_qtr = steady_income([ic_ann,ic_quart])
         lq_ann,lq_qtr = liquidity([cf_ann,cf_quart])
         chosenL = set(CR+DE+si_ann+si_qtr+lq_ann+lq_qtr)
-        uv = underValued(chosenL)
+        # uv = underValued(chosenL)
         if(len(chosenL) != 0):
             ivps = intrinsicValue(s, chosenL)
         else:
             ivps = None
+        # except:
+        #     pass
         ### PRINTS #####
         print(50*'-' + '\n' + 10*' ' + business + "\n" + 50*'-')
         print(', '.join(tickerL) + "\n" + 50*'-')
@@ -42,8 +45,8 @@ def screen_bycode(s, code, type):
         print('\n' + 10*'-'  + 'Liquidity' + 10*'-' )
         print('Annually: ' + ', '.join(lq_ann))
         print('Quarterly: ' + ', '.join(lq_qtr))
-        print('\n' + 10*'-'  + 'Undervalued' + 10*'-' )
-        print(', '.join(uv))
+        # print('\n' + 10*'-'  + 'Undervalued' + 10*'-' )
+        # print(', '.join(uv))
         print('\n' + 8*'-'  + 'Intrinsic Value' + 8*'-' )
         print(ivps)
 
