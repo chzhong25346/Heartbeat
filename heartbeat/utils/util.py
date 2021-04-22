@@ -32,7 +32,7 @@ def beautify_dict(dict):
 
 def is_db(dbname):
     dbname = dbname.lower()
-    db_name_list = ['nasdaq100','tsxci','sp100','csi300','testing']
+    db_name_list = ['nasdaq100','tsxci','sp100','csi300','testing','eei']
     if dbname in db_name_list:
         return True
     else:
