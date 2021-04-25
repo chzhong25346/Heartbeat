@@ -282,7 +282,7 @@ def udpate_findex():
 
 
 def total_ticker():
-    db_name_list = ['nasdaq100','tsxci','sp100']
+    db_name_list = ['nasdaq100','tsxci','sp100','eei']
     s_dic = {}
     for name in db_name_list:
         Config.DB_NAME = name

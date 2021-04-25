@@ -92,7 +92,12 @@ def ticker_counter(s_dic):
     total = 0
     print('\n-----------------------------')
     for dbname in s_dic:
-        db_total = s_dic[dbname].query(Index).count()
-        total += db_total
-        print('%s: %s'% (dbname.upper(),str(db_total)))
+        if dbname != 'eei':
+            db_total = s_dic[dbname].query(Index).count()
+            total += db_total
+            print('%s: %s'% (dbname.upper(),str(db_total)))
     print('-----------------------------\nTotal tickers: %s'% str(total))
+    for dbname in s_dic:
+        if dbname == 'eei':
+            db_total = s_dic[dbname].query(Index).count()
+            print('\n-----------------------------\n%s: %s'% (dbname.upper(),str(db_total)))
