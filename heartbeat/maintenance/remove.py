@@ -1,4 +1,4 @@
-from ..models import Index, Quote, Report, Findex, Rsi_predict, Rsi_predict_report
+from ..models import Index, Quote, Report, Findex, Rsi_predict, Rsi_predict_report, Hvlc_report, Ublb_cross
 
 def delete_ticker(dbname, s_dic, ticker):
     s = s_dic[dbname]
@@ -25,6 +25,17 @@ def delete_ticker(dbname, s_dic, ticker):
         sl.query(Rsi_predict_report).filter(Rsi_predict_report.symbol==ticker).filter(Rsi_predict_report.index==dbname).delete()
     except:
         pass
+
+    try:
+        sl.query(Hvlc_report).filter(Hvlc_report.symbol==ticker).filter(Hvlc_report.index==dbname).delete()
+    except:
+        pass
+
+    try:
+        sl.query(Ublb_cross).filter(Ublb_cross.symbol==ticker).filter(Ublb_cross.index==dbname).delete()
+    except:
+        pass
+
     sl.commit()
     if (before and after == None):
         print('%s (%s) is removed!\n' % (ticker, before.company))
