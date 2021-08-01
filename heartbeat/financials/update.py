@@ -14,7 +14,7 @@ def update_financials(s):
         print('Creating Index in financials db.')
         mapping_findex(s)
     list = pd.read_sql(s.query(Findex).statement, s.bind)['Symbol'].tolist()
-    # list = ['TOU.TO']  ## Testing
+    # list = ['SJ.TO']  ## Testing
     for ticker in list:
         print('--> %s' % ticker)
         time.sleep(10)
