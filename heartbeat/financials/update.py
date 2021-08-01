@@ -3,35 +3,39 @@ from ..utils.normalize import normalize_financials, reindex_missing
 from ..db.mapping import map_income, map_balancesheet, map_cashflow, map_keystats, map_findex
 from ..db.write import bulk_save, bulk_update
 from ..db.read import has_table
-from ..models import Income,BalanceSheet,Cashflow,Keystats,Findex,Shares_outstanding
+from ..models import Income,BalanceSheet,Cashflow,Keystats,Findex,Shares_outstanding, Index
 from sqlalchemy import exc
 import time
 import pandas as pd
 
 
-def update_financials(s):
-    if (has_table(s, Findex) is None):
+def update_financials(s_dic):
+    s_f = s_dic['financials']
+    s_eei = s_dic['eei']
+    if (has_table(s_f, Findex) is None):
         print('Creating Index in financials db.')
-        mapping_findex(s)
-    list = pd.read_sql(s.query(Findex).statement, s.bind)['Symbol'].tolist()
-    # list = ['SJ.TO']  ## Testing
-    for ticker in list:
+        mapping_findex(s_f)
+    findex_list = pd.read_sql(s_f.query(Findex).statement, s_f.bind)['Symbol'].tolist()
+    eei_index = pd.read_sql(s_eei.query(Index).statement, s_eei.bind)['symbol'].tolist()
+
+    # index_list = ['SJ.TO']  ## Testing
+    for ticker in eei_index + findex_list:
         print('--> %s' % ticker)
         time.sleep(10)
         fin_data = get_financials(ticker)
         try:
             os_shares = get_outstanding_shares(ticker)
             if os_shares != None:
-                mapping_write(s, [ticker, os_shares], 'os_shares')
+                mapping_write(s_f, [ticker, os_shares], 'os_shares')
             else:
                 print('Cannot find outstanding shares - %s' % ticker)
             if ('SH' not in ticker and 'SZ' not in ticker): # CSI stocks do not get financials
                 income, balancesheet, cashflow = classify_findata(fin_data, ticker)
-                mapping_write(s, income, 'income')
-                mapping_write(s, balancesheet, 'balancesheet')
-                mapping_write(s, cashflow, 'cashflow')
+                mapping_write(s_f, income, 'income')
+                mapping_write(s_f, balancesheet, 'balancesheet')
+                mapping_write(s_f, cashflow, 'cashflow')
                 # update keystats
-                mapping_keystats(s, ticker)
+                mapping_keystats(s_f, ticker)
         except Exception as e:
             print(e)
             pass

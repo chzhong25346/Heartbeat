@@ -194,17 +194,22 @@ def reporting_fundamental(ticker):
 
 
 def updating_financials():
-    Config.DB_NAME = 'financials'
-    db = Db(Config)
-    s = db.session()
-    db.create_all([Findex.__table__])
-    db.create_all([Income.__table__])
-    db.create_all([BalanceSheet.__table__])
-    db.create_all([Cashflow.__table__])
-    db.create_all([Keystats.__table__])
-    db.create_all([Shares_outstanding.__table__])
-    update_financials(s)  # .financials.upate
-    s.close()
+    db_name_list = ['eei','financials',]
+    s_dic = {}
+    for name in db_name_list:
+        Config.DB_NAME = name
+        db = Db(Config)
+        s = db.session()
+        s_dic.update({name:s})
+        if ('financials' in s_dic):
+            db.create_all([Findex.__table__])
+            db.create_all([Income.__table__])
+            db.create_all([BalanceSheet.__table__])
+            db.create_all([Cashflow.__table__])
+            db.create_all([Keystats.__table__])
+            db.create_all([Shares_outstanding.__table__])
+    update_financials(s_dic)  # .financials.upate
+    close_alldb(s_dic)
 
 
 def screening_full():

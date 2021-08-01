@@ -103,7 +103,6 @@ def get_keyStats(ticker):
         time.sleep(30)
         lm_json = requests.get(url, headers=_get_headers()).json()
     df = pd.read_html(lm_json["ksContent"])[0]
-    print(df)
     df = df.rename(columns = {'Unnamed: 0':'date'})
     df = df[df.columns.drop(list(df.filter(regex='Unnamed|TTM')))]
     df = df[df['date'].notnull()]
