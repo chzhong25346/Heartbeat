@@ -19,9 +19,9 @@ def update_financials(s_dic):
     eei_index = pd.read_sql(s_eei.query(Index).statement, s_eei.bind)['symbol'].tolist()
 
     # index_list = ['ICLR']  ## Testing
-    # for ticker in eei_index + findex_list:
     index_list = eei_index + findex_list
     # for ticker in index_list[index_list.index('KL.TO'):]:
+    for ticker in eei_index + findex_list:
         print('--> %s' % ticker)
         time.sleep(10)
         fin_data = get_financials(ticker)
