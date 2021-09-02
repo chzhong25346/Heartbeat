@@ -19,7 +19,7 @@ def update_financials(s_dic):
     eei_index = pd.read_sql(s_eei.query(Index).statement, s_eei.bind)['symbol'].tolist()
 
     index_list = eei_index + findex_list
-    index_list = ['A']  ## Testing
+    # index_list = ['A']  ## Testing
     # for ticker in index_list[index_list.index('WRB'):]:
     for ticker in index_list:
         print('--> %s' % ticker)
