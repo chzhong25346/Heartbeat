@@ -18,15 +18,16 @@ def update_financials(s_dic):
     findex_list = pd.read_sql(s_f.query(Findex).statement, s_f.bind)['Symbol'].tolist()
     eei_index = pd.read_sql(s_eei.query(Index).statement, s_eei.bind)['symbol'].tolist()
 
-    # index_list = ['ICLR']  ## Testing
     index_list = eei_index + findex_list
-    # for ticker in index_list[index_list.index('KL.TO'):]:
-    for ticker in eei_index + findex_list:
+    index_list = ['A']  ## Testing
+    # for ticker in index_list[index_list.index('WRB'):]:
+    for ticker in index_list:
         print('--> %s' % ticker)
         time.sleep(10)
         fin_data = get_financials(ticker)
         try:
             os_shares = get_outstanding_shares(ticker)
+
             if os_shares != None:
                 mapping_write(s_f, [ticker, os_shares], 'os_shares')
             else:
@@ -63,6 +64,7 @@ def classify_findata(data, ticker):
     cashflow_qtrs_L = normalize_financials(cashflow_qtrs, ticker, 'quarterly')
     cashflow = reindex_missing(cashflow_yr_L + cashflow_qtrs_L, 'cashflow')
 
+    # return None, None, None
     return income, balancesheet, cashflow
 
 
