@@ -15,6 +15,7 @@ from .screener.screener import screen_full
 from .screener.screener_bycode import screen_bycode
 from .learning.training_data import collect_tdata
 from .learning.find5yLow import find5yLow
+from .learning.findWeeklyCross import findWeeklyCross
 from .learning.deep_learning import learning_hub
 from .maintenance.remove import delete_ticker
 from .maintenance.keep_latest import keep_latest, renew_findex, ticker_counter
@@ -107,7 +108,7 @@ def main(argv):
             if(mode == 'Learning'): #### Option 5
                 if(submode == None):
                     code = ''
-                    dic = {1:'Renew data', 2:'Learning', 3:'Find 5-Year Low', 0:'Return'}
+                    dic = {1:'Renew data', 2:'Learning', 3:'Find 5-Year Low', 4:'Find Weekly Cross', 0:'Return'}
                     print('\n', 5*'-',"Learning Mode", 5*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
                     key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode, submode)))
                     if(key not in list(dic.keys()) ):
@@ -122,6 +123,9 @@ def main(argv):
                         submode = None
                     elif(submode == 'Find 5-Year Low'): #### Option 5-3
                         FiveYearLow()
+                        submode = None
+                    elif(submode == 'Find Weekly Cross'): #### Option 5-4
+                        WeeklyCross()
                         submode = None
                     elif(submode == 'Return'): #### Option 5-0
                         submode = None
@@ -268,6 +272,19 @@ def FiveYearLow():
         s_dic.update({name:s})
     find5yLow(s_dic)
     close_alldb(s_dic)
+
+
+def WeeklyCross():
+    db_name_list = ['nasdaq100','tsxci','sp100','eei']
+    s_dic = {}
+    for name in db_name_list:
+        Config.DB_NAME = name
+        db = Db(Config)
+        s = db.session()
+        s_dic.update({name:s})
+    findWeeklyCross(s_dic)
+    close_alldb(s_dic)
+
 
 def purge_ticker(dbname, ticker):
     db_name_list = [dbname, 'financials', 'learning']
