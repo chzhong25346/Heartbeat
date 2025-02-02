@@ -18,7 +18,7 @@ def findBuyNegative(s_dic):
         indexes = pd.read_sql(s.query(Index).statement, s.bind)  # Fetch stock symbols
 
         for ticker in indexes['symbol'].tolist():
-            # if ticker == "TD":  # Only process SAP (adjust as needed)
+            # if ticker == "NPI":  # Only process SAP (adjust as needed)
             df = pd.read_sql(
                 s.query(Quote).filter(Quote.symbol == ticker).statement,
                 s.bind,
@@ -106,9 +106,9 @@ def check_histogram_wave(df_hist):
     # Final wave check in case the last trend completes a wave
     if last_trend == -1 and consecutive_downs >= 3 and consecutive_ups >= 3:
         wave_count += 1
-    # print(df_filtered)
-    # print(wave_count)
+
     return wave_count
+
 
 def check_macd_conditions(df):
 
@@ -148,7 +148,6 @@ def check_macd_conditions(df):
 
     # Condition 5: Histogram has 1 wave pattern
     condition_5 = check_histogram_wave(df_weekly['Hist'])
-
 
     return condition_1 and condition_2 and condition_3 and condition_4 and condition_5
 
