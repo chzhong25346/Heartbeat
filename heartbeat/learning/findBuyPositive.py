@@ -6,7 +6,7 @@ import numpy as np
 def findBuyPositive(s_dic):
     """Find stocks meeting weekly MACD conditions across multiple databases."""
     print("\nCondition 1: MACD and Signal Line both above zero.\n"
-          "Condition 2: MACD has crossed above Signal Line.\n"
+          "Condition 2: MACD has just crossed above Signal Line.\n"
           "Condition 3: Histogram increasing for 3 weeks.\n"
           "Condition 4: Any of the last 5 weeks has a long lower shadow.\n"
           "(Caution - Slow line must be raising!)")
@@ -18,18 +18,18 @@ def findBuyPositive(s_dic):
         indexes = pd.read_sql(s.query(Index).statement, s.bind)  # Fetch stock symbols
 
         for ticker in indexes['symbol'].tolist():
-            # if ticker == "NPI":  # Only process SAP (adjust as needed)
-            df = pd.read_sql(
-                s.query(Quote).filter(Quote.symbol == ticker).statement,
-                s.bind,
-                index_col='date'
-            ).sort_index(ascending=True)
-            df = df.drop('adjusted', axis=1)
-            df = df.drop('id', axis=1)
+            if ticker == "LUG":  # Only process SAP (adjust as needed)
+                df = pd.read_sql(
+                    s.query(Quote).filter(Quote.symbol == ticker).statement,
+                    s.bind,
+                    index_col='date'
+                ).sort_index(ascending=True)
+                df = df.drop('adjusted', axis=1)
+                df = df.drop('id', axis=1)
 
-            if check_macd_conditions(df):
-                corp_name = s.query(Index).filter(Index.symbol == ticker).first()
-                print('%s (%s)' % (ticker, corp_name.company))
+                if check_macd_conditions(df):
+                    corp_name = s.query(Index).filter(Index.symbol == ticker).first()
+                    print('%s (%s)' % (ticker, corp_name.company))
 
         s.close()  # Close the database session after processing all tickers
 
@@ -44,9 +44,7 @@ def calculate_macd(df):
     return df
 
 
-
 def check_macd_conditions(df):
-
     # Convert to weekly data
     df_weekly = df.resample('W-MON', label='left', closed='left').agg({
         'open': 'first',
@@ -65,24 +63,25 @@ def check_macd_conditions(df):
     last_five = df_weekly.iloc[-5:]  # Last 5 weeks
     last_three_hist = df_weekly['Hist'].iloc[-3:]  # Last 3 histogram values
 
-    # Condition 1: MACD and Signal Line both below zero
+    # Condition 1: MACD and Signal Line both above zero
     condition_1 = df_weekly['MACD'].iloc[-1] > 0 and df_weekly['Signal'].iloc[-1] > 0
 
-    # Condition 2: MACD has crossed above Signal Line
+    # Condition 2: MACD has just crossed above Signal Line **recently**
     condition_2 = (
-            df_weekly['MACD'].iloc[-1] > df_weekly['Signal'].iloc[-1]
+        df_weekly['MACD'].iloc[-2] < df_weekly['Signal'].iloc[-2] and  # Previously below
+        df_weekly['MACD'].iloc[-1] > df_weekly['Signal'].iloc[-1] and  # Now above
+        all(df_weekly['MACD'].iloc[-5:-2] < df_weekly['Signal'].iloc[-5:-2])  # MACD was below Signal Line for at least 3 weeks before crossing
     )
 
+    print(condition_2)
+    print(df_weekly['MACD'].iloc[-1])
+    print(df_weekly['Signal'].iloc[-1])
     # Condition 3: Histogram increasing for 3 weeks
     condition_3 = (
-            last_three_hist.iloc[0] < last_three_hist.iloc[1] < last_three_hist.iloc[2]
+        last_three_hist.iloc[0] < last_three_hist.iloc[1] < last_three_hist.iloc[2]
     )
 
     # Condition 4: Any of the last 5 weeks has a long lower shadow
     condition_4 = any(last_five['Lower_Shadow'] > (last_five['high'] - last_five['low']) * 0.4)
 
-
-
     return condition_1 and condition_2 and condition_3 and condition_4
-
-
