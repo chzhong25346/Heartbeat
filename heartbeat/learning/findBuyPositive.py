@@ -18,18 +18,18 @@ def findBuyPositive(s_dic):
         indexes = pd.read_sql(s.query(Index).statement, s.bind)  # Fetch stock symbols
 
         for ticker in indexes['symbol'].tolist():
-            if ticker == "LUG":  # Only process SAP (adjust as needed)
-                df = pd.read_sql(
-                    s.query(Quote).filter(Quote.symbol == ticker).statement,
-                    s.bind,
-                    index_col='date'
-                ).sort_index(ascending=True)
-                df = df.drop('adjusted', axis=1)
-                df = df.drop('id', axis=1)
+            # if ticker == "LUG":  # Only process SAP (adjust as needed)
+            df = pd.read_sql(
+                s.query(Quote).filter(Quote.symbol == ticker).statement,
+                s.bind,
+                index_col='date'
+            ).sort_index(ascending=True)
+            df = df.drop('adjusted', axis=1)
+            df = df.drop('id', axis=1)
 
-                if check_macd_conditions(df):
-                    corp_name = s.query(Index).filter(Index.symbol == ticker).first()
-                    print('%s (%s)' % (ticker, corp_name.company))
+            if check_macd_conditions(df):
+                corp_name = s.query(Index).filter(Index.symbol == ticker).first()
+                print('%s (%s)' % (ticker, corp_name.company))
 
         s.close()  # Close the database session after processing all tickers
 
@@ -73,9 +73,6 @@ def check_macd_conditions(df):
         all(df_weekly['MACD'].iloc[-5:-2] < df_weekly['Signal'].iloc[-5:-2])  # MACD was below Signal Line for at least 3 weeks before crossing
     )
 
-    print(condition_2)
-    print(df_weekly['MACD'].iloc[-1])
-    print(df_weekly['Signal'].iloc[-1])
     # Condition 3: Histogram increasing for 3 weeks
     condition_3 = (
         last_three_hist.iloc[0] < last_three_hist.iloc[1] < last_three_hist.iloc[2]
