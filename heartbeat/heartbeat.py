@@ -279,7 +279,7 @@ def FiveYearLow():
 
 
 def BuyNegative():
-    db_name_list = ['nasdaq100','tsxci','sp100','eei']
+    db_name_list = ['nasdaq100','tsxci','sp100']
     s_dic = {}
     for name in db_name_list:
         Config.DB_NAME = name
@@ -291,7 +291,7 @@ def BuyNegative():
 
 
 def BuyPositive():
-    db_name_list = ['nasdaq100','tsxci','sp100','eei']
+    db_name_list = ['nasdaq100','tsxci','sp100']
     s_dic = {}
     for name in db_name_list:
         Config.DB_NAME = name

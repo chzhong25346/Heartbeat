@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Chronosphere/.idea/Chronosphere.iml" filepath="$PROJECT_DIR$/../Chronosphere/.idea/Chronosphere.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Heartbeat.iml" filepath="$PROJECT_DIR$/.idea/Heartbeat.iml" />
       <module fileurl="file://$PROJECT_DIR$/../Soundtrack/.idea/Soundtrack.iml" filepath="$PROJECT_DIR$/../Soundtrack/.idea/Soundtrack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Streetlight/.idea/Streetlight.iml" filepath="$PROJECT_DIR$/../Streetlight/.idea/Streetlight.iml" />
     </modules>
   </component>
 </project>

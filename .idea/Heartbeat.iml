@@ -5,5 +5,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Soundtrack" />
+    <orderEntry type="module" module-name="Chronosphere" />
+    <orderEntry type="module" module-name="Streetlight" />
   </component>
 </module>
