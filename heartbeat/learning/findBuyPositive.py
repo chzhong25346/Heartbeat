@@ -10,7 +10,7 @@ def findBuyPositive(s_dic):
           "Condition 3: Histogram increasing for 3 weeks.\n"
           "Condition 4: Any of the last 5 weeks has a long lower shadow.\n"
           "(Caution - Slow line must be raising!)")
-    for db_name in ['tsxci', 'nasdaq100', 'sp100', 'eei']:
+    for db_name in ['tsxci', 'nasdaq100', 'sp100']:
 
         print(f'\nFive Weekly Buy Positive Company(s) in {db_name}:')
         print('----------------------------------------')
