@@ -18,6 +18,7 @@ from .learning.find5yLow import find5yLow
 from .learning.findBuyNegative import findBuyNegative
 from .learning.findBuyPositive import findBuyPositive
 from .learning.deep_learning import learning_hub
+from .learning.ai_prompt import get_AI_Prompt
 from .maintenance.remove import delete_ticker
 from .maintenance.keep_latest import keep_latest, renew_findex, ticker_counter
 from .db.db import Db
@@ -109,7 +110,7 @@ def main(argv):
             if(mode == 'Learning'): #### Option 5
                 if(submode == None):
                     code = ''
-                    dic = {1:'Renew data', 2:'Learning', 3:'Find 5-Year Low', 4:'Find Buy Negative', 5:'Find Buy Positive', 0:'Return'}
+                    dic = {1:'Renew data', 2:'Learning', 3:'Find 5-Year Low', 4:'Find Buy Negative', 5:'Find Buy Positive', 6:'AI Prompt', 0:'Return'}
                     print('\n', 5*'-',"Learning Mode", 5*'-', '\n', '\n '.join('{} - {}'.format(key, value) for key, value in dic.items()), '\n',25*'-')
                     key = int(prompt('Your choice: ', validator=validator, bottom_toolbar=bottom_toolbar(mode, submode)))
                     if(key not in list(dic.keys()) ):
@@ -130,6 +131,24 @@ def main(argv):
                         submode = None
                     elif(submode == 'Find Buy Positive'): #### Option 5-5
                         BuyPositive()
+                        submode = None
+                    elif(submode == 'AI Prompt'): #### Option 5-6
+                        while True:
+                            dbname = prompt('Database name: ', bottom_toolbar=bottom_toolbar(mode, submode),
+                                            completer=cmd_completer).replace(" ", "")
+                            db_exist = is_db(dbname)
+                            if db_exist and dbname != 'exit':
+                                ticker = prompt('Ticker(' + dbname + '): ',
+                                                bottom_toolbar=bottom_toolbar(mode, submode),
+                                                completer=cmd_completer).replace(" ", "")
+                                if ticker and ticker != 'exit':
+                                    AIPrompt(dbname, ticker)
+                                elif ticker == 'exit':
+                                    submode = None
+                                    break
+                            elif dbname == 'exit':
+                                submode = None
+                                break
                         submode = None
                     elif(submode == 'Return'): #### Option 5-0
                         submode = None
@@ -299,6 +318,17 @@ def BuyPositive():
         s = db.session()
         s_dic.update({name:s})
     findBuyPositive(s_dic)
+    close_alldb(s_dic)
+
+def AIPrompt(dbname, ticker):
+    db_name_list = ['nasdaq100','tsxci','sp100','csi300','eei']
+    s_dic = {}
+    for name in db_name_list:
+        Config.DB_NAME = name
+        db = Db(Config)
+        s = db.session()
+        s_dic.update({name:s})
+    get_AI_Prompt(s_dic, dbname, ticker)
     close_alldb(s_dic)
 
 def purge_ticker(dbname, ticker):

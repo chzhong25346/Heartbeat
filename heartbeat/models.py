@@ -9,8 +9,7 @@ class Index(db.Model):
     company = db.Column(db.String(60),nullable=False)
 
 
-
-class Quote(db.Model):
+class Quote_CSI300(db.Model):
     __tablename__ = 'quote'
     id = db.Column(db.String(40), unique=True, nullable=False, primary_key=True)
     symbol = db.Column(db.String(6), db.ForeignKey("index.symbol"), nullable=False)
@@ -19,8 +18,15 @@ class Quote(db.Model):
     high = db.Column(db.Float, nullable=True)
     low = db.Column(db.Float, nullable=True)
     close = db.Column(db.Float, nullable=True)
-    adjusted = db.Column(db.Float, nullable=True)
     volume = db.Column(db.BIGINT, nullable=True)
+
+
+class Quote(Quote_CSI300):
+    __tablename__ = 'quote'
+    __table_args__ = {'extend_existing': True}
+
+    adjusted = db.Column(db.Float, nullable=True)
+
 
 
 class Report(db.Model):
@@ -257,3 +263,5 @@ class Ublb_cross(db.Model):
     reached_date = db.Column(db.DateTime, nullable=False)
     index = db.Column(db.String(20), nullable=False)
     symbol = db.Column(db.String(10), nullable=False)
+
+
