@@ -4,99 +4,426 @@ import numpy as np
 import json
 
 
-def get_AI_Prompt(sdic, dbname, ticker):
-    s = sdic[dbname]
+def get_AI_Prompt(
+    sdic,
+    dbname,
+    ticker
+):
+    """
+    Load daily OHLCV data, convert it to weekly data,
+    calculate weekly trend indicators, and return a
+    structured JSON-compatible dictionary.
+
+    Parameters
+    ----------
+    sdic : dict
+        Dictionary containing SQLAlchemy sessions.
+
+    dbname : str
+        Database name, such as:
+            csi300
+            tsxci
+            sp100
+            nasdaq100
+            eei
+
+    ticker : str
+        Stock ticker.
+
+    Returns
+    -------
+    dict
+        Weekly trend, support/resistance, chase-value,
+        and buy-low-value analysis.
+    """
+
+    # --------------------------------------------------
+    # 1. Validate database/session
+    # --------------------------------------------------
+
+    if dbname not in sdic:
+        raise ValueError(
+            f"Database session '{dbname}' "
+            f"was not found in sdic."
+        )
+
+    session = sdic[dbname]
+
+    # --------------------------------------------------
+    # 2. Normalize ticker for the selected database
+    # --------------------------------------------------
+
+    # TSX database may store symbols without ".TO".
+    query_ticker = (
+        ticker.replace(".TO", "")
+        if dbname == "tsxci"
+        else ticker
+    )
+
+    # --------------------------------------------------
+    # 3. Build SQL query
+    # --------------------------------------------------
 
     if dbname == "csi300":
         query = (
-            s.query(Quote_CSI300)
-            .filter(Quote_CSI300.symbol == ticker)
+            session.query(Quote_CSI300)
+            .filter(
+                Quote_CSI300.symbol
+                == query_ticker
+            )
         )
+
     else:
         query = (
-            s.query(Quote)
-            .filter(Quote.symbol == ticker)
+            session.query(Quote)
+            .filter(
+                Quote.symbol
+                == query_ticker
+            )
         )
 
-    df = pd.read_sql(
-        query.statement,
-        s.bind,
-        index_col="date"
-    ).sort_index()
+    # --------------------------------------------------
+    # 4. Load daily data
+    # --------------------------------------------------
 
-    df_weekly = to_weekly_df(df)
+    df_daily = pd.read_sql(
+        query.statement,
+        session.bind,
+        index_col="date"
+    )
+
+    if df_daily is None or df_daily.empty:
+        raise ValueError(
+            f"No daily data found for "
+            f"{ticker} in database '{dbname}'."
+        )
+
+    # --------------------------------------------------
+    # 5. Clean daily dataframe
+    # --------------------------------------------------
+
+    df_daily = df_daily.copy()
+
+    if not isinstance(
+        df_daily.index,
+        pd.DatetimeIndex
+    ):
+        df_daily.index = pd.to_datetime(
+            df_daily.index,
+            errors="coerce"
+        )
+
+    # Remove invalid datetime indexes.
+    df_daily = df_daily[
+        ~df_daily.index.isna()
+    ]
+
+    df_daily = df_daily.sort_index()
+
+    df_daily.columns = [
+        str(column).lower()
+        for column in df_daily.columns
+    ]
+
+    required_daily_columns = [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+    ]
+
+    missing_daily_columns = [
+        column
+        for column in required_daily_columns
+        if column not in df_daily.columns
+    ]
+
+    if missing_daily_columns:
+        raise ValueError(
+            f"Daily dataframe for {ticker} "
+            f"is missing columns: "
+            f"{missing_daily_columns}"
+        )
+
+    # Convert required columns to numeric.
+    for column in required_daily_columns:
+        df_daily[column] = pd.to_numeric(
+            df_daily[column],
+            errors="coerce"
+        )
+
+    df_daily = df_daily.dropna(
+        subset=[
+            "open",
+            "high",
+            "low",
+            "close"
+        ]
+    )
+
+    if df_daily.empty:
+        raise ValueError(
+            f"No valid OHLC data remains for "
+            f"{ticker} after cleaning."
+        )
+
+    # --------------------------------------------------
+    # 6. Convert daily data to weekly data
+    # --------------------------------------------------
+
+    df_weekly = to_weekly_df(
+        df_daily
+    )
 
     if df_weekly is None or df_weekly.empty:
         raise ValueError(
-            f"No weekly data found for {ticker} in {dbname}."
+            f"No weekly data could be generated "
+            f"for {ticker} in database '{dbname}'."
         )
 
-    result = {
-        "symbol": ticker,
-        "database": dbname,
+    df_weekly = df_weekly.sort_index()
 
-        "weekly_k": build_weekly_k(
-            df_weekly
-        ),
+    # --------------------------------------------------
+    # 7. Ensure enough weekly history
+    # --------------------------------------------------
 
-        "moving_averages": build_moving_averages(
+    # EMA50 needs at least 50 weeks.
+    # MACD(14,56,5) benefits from more history.
+    minimum_weekly_rows = 61
+
+    if len(df_weekly) < minimum_weekly_rows:
+        raise ValueError(
+            f"At least {minimum_weekly_rows} "
+            f"weekly candles are required for "
+            f"EMA50 and MACD(14,56,5). "
+            f"Only {len(df_weekly)} weeks "
+            f"are available for {ticker}."
+        )
+
+    # --------------------------------------------------
+    # 8. Build the latest weekly candle
+    # --------------------------------------------------
+
+    weekly_k = build_weekly_k(
+        df_weekly=df_weekly
+    )
+
+    # --------------------------------------------------
+    # 9. Build moving averages
+    # --------------------------------------------------
+
+    moving_averages = (
+        build_moving_averages(
             df_weekly=df_weekly,
             flat_threshold_pct=0.05
-        ),
+        )
+    )
 
-        "macd": build_macd(
-            df_weekly=df_weekly,
-            fast_period=14,
-            slow_period=56,
-            signal_period=5,
-            history_weeks=8,
-            histogram_multiplier=1,
-            flat_threshold=0.0001
-        ),
+    # --------------------------------------------------
+    # 10. Build weekly MACD(14,56,5)
+    # --------------------------------------------------
 
-        "volume_analysis": build_volume_analysis(
+    macd = build_macd(
+        df_weekly=df_weekly,
+        fast_period=14,
+        slow_period=56,
+        signal_period=5,
+        history_weeks=8,
+        histogram_multiplier=1,
+        flat_threshold=0.0001
+    )
+
+    # --------------------------------------------------
+    # 11. Build weekly volume analysis
+    # --------------------------------------------------
+
+    volume_analysis = (
+        build_volume_analysis(
             df_weekly=df_weekly,
             high_volume_threshold=1.20,
             history_weeks=8
-        ),
-
-        "gap": build_gap_analysis(
-            df_daily=df,
-            current_price=float(df_weekly["close"].iloc[-1]),
-            lookback_days=252,
-            minimum_gap_pct=0.30
         )
-    }
-
-
-    json_output = json.dumps(
-        result,
-        indent=2,
-        ensure_ascii=False
     )
 
-    prompt = f"""
-    Analyze the following stock using weekly trading only.
+    # --------------------------------------------------
+    # 12. Build daily-gap analysis
+    # --------------------------------------------------
 
-    Focus on:
-    1. Weekly trend stage
-    2. MA5, MA10, MA20 and EMA50 structure
-    3. Weekly MACD(14,56,5)
-    4. Price and volume relationship
-    5. Unfilled gaps
-    6. Support and resistance
-    7. Whether this is a reversal, pullback, or continuation
+    # Gap analysis must use original daily data.
+    # Weekly resampling can hide daily gaps.
+    gap = build_gap_analysis(
+        df_daily=df_daily,
+        current_price=float(
+            df_weekly["close"].iloc[-1]
+        ),
+        lookback_days=252,
+        minimum_gap_pct=0.30
+    )
 
-    Stock data:
+    # --------------------------------------------------
+    # 13. Build short-term weekly structure
+    # --------------------------------------------------
 
-    {json_output}
-    """
+    short_term_structure = (
+        build_short_term_structure(
+            df_weekly=df_weekly,
+            atr_period=14
+        )
+    )
 
-    print(prompt)
+    # --------------------------------------------------
+    # 14. Build support/resistance candidates
+    # --------------------------------------------------
+
+    support_resistance = (
+        build_support_resistance_candidates(
+            weekly_k=weekly_k,
+            moving_averages=moving_averages,
+            gap=gap,
+            short_term_structure=(
+                short_term_structure
+            ),
+            atr=short_term_structure.get(
+                "atr14"
+            )
+        )
+    )
+
+    # --------------------------------------------------
+    # 15. Evaluate short-term chase value
+    # --------------------------------------------------
+
+    chase_analysis = (
+        build_chase_analysis(
+            weekly_k=weekly_k,
+            moving_averages=moving_averages,
+            macd=macd,
+            volume_analysis=volume_analysis,
+            gap=gap,
+            short_term_structure=(
+                short_term_structure
+            ),
+            support_resistance=(
+                support_resistance
+            )
+        )
+    )
+
+    # --------------------------------------------------
+    # 16. Evaluate short-term buy-low value
+    # --------------------------------------------------
+
+    buy_low_analysis = (
+        build_buy_low_analysis(
+            weekly_k=weekly_k,
+            moving_averages=moving_averages,
+            macd=macd,
+            volume_analysis=volume_analysis,
+            short_term_structure=(
+                short_term_structure
+            ),
+            support_resistance=(
+                support_resistance
+            )
+        )
+    )
+
+    # --------------------------------------------------
+    # 17. Select preferred entry style
+    # --------------------------------------------------
+
+    preferred_entry_style = (
+        choose_preferred_entry_style(
+            chase_analysis=chase_analysis,
+            buy_low_analysis=(
+                buy_low_analysis
+            )
+        )
+    )
+
+    # --------------------------------------------------
+    # 18. Build final JSON-compatible result
+    # --------------------------------------------------
+
+    result = {
+        "symbol": ticker,
+        "query_symbol": query_ticker,
+        "database": dbname,
+
+        "data_summary": {
+            "daily_rows": int(
+                len(df_daily)
+            ),
+            "weekly_rows": int(
+                len(df_weekly)
+            ),
+            "daily_start_date": (
+                pd.Timestamp(
+                    df_daily.index[0]
+                ).strftime("%Y-%m-%d")
+            ),
+            "daily_end_date": (
+                pd.Timestamp(
+                    df_daily.index[-1]
+                ).strftime("%Y-%m-%d")
+            ),
+            "weekly_start_date": (
+                pd.Timestamp(
+                    df_weekly.index[0]
+                ).strftime("%Y-%m-%d")
+            ),
+            "weekly_end_date": (
+                pd.Timestamp(
+                    df_weekly.index[-1]
+                ).strftime("%Y-%m-%d")
+            ),
+            "timeframe": "WEEKLY"
+        },
+
+        "weekly_k": weekly_k,
+
+        "moving_averages":
+            moving_averages,
+
+        "macd": macd,
+
+        "volume_analysis":
+            volume_analysis,
+
+        "gap": gap,
+
+        "short_term_structure":
+            short_term_structure,
+
+        "support_resistance":
+            support_resistance,
+
+        "short_term_entry_analysis": {
+            "chase": chase_analysis,
+
+            "buy_low":
+                buy_low_analysis,
+
+            "preferred_entry_style":
+                preferred_entry_style
+        }
+    }
+
+    print(
+        json.dumps(
+            result,
+            indent=2,
+            ensure_ascii=False,
+            default=str
+
+        )
+    )
 
 
-############################################# Methods #############################
+    return result
 
+############################# Methods
 
 def build_weekly_k(df_weekly):
     """
@@ -1135,49 +1462,26 @@ def get_volume_level(volume_ratio):
     return "EXTREMELY_HIGH"
 
 
-def get_price_volume_state(
-    weekly_change_pct,
-    volume_ratio,
-    close_location
-):
-    """
-    Classify the relationship between weekly price action
-    and weekly trading volume.
-    """
-
+def get_price_volume_state(weekly_change_pct, volume_ratio, close_location):
+    """Classify weekly price action relative to volume."""
     high_volume = volume_ratio >= 1.20
     strong_volume = volume_ratio >= 1.50
-
+    low_volume = volume_ratio < 0.75
     if weekly_change_pct > 0:
-        if strong_volume and close_location >= 0.70:
-            return "BULLISH_HIGH_VOLUME_CLOSE"
-
-        if high_volume and close_location < 0.40:
-            return "HIGH_VOLUME_UPPER_REJECTION"
-
-        if high_volume:
-            return "BULLISH_VOLUME_EXPANSION"
-
+        if strong_volume and close_location >= 0.70: return "BULLISH_HIGH_VOLUME_CLOSE"
+        if high_volume and close_location < 0.40: return "HIGH_VOLUME_UPPER_REJECTION"
+        if high_volume: return "BULLISH_VOLUME_EXPANSION"
+        if low_volume: return "PRICE_UP_LOW_VOLUME"
         return "PRICE_UP_NORMAL_VOLUME"
-
     if weekly_change_pct < 0:
-        if strong_volume and close_location <= 0.30:
-            return "BEARISH_HIGH_VOLUME_SELLING"
-
-        if high_volume and close_location >= 0.60:
-            return "HIGH_VOLUME_BUYING_SUPPORT"
-
-        if high_volume:
-            return "BEARISH_VOLUME_EXPANSION"
-
+        if strong_volume and close_location <= 0.30: return "BEARISH_HIGH_VOLUME_SELLING"
+        if high_volume and close_location >= 0.60: return "HIGH_VOLUME_BUYING_SUPPORT"
+        if high_volume: return "BEARISH_VOLUME_EXPANSION"
+        if low_volume: return "PRICE_DOWN_LOW_VOLUME"
         return "PRICE_DOWN_NORMAL_VOLUME"
-
-    if high_volume:
-        return "HIGH_VOLUME_NO_PRICE_PROGRESS"
-
+    if high_volume: return "HIGH_VOLUME_NO_PRICE_PROGRESS"
+    if low_volume: return "LOW_VOLUME_NO_PRICE_PROGRESS"
     return "NEUTRAL_VOLUME"
-
-
 def count_consecutive_high_volume_weeks(
     analysis_df,
     threshold=1.20
@@ -1526,6 +1830,10 @@ def build_gap_analysis(
 
         "is_filled": False,
 
+        "is_effectively_filled": bool(
+            nearest_gap["fill_pct"] >= 95.0
+        ),
+
         "fill_pct": round(
             nearest_gap["fill_pct"],
             3
@@ -1668,8 +1976,753 @@ def empty_gap_result():
         "location": None,
         "distance_to_gap_pct": None,
         "is_filled": None,
+        "is_effectively_filled": None,
         "fill_pct": None,
         "filled_date": None,
         "total_gaps_detected": 0,
         "unfilled_gap_count": 0
     }
+
+
+# ============================================================================
+# Short-term weekly entry analysis
+# ============================================================================
+
+def count_consecutive_return_weeks(return_series, positive=True):
+    values = return_series.dropna().astype(float).tolist()
+    count = 0
+    for value in reversed(values):
+        if (positive and value > 0) or ((not positive) and value < 0):
+            count += 1
+        else:
+            break
+    return count
+
+
+def build_short_term_structure(df_weekly, atr_period=14):
+    required = ["open", "high", "low", "close"]
+    missing = [c for c in required if c not in df_weekly.columns]
+    if missing:
+        raise ValueError(f"Missing short-term structure columns: {missing}")
+    df = df_weekly[required].copy().sort_index()
+    for c in required:
+        df[c] = pd.to_numeric(df[c], errors="coerce")
+    df = df.dropna(subset=required)
+    if len(df) < 27:
+        raise ValueError("At least 27 weekly candles are required.")
+
+    prev_close = df["close"].shift(1)
+    tr = pd.concat([
+        df["high"] - df["low"],
+        (df["high"] - prev_close).abs(),
+        (df["low"] - prev_close).abs(),
+    ], axis=1).max(axis=1)
+    atr_s = tr.ewm(alpha=1 / atr_period, adjust=False, min_periods=atr_period).mean()
+    close = float(df["close"].iloc[-1])
+    high = float(df["high"].iloc[-1])
+    low = float(df["low"].iloc[-1])
+    atr = float(atr_s.iloc[-1])
+    returns = df["close"].pct_change() * 100
+
+    def wh(n): return float(df["high"].tail(n).max())
+    def wl(n): return float(df["low"].tail(n).min())
+    def ph(n): return float(df["high"].iloc[-(n + 1):-1].max())
+    def pl(n): return float(df["low"].iloc[-(n + 1):-1].min())
+    def change(offset): return (close / float(df["close"].iloc[-offset]) - 1) * 100
+
+    h4, h13, h26 = wh(4), wh(13), wh(26)
+    l4, l13, l26 = wl(4), wl(13), wl(26)
+    ph4, ph13, ph26 = ph(4), ph(13), ph(26)
+    pl4, pl13, pl26 = pl(4), pl(13), pl(26)
+
+    return {
+        "atr14": round(atr, 3),
+        "weekly_range_atr": round((high - low) / atr, 3) if atr > 0 else None,
+        "change_pct_2w": round(change(3), 3),
+        "change_pct_4w": round(change(5), 3),
+        "change_pct_8w": round(change(9), 3),
+        "high_4w": round(h4, 3), "high_13w": round(h13, 3), "high_26w": round(h26, 3),
+        "low_4w": round(l4, 3), "low_13w": round(l13, 3), "low_26w": round(l26, 3),
+        "previous_high_4w": round(ph4, 3), "previous_high_13w": round(ph13, 3),
+        "previous_high_26w": round(ph26, 3), "previous_low_4w": round(pl4, 3),
+        "previous_low_13w": round(pl13, 3), "previous_low_26w": round(pl26, 3),
+        "drawdown_from_4w_high_pct": round((close / h4 - 1) * 100, 3),
+        "drawdown_from_13w_high_pct": round((close / h13 - 1) * 100, 3),
+        "drawdown_from_26w_high_pct": round((close / h26 - 1) * 100, 3),
+        "distance_to_13w_high_pct": round((close / h13 - 1) * 100, 3),
+        "distance_to_26w_high_pct": round((close / h26 - 1) * 100, 3),
+        "broke_previous_4w_high": bool(high > ph4),
+        "closed_above_previous_4w_high": bool(close > ph4),
+        "broke_previous_13w_high": bool(high > ph13),
+        "closed_above_previous_13w_high": bool(close > ph13),
+        "broke_previous_26w_high": bool(high > ph26),
+        "closed_above_previous_26w_high": bool(close > ph26),
+        "consecutive_up_weeks": count_consecutive_return_weeks(returns, True),
+        "consecutive_down_weeks": count_consecutive_return_weeks(returns, False),
+    }
+
+
+def add_price_level_candidate(supports, resistances, name, price, current_price, level_type, direction=None):
+    if price is None or pd.isna(price):
+        return
+    price = float(price)
+    current_price = float(current_price)
+    item = {
+        "name": str(name), "price": round(price, 3), "type": str(level_type),
+        "direction": direction, "sources": [str(name)],
+        "distance_pct": round((price / current_price - 1) * 100, 3),
+    }
+    (supports if price <= current_price else resistances).append(item)
+
+
+def merge_duplicate_price_levels(levels, tolerance_pct=0.20, current_price=None, atr=None, tolerance_atr=0.15):
+    """Merge nearby levels and preserve all source information."""
+    merged=[]
+    for raw in levels:
+        item=raw.copy(); item["sources"]=list(item.get("sources",[item["name"]]))
+        item["source_prices"]={x:round(float(item["price"]),3) for x in item["sources"]}
+        item["source_directions"]={x:item.get("direction") for x in item["sources"]}
+        item["source_types"]={x:item.get("type") for x in item["sources"]}
+        match = next((
+            e for e in merged
+            if (
+                abs(float(item["price"]) - float(e["price"]))
+                / max(abs(float(item["price"])), abs(float(e["price"])), 1e-9)
+                * 100 <= tolerance_pct
+            )
+            or (
+                atr is not None
+                and float(atr) > 0
+                and abs(float(item["price"]) - float(e["price"])) / float(atr) <= tolerance_atr
+            )
+        ), None)
+        if match is None: merged.append(item); continue
+        for x in item["sources"]:
+            if x not in match["sources"]: match["sources"].append(x)
+            match["source_prices"][x]=item["source_prices"][x]; match["source_directions"][x]=item["source_directions"][x]; match["source_types"][x]=item["source_types"][x]
+        prices=list(match["source_prices"].values()); match["price"]=round(sum(prices)/len(prices),3); match["price_low"]=round(min(prices),3); match["price_high"]=round(max(prices),3)
+        dirs={d for d in match["source_directions"].values() if d not in [None,"UNKNOWN"]}; match["direction"]=next(iter(dirs)) if len(dirs)==1 else ("MIXED" if len(dirs)>1 else None)
+        types={t for t in match["source_types"].values() if t is not None}; match["type"]=next(iter(types)) if len(types)==1 else "CONFLUENCE"
+        match["name"]="MULTI_TIMEFRAME_LEVEL" if len(match["sources"])>=3 else "+".join(match["sources"])
+        if current_price: match["distance_pct"]=round((match["price"]/float(current_price)-1)*100,3)
+    return merged
+def get_level_quality_score(level, is_support=True):
+    score = 50
+    if level.get("type") == "MOVING_AVERAGE":
+        direction = level.get("direction")
+        if is_support:
+            score += {"UP": 22, "FLAT": 8, "MIXED": 5, "DOWN": -12}.get(direction, 0)
+        else:
+            score += {"DOWN": 18, "MIXED": 10, "FLAT": 8, "UP": 3}.get(direction, 0)
+    elif level.get("type") == "GAP":
+        score += 15
+    elif level.get("type") == "PRICE_STRUCTURE":
+        score += 10
+    if len(level.get("sources", [])) >= 3:
+        score += 15
+    elif len(level.get("sources", [])) == 2:
+        score += 8
+    return int(max(0, min(100, score)))
+
+
+def build_support_resistance_candidates(weekly_k, moving_averages, gap, short_term_structure, atr=None):
+    current = float(weekly_k["close"])
+    atr = float(atr if atr is not None else short_term_structure["atr14"])
+    supports, resistances = [], []
+    for name in ["ma5", "ma10", "ma20", "ema50"]:
+        add_price_level_candidate(supports, resistances, name.upper(), moving_averages.get(name), current,
+                                  "MOVING_AVERAGE", moving_averages.get(f"{name}_direction"))
+    for name in ["low_4w", "previous_low_4w", "low_13w", "previous_low_13w", "low_26w",
+                 "high_4w", "previous_high_4w", "high_13w", "previous_high_13w",
+                 "high_26w", "previous_high_26w"]:
+        add_price_level_candidate(supports, resistances, name.upper(), short_term_structure.get(name),
+                                  current, "PRICE_STRUCTURE")
+    if (
+        gap.get("exists")
+        and not gap.get("is_effectively_filled", False)
+    ):
+        add_price_level_candidate(supports, resistances, "GAP_LOW", gap.get("gap_low"), current, "GAP")
+        add_price_level_candidate(supports, resistances, "GAP_HIGH", gap.get("gap_high"), current, "GAP")
+
+    supports = merge_duplicate_price_levels(sorted(supports, key=lambda x: abs(x["distance_pct"])), current_price=current, atr=atr)
+    resistances = merge_duplicate_price_levels(sorted(resistances, key=lambda x: abs(x["distance_pct"])), current_price=current, atr=atr)
+    supports.sort(key=lambda x: abs(x["distance_pct"]))
+    resistances.sort(key=lambda x: abs(x["distance_pct"]))
+    for item in supports:
+        item["distance_atr"] = round(abs(current - float(item["price"])) / atr, 3) if atr > 0 else None
+        item["quality_score"] = get_level_quality_score(item, True)
+    for item in resistances:
+        item["distance_atr"] = round(abs(float(item["price"]) - current) / atr, 3) if atr > 0 else None
+        item["quality_score"] = get_level_quality_score(item, False)
+    return {
+        "current_price": round(current, 3),
+        "nearest_support": supports[0] if supports else None,
+        "nearest_resistance": resistances[0] if resistances else None,
+        "support_candidates": supports[:8],
+        "resistance_candidates": resistances[:8],
+    }
+
+
+def get_entry_rating(score):
+    if score >= 80: return "HIGH"
+    if score >= 65: return "MODERATELY_HIGH"
+    if score >= 50: return "NEUTRAL"
+    if score >= 35: return "LOW"
+    return "VERY_LOW"
+
+
+def _safe_float(value):
+    return None if value is None or pd.isna(value) else float(value)
+
+
+def _entry_reward_risk(close, atr, support, resistance):
+    if not support or not resistance or atr is None or atr <= 0:
+        return None, None
+    invalidation = float(support["price"]) - 0.50 * atr
+    downside = close - invalidation
+    upside = float(resistance["price"]) - close
+    ratio = upside / downside if upside > 0 and downside > 0 else None
+    return invalidation, ratio
+
+
+def build_chase_analysis(weekly_k, moving_averages, macd, volume_analysis, gap,
+                         short_term_structure, support_resistance):
+    positive, risks = [], []
+    close = float(weekly_k["close"])
+    change = float(weekly_k["weekly_change_pct"])
+    close_loc = float(weekly_k["close_location"])
+    upper = float(weekly_k["upper_shadow_pct"])
+    lower = float(weekly_k["lower_shadow_pct"])
+    ma5, ma10, ma20, ema50 = [float(moving_averages[k]) for k in ["ma5", "ma10", "ma20", "ema50"]]
+    dirs = [moving_averages[f"{k}_direction"] for k in ["ma5", "ma10", "ma20", "ema50"]]
+    atr = _safe_float(short_term_structure.get("atr14"))
+    vr = _safe_float(volume_analysis.get("volume_ratio_13w"))
+    change4 = _safe_float(short_term_structure.get("change_pct_4w"))
+    up_weeks = int(short_term_structure.get("consecutive_up_weeks", 0))
+    broke13 = bool(short_term_structure.get("broke_previous_13w_high", False))
+    closed13 = bool(short_term_structure.get("closed_above_previous_13w_high", False))
+    support = support_resistance.get("nearest_support")
+    resistance = support_resistance.get("nearest_resistance")
+
+    if close > ma5 > ma10 > ma20 > ema50 and all(d == "UP" for d in dirs):
+        trend = 20; positive.append("Standard bullish weekly MA alignment")
+    elif close > ma5 and close > ma10 and close > ma20 and dirs[1] == "UP" and dirs[2] == "UP":
+        trend = 15; positive.append("Price is above MA5, MA10 and MA20")
+    elif close > ma20 and dirs[2] == "UP":
+        trend = 9; positive.append("Price remains above a rising MA20")
+    elif close > ema50 and dirs[3] in ["UP", "FLAT"]:
+        trend = 5
+    else:
+        trend = 0
+    if close < ma5: risks.append("Price is below MA5")
+    if close < ma10: risks.append("Price is below MA10")
+    if close < ma20: risks.append("Price is below MA20")
+
+    d5 = (close - ma5) / atr if atr and atr > 0 else None
+    d10 = (close - ma10) / atr if atr and atr > 0 else None
+    if d5 is None: extension = 0
+    elif 0 <= d5 <= 0.50: extension = 15; positive.append("Price is close to MA5 in ATR terms")
+    elif d5 <= 0.75: extension = 12
+    elif d5 <= 1.25: extension = 8
+    elif d5 <= 2.00: extension = 3; risks.append("Price is extended above MA5")
+    elif d5 > 2.00: extension = 0; risks.append("Price is severely extended above MA5")
+    else: extension = 2; risks.append("Price is below MA5")
+    if d10 is not None and d10 > 2.50:
+        extension = max(0, extension - 4); risks.append("Price is excessively extended above MA10")
+
+    if change > 0 and close_loc >= 0.80 and upper <= 20:
+        candle = 15; positive.append("Strong weekly close with limited upper rejection")
+    elif change > 0 and close_loc >= 0.60 and upper < 35:
+        candle = 11; positive.append("Weekly candle closed in its upper range")
+    elif change > 0 and close_loc >= 0.50: candle = 7
+    elif close_loc >= 0.60: candle = 5
+    else: candle = 0
+    if upper >= 50 and close_loc <= 0.40:
+        candle = 0; risks.append("Severe weekly upper rejection")
+    elif upper >= 40 and close_loc <= 0.50:
+        candle = min(candle, 3); risks.append("Meaningful weekly upper rejection")
+    if close_loc <= 0.20:
+        candle = 0; risks.append("Weekly close is near the weekly low")
+    if lower >= 35 and close_loc >= 0.60: candle = min(15, candle + 3)
+
+    state = macd.get("state")
+    if macd.get("dif_above_dea") and macd.get("dif_above_zero") and macd.get("dea_above_zero") and state == "POSITIVE_EXPANDING":
+        macd_score = 15; positive.append("MACD is bullish above zero with expanding momentum")
+    elif macd.get("dif_above_dea") and macd.get("dif_above_zero") and macd.get("dea_above_zero"):
+        macd_score = 10; positive.append("MACD remains bullish above zero")
+        if state == "POSITIVE_NARROWING": risks.append("MACD bullish momentum is narrowing")
+    elif state == "ZERO_LINE_CROSS_UP": macd_score = 9; positive.append("Fresh bullish MACD crossover")
+    elif macd.get("dif_above_dea") and not macd.get("dif_above_zero") and state == "POSITIVE_EXPANDING":
+        macd_score = 7; risks.append("Long-term MACD confirmation is pending")
+    elif state == "NEGATIVE_NARROWING": macd_score = 3
+    else:
+        macd_score = 0
+        if state in ["NEGATIVE_EXPANDING", "ZERO_LINE_CROSS_DOWN"]: risks.append("MACD bearish momentum is expanding")
+
+    if vr is None: volume = 0
+    elif change > 0 and vr >= 1.20 and close_loc >= 0.70 and upper <= 30: volume = 15; positive.append("Bullish move is confirmed by volume")
+    elif change > 0 and vr >= 1.00 and close_loc >= 0.60: volume = 11
+    elif change > 0 and vr >= 0.75: volume = 7
+    elif change > 0: volume = 3; risks.append("Price advanced on low volume")
+    elif vr < 0.80: volume = 4
+    else: volume = 0
+    if vr is not None and vr >= 1.50 and upper >= 40 and close_loc < 0.50:
+        volume = 0; risks.append("High-volume upper rejection raises distribution risk")
+
+    if change4 is None: acceleration = 0
+    elif 3 <= change4 <= 9: acceleration = 10; positive.append("Recent appreciation is constructive without extreme extension")
+    elif 0 <= change4 < 3: acceleration = 7
+    elif 9 < change4 < 12: acceleration = 6
+    elif 12 <= change4 < 18: acceleration = 3; risks.append("Four-week gain is extended")
+    elif change4 >= 18: acceleration = 0; risks.append("Four-week gain is severely extended")
+    else: acceleration = 2
+    if up_weeks >= 7: acceleration = 0; risks.append("Too many consecutive up weeks")
+    elif up_weeks >= 5: acceleration = min(acceleration, 3)
+
+    if closed13 and change > 0 and close_loc >= 0.70:
+        if vr is not None and vr >= 1.20: breakout = 10; positive.append("Confirmed 13-week breakout with volume support")
+        elif vr is not None and vr >= 1.00: breakout = 7
+        else: breakout = 4; risks.append("Breakout volume is below average")
+    elif broke13 and not closed13:
+        breakout = 0; risks.append("Price broke the previous 13-week high but failed to close above it")
+    else:
+        breakout = 2; risks.append("Price has not confirmed a 13-week breakout")
+
+    score = trend + extension + candle + macd_score + volume + acceleration + breakout
+    invalidation, rr = _entry_reward_risk(close, atr, support, resistance)
+    ds = (close - float(support["price"])) / atr if support and atr and atr > 0 else None
+    dr = (float(resistance["price"]) - close) / atr if resistance and atr and atr > 0 else None
+    if dr is not None and 0 < dr < 0.25: score -= 8; risks.append("Price is immediately below resistance")
+    elif dr is not None and 0 < dr < 0.50: score -= 5; risks.append("Upside room before resistance is limited")
+    if rr is not None:
+        if rr >= 3: score += 5
+        elif rr >= 2: score += 3
+        elif rr < 0.75: score -= 6; risks.append("Upside is small relative to technical invalidation risk")
+    if (
+        gap.get("exists")
+        and not gap.get("is_effectively_filled", False)
+    ):
+        gd = _safe_float(gap.get("distance_to_gap_pct"))
+        if gap.get("location") == "ABOVE_PRICE" and gd is not None and gd <= 3:
+            score -= 7; risks.append("Nearby overhead gap restricts upside")
+        if gap.get("location") == "PRICE_INSIDE_GAP":
+            score -= 5; risks.append("Price is trading inside an unfilled gap")
+
+    if not closed13: score = min(score, 74)
+    if broke13 and not closed13: score = min(score, 55)
+    if vr is not None and vr < 1.00 and not closed13:
+        score = min(score, 69); risks.append("Volume is below the 13-week average")
+    if vr is not None and vr < 1.00 and closed13: score = min(score, 79)
+    score = int(max(0, min(100, round(score))))
+    if score >= 80:
+        decision = (
+            "CHASE_ACCEPTABLE_WITH_RISK_CONTROL"
+            if closed13
+            else "WAIT_FOR_BREAKOUT_CONFIRMATION"
+        )
+    elif score >= 65:
+        decision = (
+            "BREAKOUT_ENTRY_ACCEPTABLE"
+            if closed13
+            else "WAIT_FOR_BREAKOUT_CONFIRMATION"
+        )
+    elif score >= 50:
+        decision = "WAIT_FOR_BREAKOUT_CONFIRMATION"
+    elif score >= 35:
+        decision = "PREFER_PULLBACK_OVER_CHASING"
+    else:
+        decision = "DO_NOT_CHASE"
+    return {
+        "score": score, "rating": get_entry_rating(score), "decision": decision,
+        "components": {"trend": trend, "extension": extension, "weekly_candle": candle,
+                       "macd": macd_score, "volume": volume, "acceleration": acceleration,
+                       "breakout": breakout},
+        "distance_ma5_atr": round(d5, 3) if d5 is not None else None,
+        "distance_ma10_atr": round(d10, 3) if d10 is not None else None,
+        "nearest_support_distance_atr": round(ds, 3) if ds is not None else None,
+        "nearest_resistance_distance_atr": round(dr, 3) if dr is not None else None,
+        "invalidation_price": round(invalidation, 3) if invalidation is not None else None,
+        "estimated_reward_risk": round(rr, 3) if rr is not None else None,
+        "positive_factors": list(dict.fromkeys(positive)), "risk_factors": list(dict.fromkeys(risks)),
+    }
+
+
+def build_buy_low_analysis(weekly_k, moving_averages, macd, volume_analysis,
+                           short_term_structure, support_resistance):
+    positive, risks = [], []
+    close = float(weekly_k["close"]); change = float(weekly_k["weekly_change_pct"])
+    close_loc = float(weekly_k["close_location"]); lower = float(weekly_k["lower_shadow_pct"])
+    upper = float(weekly_k["upper_shadow_pct"]); atr = float(short_term_structure["atr14"])
+    vr = float(volume_analysis["volume_ratio_13w"])
+    volume_change_1w = _safe_float(volume_analysis.get("volume_change_pct_1w"))
+    current_week_low = float(weekly_k["low"])
+    previous_low_4w = _safe_float(short_term_structure.get("previous_low_4w"))
+    ma5, ma10, ma20, ema50 = [float(moving_averages[k]) for k in ["ma5", "ma10", "ma20", "ema50"]]
+    support = support_resistance.get("nearest_support"); resistance = support_resistance.get("nearest_resistance")
+    rising = sum(moving_averages[f"{k}_direction"] == "UP" for k in ["ma5", "ma10", "ma20", "ema50"])
+
+    if close > ma20 and close > ema50 and rising == 4: trend = 20; positive.append("Price remains within a strong upward trend")
+    elif close > ma20 and close > ema50 and rising >= 3: trend = 17
+    elif moving_averages["ma20_direction"] == "UP" and moving_averages["ema50_direction"] in ["UP", "FLAT"]: trend = 13
+    elif close > ema50: trend = 7
+    else: trend = 0
+    broke_previous_support = bool(previous_low_4w is not None and current_week_low < previous_low_4w)
+    falling = (
+        close < ma5 and close < ma10 and close < ma20 and close < ema50
+        and moving_averages["ma5_direction"] == "DOWN" and moving_averages["ma10_direction"] == "DOWN"
+        and moving_averages["ma20_direction"] == "DOWN" and moving_averages["ema50_direction"] == "DOWN"
+        and macd["state"] in ["NEGATIVE_EXPANDING", "ZERO_LINE_CROSS_DOWN"]
+        and close_loc <= 0.35 and (change < 0 or broke_previous_support)
+    )
+    breakdown_risk = (
+        close < ma5 and close < ma10 and close < ma20 and close < ema50
+        and moving_averages["ma5_direction"] == "DOWN" and moving_averages["ma10_direction"] == "DOWN"
+        and macd["state"] in ["NEGATIVE_EXPANDING", "ZERO_LINE_CROSS_DOWN"] and change <= -2.0 and close_loc <= 0.20
+    )
+    recovery_ma_score = sum([
+        moving_averages["ma5_direction"] == "UP",
+        moving_averages["ma10_direction"] in ["UP", "FLAT"],
+        moving_averages["ema50_direction"] in ["UP", "FLAT"],
+    ])
+    recovery_rally = (
+        change >= 2.0
+        and close_loc >= 0.75
+        and close > ma5
+        and close > ma10
+        and close > ema50
+        and close < ma20
+        and moving_averages["ma5_direction"] == "UP"
+        and moving_averages["ema50_direction"] in ["UP", "FLAT"]
+        and recovery_ma_score >= 2
+    )
+    trend_continuation = (
+        change >= 2.0 and close_loc >= 0.75 and close > ma5 and close > ma10 and close > ma20 and close > ema50
+        and rising == 4
+    )
+
+    early_recovery = (
+        close > ma5
+        and close > ma10
+        and close < ma20
+        and close < ema50
+        and moving_averages["ma5_direction"] == "UP"
+        and moving_averages["ma10_direction"] == "UP"
+        and macd["state"] == "NEGATIVE_NARROWING"
+    )
+
+    if falling:
+        setup_type = "FALLING_KNIFE"
+    elif breakdown_risk:
+        setup_type = "BREAKDOWN_RISK"
+    elif recovery_rally:
+        setup_type = "RECOVERY_RALLY_BELOW_MA20"
+    elif trend_continuation:
+        setup_type = "TREND_CONTINUATION_NEAR_RESISTANCE"
+    elif early_recovery:
+        setup_type = "EARLY_RECOVERY"
+    elif close > ma20 and close > ema50:
+        setup_type = "TREND_PULLBACK"
+    else:
+        setup_type = "UNCONFIRMED_RECOVERY"
+
+    current_low_is_unconfirmed = bool(support and "LOW_4W" in support.get("sources", []) and abs(float(support["price"])-current_week_low)<=0.001 and close_loc<0.35 and lower<15)
+    if current_low_is_unconfirmed:
+        alternatives=[x for x in support_resistance.get("support_candidates",[]) if x is not support and float(x["price"])<close and abs(float(x["price"])-current_week_low)>0.001]
+        if alternatives: support=alternatives[0]
+        risks.append("The current week's low is unconfirmed and is not used as primary support")
+
+    ds = (close - float(support["price"])) / atr if support and atr > 0 else None
+    if ds is None: support_score = 0
+    elif 0 <= ds <= 0.25: support_score = 20; positive.append("Price is immediately above weekly support")
+    elif ds <= 0.50: support_score = 17; positive.append("Price is close to weekly support")
+    elif ds <= 0.75: support_score = 12
+    elif ds <= 1.25: support_score = 6
+    else: support_score = 1; risks.append("Price remains too far above support for strong buy-low value")
+    if support and int(support.get("quality_score", 50)) < 45: support_score = max(0, support_score - 5)
+
+    dd = abs(min(0.0, float(short_term_structure["drawdown_from_4w_high_pct"])))
+    if 2 <= dd <= 6: pullback = 15; positive.append("Pullback depth is constructive")
+    elif 6 < dd <= 10: pullback = 11
+    elif 10 < dd <= 15: pullback = 5; risks.append("Pullback is deep and needs confirmation")
+    elif dd > 15: pullback = 0; risks.append("Drawdown may represent trend damage")
+    elif 1 <= dd < 2: pullback = 8
+    else: pullback = 2; risks.append("Price has not pulled back enough for strong buy-low value")
+
+    # Pullback depth is most meaningful inside an established
+    # upward trend. In a bearish structure, a shallow drawdown
+    # may only represent consolidation rather than a healthy pullback.
+    original_pullback_score = pullback
+
+    if setup_type == "EARLY_RECOVERY":
+        pullback = min(pullback, 10)
+
+    elif setup_type in ["UNCONFIRMED_RECOVERY", "RECOVERY_RALLY_BELOW_MA20"]:
+        pullback = min(pullback, 6)
+
+    elif setup_type in ["BREAKDOWN_RISK", "FALLING_KNIFE"]:
+        pullback = 0
+
+    if pullback < original_pullback_score:
+        positive = [x for x in positive if x != "Pullback depth is constructive"]
+        positive.append("Drawdown depth is moderate in percentage terms")
+        risks.append(
+            "Pullback-depth score is capped because the setup "
+            "does not have a confirmed upward-trend background"
+        )
+
+    strong = lower >= 35 and close_loc >= 0.60
+    moderate = lower >= 20 and close_loc >= 0.50
+    if strong: candle = 15; positive.append("Weekly candle strongly rejected lower prices")
+    elif moderate: candle = 9; positive.append("Weekly candle shows moderate support")
+    elif close_loc >= 0.60: candle = 6
+    elif close_loc >= 0.40: candle = 3
+    else: candle = 0
+    if close_loc <= 0.20 and lower < 15: candle = 0; risks.append("Weekly candle closed near its low without support confirmation")
+    if upper >= 45 and close_loc < 0.40: candle = max(0, candle - 5)
+
+    bearish_volume_breakdown = bool(change <= -3.0 and close_loc <= 0.20 and volume_change_1w is not None and volume_change_1w >= 20.0)
+    failed_breakout_reversal = bool(
+        short_term_structure.get("broke_previous_4w_high")
+        and not short_term_structure.get("closed_above_previous_4w_high")
+        and change <= -3.0
+        and close_loc <= 0.20
+    )
+    if bearish_volume_breakdown:
+        volume = 0; risks.append("Large bearish week closed near its low with volume expanding versus the prior week")
+    elif failed_breakout_reversal and vr < 0.75:
+        volume = 6
+        risks.append("Low-volume decline followed a failed breakout attempt and closed near the weekly low")
+    elif change < 0:
+        if vr < 0.75: volume = 10; positive.append("Pullback occurred on low volume")
+        elif vr <= 1.10: volume = 7
+        elif vr < 1.50: volume = 3
+        else: volume = 0; risks.append("Pullback occurred on heavy volume")
+    elif strong: volume = 9
+    elif moderate: volume = 6
+    else: volume = 3
+
+    state = macd["state"]
+    if macd["dif_above_dea"] and macd["dif_above_zero"] and macd["dea_above_zero"] and state == "POSITIVE_EXPANDING": macd_score = 10
+    elif macd["dif_above_dea"] and macd["dif_above_zero"] and macd["dea_above_zero"]:
+        macd_score = 8
+        if state == "POSITIVE_NARROWING": risks.append("MACD bullish momentum is slowing")
+    elif state == "ZERO_LINE_CROSS_UP":
+        macd_score = 7
+    elif (
+        macd["dif_above_dea"]
+        and not macd["dif_above_zero"]
+        and not macd["dea_above_zero"]
+        and state == "POSITIVE_EXPANDING"
+    ):
+        macd_score = 6
+        positive.append("MACD recovery is expanding below the zero axis")
+        risks.append("MACD remains below zero, so long-term trend confirmation is pending")
+    elif (
+        macd["dif_above_dea"]
+        and not macd["dif_above_zero"]
+        and not macd["dea_above_zero"]
+        and state == "POSITIVE_NARROWING"
+    ):
+        macd_score = 3
+        risks.append("MACD recovery remains below zero and bullish momentum is narrowing")
+    elif state == "NEGATIVE_NARROWING":
+        macd_score = 5
+    else:
+        macd_score = 0
+        if state in ["NEGATIVE_EXPANDING", "ZERO_LINE_CROSS_DOWN"]: risks.append("MACD bearish momentum is expanding")
+
+    invalidation, rr = _entry_reward_risk(close, atr, support, resistance)
+    if rr is None: rr_score = 0
+    elif rr >= 3: rr_score = 10
+    elif rr >= 2: rr_score = 7
+    elif rr >= 1: rr_score = 4
+    elif rr >= 0.75: rr_score = 2
+    else: rr_score = 0; risks.append("Nearby resistance limits upside relative to invalidation risk")
+
+    score = trend + support_score + pullback + candle + volume + macd_score + rr_score
+    pullback_week = change < 0; near_support = ds is not None and 0 <= ds <= 0.50
+    support_rejection = lower >= 25 and close_loc >= 0.60
+    if not pullback_week and not support_rejection:
+        score = min(score, 69); risks.append("Current week is neither a pullback nor a clear support-rejection week")
+    elif near_support and support_rejection: score = min(score, 89)
+    elif pullback_week and not support_rejection:
+        score = min(score, 74); risks.append("Weekly support reaction is visible but not yet strong enough for confirmation")
+    if falling:
+        score = min(score, 34)
+        risks.append("Setup resembles a falling knife")
+
+    if breakdown_risk:
+        score = min(score, 24); risks.append("A large bearish breakdown requires stabilization before buy-low consideration")
+    if recovery_rally:
+        score = min(score, 49); risks.append("Strong recovery rally remains below a falling MA20")
+    if trend_continuation:
+        score = min(score, 59); risks.append("Current week is a continuation move near resistance rather than a low-risk pullback entry")
+    if early_recovery:
+        score = min(score, 59)
+        risks.append("Early recovery remains below falling MA20 and EMA50")
+
+        resistance_distance_atr = (
+            resistance.get("distance_atr")
+            if resistance
+            else None
+        )
+
+        if (
+            resistance_distance_atr is not None
+            and resistance_distance_atr < 0.50
+        ):
+            score = min(score, 44)
+            risks.append("Early recovery is immediately below nearby resistance")
+
+    if rr is not None:
+        if rr < 0.75:
+            score = min(score, 59)
+            risks.append("Buy-low score is capped because estimated reward/risk is below 0.75")
+        elif rr < 1.00:
+            score = min(score, 69)
+            risks.append("Buy-low score is capped because estimated reward/risk is below 1.0")
+        elif rr < 1.50:
+            score = min(score, 79)
+
+    score = int(max(0, min(100, round(score))))
+
+    if falling:
+        decision = "AVOID_CATCHING_FALLING_KNIFE"
+    elif breakdown_risk:
+        decision = "WAIT_FOR_BREAKDOWN_STABILIZATION"
+    elif recovery_rally:
+        decision = "RECOVERY_RALLY_NOT_CONFIRMED"
+    elif trend_continuation:
+        decision = "WAIT_FOR_PULLBACK_ENTRY"
+    elif early_recovery:
+        decision = "WAIT_FOR_REVERSAL_CONFIRMATION"
+    elif score >= 80:
+        if ds is not None and ds <= 0.25 and rr is not None and rr >= 1.50:
+            decision = "BUY_LOW_SETUP_STRONG"
+        else:
+            decision = "WAIT_FOR_BUY_LOW_ZONE"
+    elif score >= 65:
+        if rr is not None and rr >= 1.00:
+            decision = "BUY_LOW_SETUP_ACCEPTABLE"
+        else:
+            decision = "WAIT_FOR_BETTER_REWARD_RISK"
+    elif score >= 50:
+        decision = "WAIT_FOR_SUPPORT_CONFIRMATION"
+    elif score >= 35:
+        decision = "PULLBACK_NOT_CONFIRMED"
+    else:
+        if setup_type == "UNCONFIRMED_RECOVERY":
+            decision = "WAIT_FOR_RECOVERY_CONFIRMATION"
+        else:
+            decision = "NO_BUY_LOW_EDGE"
+    return {
+        "score": score, "rating": get_entry_rating(score), "decision": decision,
+        "setup_type": setup_type,
+        "components": {"trend_background": trend, "support_proximity": support_score,
+                       "pullback_depth": pullback, "support_candle": candle,
+                       "volume_behavior": volume, "macd_context": macd_score, "reward_risk": rr_score},
+        "nearest_support": support, "nearest_resistance": resistance,
+        "support_distance_atr": round(ds, 3) if ds is not None else None,
+        "drawdown_from_4w_high_pct": short_term_structure["drawdown_from_4w_high_pct"],
+        "invalidation_price": round(invalidation, 3) if invalidation is not None else None,
+        "estimated_reward_risk": round(rr, 3) if rr is not None else None,
+        "positive_factors": list(dict.fromkeys(positive)), "risk_factors": list(dict.fromkeys(risks)),
+    }
+
+
+def choose_preferred_entry_style(chase_analysis, buy_low_analysis):
+    """Select the preferred weekly entry approach using scores and setup states."""
+    chase_score = int(chase_analysis["score"])
+    buy_low_score = int(buy_low_analysis["score"])
+    chase_decision = chase_analysis.get("decision")
+    buy_low_decision = buy_low_analysis.get("decision")
+    buy_low_type = buy_low_analysis.get("setup_type")
+    chase_rr = chase_analysis.get("estimated_reward_risk")
+    buy_low_rr = buy_low_analysis.get("estimated_reward_risk")
+    difference = chase_score - buy_low_score
+
+    if buy_low_type == "FALLING_KNIFE":
+        return "WAIT_NO_CLEAR_EDGE"
+    if buy_low_type == "BREAKDOWN_RISK":
+        return "WAIT_FOR_BREAKDOWN_STABILIZATION"
+    if buy_low_type == "RECOVERY_RALLY_BELOW_MA20":
+        return "WAIT_FOR_BREAKOUT_OR_RECOVERY_PULLBACK"
+    if buy_low_type == "TREND_CONTINUATION_NEAR_RESISTANCE":
+        return "WAIT_FOR_BREAKOUT_OR_PULLBACK"
+
+    if buy_low_type == "EARLY_RECOVERY":
+        return "WAIT_FOR_REVERSAL_CONFIRMATION"
+
+    if (
+        chase_score >= 75
+        and difference >= 10
+        and chase_decision in [
+            "CHASE_ACCEPTABLE_WITH_RISK_CONTROL",
+            "BREAKOUT_ENTRY_ACCEPTABLE",
+        ]
+    ):
+        return "CHASE_BREAKOUT"
+
+    if (
+        buy_low_score >= 75
+        and difference <= -10
+        and buy_low_decision in [
+            "BUY_LOW_SETUP_STRONG",
+            "BUY_LOW_SETUP_ACCEPTABLE",
+        ]
+    ):
+        return "BUY_LOW_PULLBACK"
+
+    if (
+        chase_decision == "WAIT_FOR_BREAKOUT_CONFIRMATION"
+        and buy_low_decision in [
+            "WAIT_FOR_BETTER_REWARD_RISK",
+            "WAIT_FOR_BUY_LOW_ZONE",
+            "WAIT_FOR_SUPPORT_CONFIRMATION",
+        ]
+    ):
+        return "WAIT_FOR_BREAKOUT_OR_PULLBACK"
+
+    if (
+        chase_score >= 65
+        and buy_low_score >= 65
+        and abs(difference) <= 5
+        and chase_decision in [
+            "CHASE_ACCEPTABLE_WITH_RISK_CONTROL",
+            "BREAKOUT_ENTRY_ACCEPTABLE",
+        ]
+        and buy_low_decision in [
+            "BUY_LOW_SETUP_STRONG",
+            "BUY_LOW_SETUP_ACCEPTABLE",
+        ]
+    ):
+        return "EITHER_WITH_CONFIRMATION"
+
+    if buy_low_score > chase_score and buy_low_score >= 55:
+        if buy_low_decision in [
+            "BUY_LOW_SETUP_STRONG",
+            "BUY_LOW_SETUP_ACCEPTABLE",
+        ]:
+            return "BUY_LOW_PULLBACK"
+        return "PREFER_WAITING_FOR_SUPPORT"
+
+    if chase_score > buy_low_score and chase_score >= 55:
+        if chase_decision in [
+            "CHASE_ACCEPTABLE_WITH_RISK_CONTROL",
+            "BREAKOUT_ENTRY_ACCEPTABLE",
+        ]:
+            return "CHASE_BREAKOUT"
+        return "PREFER_BREAKOUT_CONFIRMATION"
+
+    if (
+        chase_rr is not None
+        and buy_low_rr is not None
+        and chase_rr < 1.0
+        and buy_low_rr < 1.0
+    ):
+        return "WAIT_FOR_BETTER_REWARD_RISK"
+
+    if chase_score >= 50 and buy_low_score >= 50:
+        return "WAIT_FOR_CLEARER_ENTRY"
+
+    return "WAIT_NO_CLEAR_EDGE"
