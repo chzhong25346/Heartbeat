@@ -2229,8 +2229,15 @@ def build_support_resistance_candidates(weekly_k, moving_averages, gap, short_te
     for item in resistances:
         item["distance_atr"] = round(abs(float(item["price"]) - current) / atr, 3) if atr > 0 else None
         item["quality_score"] = get_level_quality_score(item, False)
-    eligible_supports = [item for item in supports if item.get("eligible_for_rr")]
-    formal_support = eligible_supports[0] if eligible_supports else (supports[0] if supports else None)
+    eligible_supports = [
+        item
+        for item in supports
+        if item.get("eligible_for_rr", False)
+    ]
+    # Never fall back to an ineligible level for formal trade planning.
+    # The nearest physical level remains available separately as
+    # nearest_reference_support.
+    formal_support = eligible_supports[0] if eligible_supports else None
     return {
         "current_price": round(current, 3),
         "current_week_reference_high": round(current_week_high, 3),
@@ -2427,10 +2434,10 @@ def build_chase_analysis(weekly_k, moving_averages, macd, volume_analysis, gap,
     }
 
 
-def _classify_support_usage(support_distance_atr):
-    """Classify whether support is usable for a short-term entry plan."""
-    if support_distance_atr is None:
-        return "NO_SUPPORT"
+def _classify_support_usage(support_distance_atr, eligible_for_rr=False):
+    """Classify whether formal support is usable for an entry plan."""
+    if not eligible_for_rr or support_distance_atr is None:
+        return "NO_ACTIONABLE_SUPPORT"
     if support_distance_atr <= 0.75:
         return "ACTIONABLE_SUPPORT"
     if support_distance_atr <= 1.00:
@@ -2513,7 +2520,18 @@ def build_buy_low_analysis(weekly_k, moving_averages, macd, volume_analysis,
         setup_type = "UNCONFIRMED_RECOVERY"
 
     ds = (close - float(support["price"])) / atr if support and atr > 0 else None
-    support_usage = _classify_support_usage(ds)
+    support_eligible = bool(
+        support
+        and support.get("eligible_for_rr", False)
+    )
+    support_usage = _classify_support_usage(
+        ds,
+        eligible_for_rr=support_eligible
+    )
+    if support is None:
+        risks.append(
+            "No nearby support meets the minimum quality and distance requirements"
+        )
     if ds is None: support_score = 0
     elif 0 <= ds <= 0.25: support_score = 20; positive.append("Price is immediately above weekly support")
     elif ds <= 0.50: support_score = 17; positive.append("Price is close to weekly support")
