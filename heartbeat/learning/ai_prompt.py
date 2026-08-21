@@ -2341,6 +2341,23 @@ def build_chase_analysis(weekly_k, moving_averages, macd, volume_analysis, gap,
     elif state == "ZERO_LINE_CROSS_UP": macd_score = 9; positive.append("Fresh bullish MACD crossover")
     elif macd.get("dif_above_dea") and not macd.get("dif_above_zero") and state == "POSITIVE_EXPANDING":
         macd_score = 7; risks.append("Long-term MACD confirmation is pending")
+    elif (
+        macd.get("dif_above_dea")
+        and not macd.get("dif_above_zero")
+        and not macd.get("dea_above_zero")
+        and state == "POSITIVE_NARROWING"
+        and macd.get("dif_direction") == "UP"
+        and macd.get("dea_direction") in ["UP", "FLAT"]
+    ):
+        macd_score = 5
+        risks.append("Below-zero MACD recovery remains bullish but momentum is narrowing")
+    elif (
+        macd.get("dif_above_dea")
+        and not macd.get("dif_above_zero")
+        and state == "POSITIVE_NARROWING"
+    ):
+        macd_score = 1
+        risks.append("Below-zero MACD recovery is fading")
     elif state == "NEGATIVE_NARROWING": macd_score = 3
     else:
         macd_score = 0
@@ -2478,14 +2495,22 @@ def build_buy_low_analysis(weekly_k, moving_averages, macd, volume_analysis,
         and close_loc <= 0.35
     )
 
+    # Early recovery requires both price progress and improving momentum.
+    # This captures recovery pullbacks after a below-zero MACD cross while
+    # excluding stocks that remain below declining short-term averages.
     early_recovery = (
-        close > ma5
-        and close > ma10
-        and close < ma20
+        close > ma10
         and close < ema50
         and moving_averages["ma5_direction"] == "UP"
-        and moving_averages["ma10_direction"] == "UP"
-        and macd["state"] == "NEGATIVE_NARROWING"
+        and macd["dif_direction"] == "UP"
+        and macd["dea_direction"] in ["UP", "FLAT"]
+        and macd["state"] in [
+            "NEGATIVE_NARROWING",
+            "ZERO_LINE_CROSS_UP",
+            "POSITIVE_EXPANDING",
+            "POSITIVE_NARROWING",
+        ]
+        and (close > ma5 or close > ma20)
     )
 
     continuation_breakout = (
@@ -2569,26 +2594,58 @@ def build_buy_low_analysis(weekly_k, moving_averages, macd, volume_analysis,
             "Pullback-depth score is capped by the current setup state"
         )
 
-    balanced_long_shadows = upper >= 35 and lower >= 35 and abs(upper - lower) <= 10
-    strong = lower >= 35 and close_loc >= 0.60 and not balanced_long_shadows
-    moderate = lower >= 20 and close_loc >= 0.50 and not balanced_long_shadows
-    if balanced_long_shadows:
-        candle = 4; risks.append("Long upper and lower shadows indicate weekly indecision")
-    elif strong: candle = 15; positive.append("Weekly candle strongly rejected lower prices")
-    elif moderate: candle = 9; positive.append("Weekly candle shows moderate support")
-    elif close_loc >= 0.60: candle = 6
-    elif close_loc >= 0.40: candle = 3
-    else: candle = 0
-    if close_loc <= 0.20 and lower < 15: candle = 0; risks.append("Weekly candle closed near its low without support confirmation")
     body_pct = float(weekly_k["body_pct"])
-    if body_pct < 10 and upper >= 30 and lower >= 35:
-        candle = min(candle, 9); risks.append("Small candle body and upper shadow indicate weekly indecision")
-    if upper >= 45:
-        candle = min(candle, 5 if close_loc >= 0.50 else 2)
-        risks.append("Weekly candle shows meaningful upper rejection")
-    elif upper >= 35 and upper > lower:
-        candle = min(candle, 6)
-        risks.append("Upper rejection limits the quality of the support candle")
+    small_body_two_sided_rejection = (
+        body_pct < 10 and upper >= 35 and lower >= 35
+    )
+    balanced_long_shadows = (
+        upper >= 35 and lower >= 35 and abs(upper - lower) <= 10
+    )
+    strong = (
+        lower >= 35
+        and close_loc >= 0.60
+        and not balanced_long_shadows
+        and not small_body_two_sided_rejection
+    )
+    moderate = (
+        lower >= 20
+        and close_loc >= 0.50
+        and not balanced_long_shadows
+        and not small_body_two_sided_rejection
+    )
+    if small_body_two_sided_rejection:
+        candle = 2
+        risks.append(
+            "Small-body candle with long two-sided shadows indicates indecision and upper rejection"
+        )
+    elif balanced_long_shadows:
+        candle = 4
+        risks.append("Long upper and lower shadows indicate weekly indecision")
+    elif strong:
+        candle = 15
+        positive.append("Weekly candle strongly rejected lower prices")
+    elif moderate:
+        candle = 9
+        positive.append("Weekly candle shows moderate support")
+    elif close_loc >= 0.60:
+        candle = 6
+    elif close_loc >= 0.40:
+        candle = 3
+    else:
+        candle = 0
+    if close_loc <= 0.20 and lower < 15:
+        candle = 0
+        risks.append("Weekly candle closed near its low without support confirmation")
+    if not small_body_two_sided_rejection:
+        if body_pct < 10 and upper >= 30 and lower >= 35:
+            candle = min(candle, 9)
+            risks.append("Small candle body and upper shadow indicate weekly indecision")
+        if upper >= 45:
+            candle = min(candle, 5 if close_loc >= 0.50 else 2)
+            risks.append("Weekly candle shows meaningful upper rejection")
+        elif upper >= 35 and upper > lower:
+            candle = min(candle, 6)
+            risks.append("Upper rejection limits the quality of the support candle")
 
     if change < 0:
         if vr < 0.75: volume = 10; positive.append("Pullback occurred on low volume")
@@ -2619,8 +2676,28 @@ def build_buy_low_analysis(weekly_k, moving_averages, macd, volume_analysis,
         macd_score = 6
         positive.append("MACD recovery is expanding below the zero axis")
         risks.append("MACD remains below zero, so long-term trend confirmation is pending")
-    elif state == "NEGATIVE_NARROWING":
+    elif (
+        macd["dif_above_dea"]
+        and not macd["dif_above_zero"]
+        and not macd["dea_above_zero"]
+        and state == "POSITIVE_NARROWING"
+        and macd["dif_direction"] == "UP"
+        and macd["dea_direction"] in ["UP", "FLAT"]
+    ):
         macd_score = 5
+        positive.append("MACD remains in bullish recovery below the zero axis")
+        risks.append("MACD recovery momentum is narrowing below the zero axis")
+        risks.append("MACD remains below zero, so long-term trend confirmation is pending")
+    elif (
+        macd["dif_above_dea"]
+        and not macd["dif_above_zero"]
+        and not macd["dea_above_zero"]
+        and state == "POSITIVE_NARROWING"
+    ):
+        macd_score = 1
+        risks.append("Below-zero MACD recovery is fading and may lose its bullish crossover")
+    elif state == "NEGATIVE_NARROWING":
+        macd_score = 4
     else:
         macd_score = 0
         if state in ["NEGATIVE_EXPANDING", "ZERO_LINE_CROSS_DOWN"]: risks.append("MACD bearish momentum is expanding")
